@@ -97,7 +97,7 @@ jobs:
 
       - name: Upload golden failures
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: golden-failures
           path: "**/failures/*.png"
