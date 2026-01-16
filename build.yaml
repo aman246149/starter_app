@@ -1,0 +1,20 @@
+targets:
+  $default:
+    builders:
+      injectable_generator:injectable_builder:
+        enabled: true
+        options:
+          auto_register: true
+          # Generate import for all @injectable classes
+          
+      freezed:freezed:
+        enabled: true
+        
+      json_serializable:
+        enabled: true
+        
+      go_router_builder:go_router_builder:
+        enabled: true
+        options:
+          # Generate type-safe routes
+          routes_file_name: app_router.g.dart

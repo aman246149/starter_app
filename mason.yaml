@@ -1,0 +1,16 @@
+# Mason CLI configuration
+# https://docs.brickhub.dev/
+
+bricks:
+  feature:
+    path: bricks/feature
+  use_case:
+    path: bricks/use_case
+  bloc:
+    path: bricks/bloc
+  entity:
+    path: bricks/entity
+  value_object:
+    path: bricks/value_object
+  repository:
+    path: bricks/repository
