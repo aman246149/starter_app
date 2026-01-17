@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 import 'package:uuid/uuid.dart';
 
@@ -8,6 +8,8 @@ import 'package:uuid/uuid.dart';
 /// This wraps a UUID string and ensures that IDs are always valid.
 /// Using a value object instead of a raw String prevents primitive obsession
 /// and makes the domain model more expressive.
+///
+/// For feature-specific IDs, create subclasses (e.g., `UserId`, `ProfileId`).
 ///
 /// Example:
 /// ```dart
@@ -18,14 +20,12 @@ import 'package:uuid/uuid.dart';
 /// final newId = UniqueId.generate();
 ///
 /// // Use in entity
-/// @freezed
-/// class Product with _$Product implements Entity {
-///   const Product._();
+/// class User extends AggregateRoot {
+///   User({required this.id, required this.email});
 ///
-///   const factory Product({
-///     required UniqueId id,
-///     required String name,
-///   }) = _Product;
+///   @override
+///   final UserId id;  // Feature-specific ID type
+///   final EmailAddress email;
 /// }
 /// ```
 @immutable
