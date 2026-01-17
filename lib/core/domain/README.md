@@ -19,14 +19,21 @@ This folder specifically contains **shared/core domain concepts** used across mu
 domain/
 ├── base/                       # Base abstractions
 │   ├── base.dart              # Barrel export
+│   ├── aggregate_root.dart    # Aggregate root with domain events
 │   ├── command.dart           # Command base classes (CQRS)
+│   ├── domain_event.dart      # Domain event base class
+│   ├── domain_service.dart    # Domain service base class
 │   ├── entity.dart            # Entity interface
+│   ├── event_dispatcher.dart  # Event dispatcher interface + impl
 │   ├── query.dart             # Query base classes (CQRS)
+│   ├── specification.dart     # Specification pattern
 │   ├── unique_id.dart         # UniqueId value object
 │   ├── usecase.dart           # UseCase base classes (legacy)
 │   └── value_object.dart      # ValueObject interface
 ├── ports/                      # Port interfaces (hexagonal architecture)
 │   ├── ports.dart             # Barrel export
+│   ├── i_circuit_breaker.dart # Circuit breaker pattern port
+│   ├── i_platform_info.dart   # Platform info port
 │   ├── i_secure_storage.dart  # Secure storage port
 │   ├── i_session_manager.dart # Session management port
 │   ├── i_token_refresh_notifier.dart # Token refresh notification port
@@ -67,35 +74,72 @@ An object with a unique identity that persists over time.
 abstract class Entity {
   UniqueId get id;
 }
+
+abstract class AggregateRoot extends Entity {
+  List<DomainEvent> get domainEvents;
+  void addDomainEvent(DomainEvent event);
+  void clearDomainEvents();
+}
 ```
 
-**Example:**
+**Example - User (actual implementation):**
 
 ```dart
-@freezed
-class Product with _$Product implements Entity {
-  const Product._();
+import 'package:starter_app/core/domain/base/aggregate_root.dart';
+import 'package:starter_app/core/domain/value_objects/email_address.dart';
 
-  const factory Product({
-    required UniqueId id,
-    required String name,
-    required double price,
-    required String description,
-  }) = _Product;
+/// User entity - Auth Aggregate Root.
+class User extends AggregateRoot {
+  User({
+    required this.id,
+    required this.email,
+    required this.isEmailVerified,
+  });
 
-  // Business logic
-  bool get isExpensive => price > 100;
-  bool get isValid => name.isNotEmpty && price > 0;
+  @override
+  final UserId id;
+  final EmailAddress email;
+  final bool isEmailVerified;
+
+  /// Business method: verifies email and emits domain event.
+  User verifyEmail() {
+    if (isEmailVerified) return this;
+
+    final updatedUser = copyWith(isEmailVerified: true);
+    updatedUser.addDomainEvent(UserEmailVerified(updatedUser));
+    return updatedUser;
+  }
+
+  /// Business method: changes email (resets verification).
+  User changeEmail(EmailAddress newEmail) {
+    if (email == newEmail) return this;
+
+    final oldEmailStr = email.getOrCrash();
+    final updatedUser = copyWith(email: newEmail, isEmailVerified: false);
+    updatedUser.addDomainEvent(UserEmailChanged(updatedUser, oldEmailStr));
+    return updatedUser;
+  }
+
+  User copyWith({UserId? id, EmailAddress? email, bool? isEmailVerified}) {
+    return User(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+    );
+  }
 }
 ```
 
 **Rules:**
 
-- ✅ Use `UniqueId` for identity (not String)
-- ✅ Make immutable with `@freezed`
-- ✅ Add business logic as methods/getters
-- ✅ Keep pure (no I/O, no side effects)
-- ❌ Don't add serialization (that's for DTOs/models)
+- ✅ Extend `AggregateRoot` (which extends `Entity`) for domain entities
+- ✅ Use feature-specific ID types (e.g., `UserId`, `ProfileId`)
+- ✅ Use value objects for validated fields (e.g., `EmailAddress`)
+- ✅ Add business logic as methods that return new instances
+- ✅ Emit domain events for significant state changes
+- ✅ Implement manual `copyWith()` for immutability
+- ❌ Don't use `@freezed` for entities (use plain classes)
+- ❌ Don't add JSON serialization (that's for DTOs/models)
 - ❌ Don't depend on infrastructure
 
 ### Value Object
@@ -106,94 +150,94 @@ An object defined by its attributes, not identity.
 
 ```dart
 abstract class ValueObject<T> {
-  Either<ValueFailure<T>, T> get value;
+  const ValueObject();
+
+  /// Left = list of validation failures, Right = valid value
+  Either<List<ValueFailure<T>>, T> get value;
+
+  /// Returns value or throws UnexpectedValueError
+  T getOrCrash();
+
+  /// Returns value or null
+  T? getOrNull();
+
+  /// Returns failures or null
+  List<ValueFailure<T>>? getFailuresOrNull();
+
+  /// Returns true if valid
+  bool get isValid;
 }
 ```
 
-**Example - Email:**
+**Example - EmailAddress (actual implementation):**
 
 ```dart
+import 'package:flutter/foundation.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:starter_app/core/domain/base/value_object.dart';
+import 'package:starter_app/core/error/failures/value_failure.dart';
+
 @immutable
 final class EmailAddress extends ValueObject<String> {
+  /// Creates with validation.
   factory EmailAddress(String input) {
-    return EmailAddress._(_validateEmail(input));
+    return EmailAddress._(_validateEmailAddress(input));
   }
-  
+
+  /// Creates from trusted source (bypasses validation).
+  factory EmailAddress.fromTrustedSource(String input) {
+    return EmailAddress._(right(input));
+  }
+
   const EmailAddress._(this.value);
+
+  /// Constant empty instance.
+  static const empty = EmailAddress._(
+    Left([ValueFailure.empty(fieldName: 'Email')]),
+  );
 
   @override
   final Either<List<ValueFailure<String>>, String> value;
 
-  static Either<List<ValueFailure<String>>, String> _validateEmail(String input) {
-    if (input.isEmpty) {
-      return left([const ValueFailure.empty()]);
+  static Either<List<ValueFailure<String>>, String> _validateEmailAddress(
+    String? input,
+  ) {
+    if (input == null || input.isEmpty) {
+      return left([const ValueFailure.empty(fieldName: 'Email')]);
     }
-
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-    if (!emailRegex.hasMatch(input)) {
-      return left([ValueFailure.invalidEmail(failedValue: input)]);
+    if (!_emailRegex.hasMatch(input)) {
+      return left([
+        ValueFailure.invalidFormat(
+          expectedFormat: 'Valid email address',
+          failedValue: input,
+        ),
+      ]);
     }
-
-    return right(input);
+    return right(input.trim().toLowerCase());
   }
-  
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || other is EmailAddress && value == other.value;
 
   @override
   int get hashCode => value.hashCode;
-}
-```
-
-**Example - Price:**
-
-```dart
-@immutable
-final class Price extends ValueObject<double> {
-  factory Price(double amount) {
-    return Price._(_validatePrice(amount));
-  }
-  
-  const Price._(this.value);
 
   @override
-  final Either<List<ValueFailure<double>>, double> value;
-
-  static Either<List<ValueFailure<double>>, double> _validatePrice(double amount) {
-    if (amount < 0) {
-      return left([const ValueFailure.negative()]);
-    }
-
-    if (amount > 1000000) {
-      return left([const ValueFailure.tooHigh(maxValue: 1000000)]);
-    }
-
-    return right(amount);
-  }
-
-  // Business logic
-  String get formatted => value.fold(
-    (_) => 'Invalid',
-    (amount) => '\$${amount.toStringAsFixed(2)}',
-  );
-  
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Price && value == other.value;
-
-  @override
-  int get hashCode => value.hashCode;
+  String toString() => 'EmailAddress(${getOrNull() ?? "invalid"})';
 }
 ```
 
 **Rules:**
 
+- ✅ Use `final class` with `extends ValueObject<T>`
+- ✅ Use `@immutable` annotation
 - ✅ Encapsulate validation in factory constructor
-- ✅ Return `Either<ValueFailure, T>` for validation
-- ✅ Make immutable with `@freezed`
-- ✅ Use private `_internal` constructor
-- ✅ Add formatting/business logic as getters
+- ✅ Add `fromTrustedSource` factory for backend data
+- ✅ Add `static const empty` for constant instances
+- ✅ Return `Either<List<ValueFailure<T>>, T>` for multi-failure support
+- ✅ Override `==`, `hashCode`, `toString`
+- ❌ Don't use `@freezed` for value objects (plain classes only)
 - ❌ Don't allow invalid state
 - ❌ Don't make validation optional
 
@@ -234,9 +278,9 @@ final class UniqueId {
     return UniqueId._(value);
   }
 
-  static Either<ValueFailure<String>, UniqueId> fromUntrusted(String? input) {
+  static Either<List<ValueFailure<String>>, UniqueId> fromUntrusted(String? input) {
     if (input == null || input.trim().isEmpty) {
-      return left(const ValueFailure.empty());
+      return left([const ValueFailure.empty()]);
     }
     return right(UniqueId._(input.trim()));
   }
@@ -257,30 +301,60 @@ final class UniqueId {
 ```bash
 # Create in feature domain folder
 touch lib/features/shop/domain/entities/product.dart
+touch lib/features/shop/domain/entities/product_id.dart
 ```
 
+**First, create the feature-specific ID (using extension type for zero runtime cost):**
+
 ```dart
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_app/core/domain/base/entity.dart';
+// product_id.dart
 import 'package:starter_app/core/domain/base/unique_id.dart';
 
-part 'product.freezed.dart';
+/// Type-safe wrapper for UniqueId specifically for Products.
+/// This is a compile-time extension type (zero runtime cost).
+extension type const ProductId(UniqueId value) implements UniqueId {
+  /// Generates a new [ProductId].
+  factory ProductId.generate() => ProductId(UniqueId.generate());
 
-@freezed
-class Product with _$Product implements Entity {
-  const Product._();
+  /// Creates a [ProductId] from a trusted string.
+  factory ProductId.fromString(String value) => ProductId(UniqueId.fromString(value));
+}
+```
 
-  const factory Product({
-    required UniqueId id,
-    required String name,
-    required double price,
-    @Default([]) List<String> tags,
-  }) = _Product;
+**Then, create the entity:**
+
+```dart
+// product.dart
+import 'package:starter_app/core/domain/base/aggregate_root.dart';
+
+class Product extends AggregateRoot {
+  Product({
+    required this.id,
+    required this.name,
+    required this.price,
+  });
 
   @override
-  bool get isValid => name.isNotEmpty && price > 0;
+  final ProductId id;
+  final String name;
+  final double price;
 
   bool get isExpensive => price > 100;
+  bool get isValid => name.isNotEmpty && price > 0;
+
+  Product updatePrice(double newPrice) {
+    final updated = copyWith(price: newPrice);
+    updated.addDomainEvent(ProductPriceChanged(updated));
+    return updated;
+  }
+
+  Product copyWith({ProductId? id, String? name, double? price}) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+    );
+  }
 }
 ```
 
@@ -294,128 +368,100 @@ touch lib/core/domain/value_objects/phone_number.dart
 touch lib/features/user/domain/value_objects/username.dart
 ```
 
-```dart
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:fpdart/fpdart.dart';
-import 'package:starter_app/core/domain/base/value_object.dart';
-import 'package:starter_app/core/error/failures/value_failure.dart';
+Follow the EmailAddress pattern above. Key checklist:
 
-part 'phone_number.freezed.dart';
-
-@freezed
-class PhoneNumber with _$PhoneNumber implements ValueObject<String> {
-  const PhoneNumber._();
-
-  const factory PhoneNumber._internal({
-    required Either<ValueFailure<String>, String> value,
-  }) = _PhoneNumber;
-
-  factory PhoneNumber(String input) {
-    return PhoneNumber._internal(
-      value: _validate(input),
-    );
-  }
-
-  static Either<ValueFailure<String>, String> _validate(String input) {
-    if (input.isEmpty) {
-      return left(const ValueFailure.empty());
-    }
-
-    final phoneRegex = RegExp(r'^\+?[1-9]\d{1,14}$');
-    if (!phoneRegex.hasMatch(input)) {
-      return left(ValueFailure.invalidFormat(
-        expectedFormat: 'E.164',
-        failedValue: input,
-      ));
-    }
-
-    return right(input);
-  }
-}
-```
-
-### 3. Run Code Generation
-
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
+1. `@immutable` + `final class` extending `ValueObject<T>`
+2. Factory constructor with validation: `factory PhoneNumber(String input)`
+3. `fromTrustedSource` factory to bypass validation
+4. Private const constructor: `const PhoneNumber._(this.value)`
+5. Static validation method returning `Either<List<ValueFailure<T>>, T>`
+6. Override `==`, `hashCode`, `toString`
 
 ## Validation Patterns
 
-### Simple Validation
+### Simple Validation (Fail-Fast)
+
+Returns first failure encountered:
 
 ```dart
-static Either<ValueFailure<String>, String> _validate(String input) {
-  if (input.isEmpty) {
-    return left(const ValueFailure.empty());
+static Either<List<ValueFailure<String>>, String> _validate(String? input) {
+  if (input == null || input.isEmpty) {
+    return left([const ValueFailure.empty(fieldName: 'Name')]);
   }
 
   if (input.length < 3) {
-    return left(ValueFailure.tooShort(
-      minLength: 3,
-      actualLength: input.length,
-    ));
+    return left([
+      ValueFailure.tooShort(minLength: 3, actualLength: input.length),
+    ]);
   }
 
   return right(input);
 }
 ```
 
-### Multiple Validations
+### Accumulating Validation (All Failures)
+
+Returns all failures at once for better UX (like Password):
 
 ```dart
-static Either<ValueFailure<String>, String> _validate(String input) {
-  return right(input)
-    .flatMap(_validateNotEmpty)
-    .flatMap(_validateLength)
-    .flatMap(_validateFormat);
-}
+static Either<List<ValueFailure<String>>, String> _validate(String? input) {
+  if (input == null || input.isEmpty) {
+    return left([const ValueFailure.empty(fieldName: 'Password')]);
+  }
 
-static Either<ValueFailure<String>, String> _validateNotEmpty(String input) {
-  return input.isEmpty
-    ? left(const ValueFailure.empty())
-    : right(input);
-}
+  final failures = <ValueFailure<String>>[];
 
-static Either<ValueFailure<String>, String> _validateLength(String input) {
-  return input.length < 3
-    ? left(ValueFailure.tooShort(minLength: 3, actualLength: input.length))
-    : right(input);
+  if (input.length < 8) {
+    failures.add(ValueFailure.tooShort(minLength: 8, actualLength: input.length));
+  }
+
+  if (!RegExp('[A-Z]').hasMatch(input)) {
+    failures.add(const ValueFailure.invalidFormat(
+      expectedFormat: 'At least one uppercase letter',
+      failedValue: 'Missing uppercase',
+    ));
+  }
+
+  if (!RegExp('[0-9]').hasMatch(input)) {
+    failures.add(const ValueFailure.invalidFormat(
+      expectedFormat: 'At least one digit',
+      failedValue: 'Missing digit',
+    ));
+  }
+
+  return failures.isEmpty ? right(input) : left(failures);
 }
 ```
 
 ### Using Value Objects in Entities
 
+Value objects provide safe accessors (see Entity section above for full example):
+
 ```dart
-@freezed
-class User with _$User implements Entity {
-  const User._();
+// Check if all value objects are valid
+bool get isValid => email.isValid && displayName.isValid;
 
-  const factory User({
-    required UniqueId id,
-    required EmailAddress email,
-    required Username username,
-    PhoneNumber? phoneNumber,
-  }) = _User;
+// Safely get value (returns null if invalid)
+String? get validEmail => email.getOrNull();
 
-  // Validation across multiple value objects
-  bool get isValid => email.value.isRight() && username.value.isRight();
+// Get value or throw (use after validation)
+String get emailString => email.getOrCrash();
 
-  // Extract validated values
-  String? get validEmail => email.value.getOrElse(() => null);
-}
+// Get failures for display
+List<ValueFailure<String>>? get emailErrors => email.getFailuresOrNull();
 ```
 
 ## Best Practices
 
 ### DO ✅
 
-- Use `UniqueId` for all entity IDs
+- Use feature-specific ID types (e.g., `UserId`, `ProductId`)
 - Validate in value object constructors
 - Keep domain layer pure (no I/O, no framework dependencies)
 - Use `Either<Failure, T>` for operations that can fail
 - Add business logic as methods/getters in entities
-- Use freezed for immutability
+- Use plain classes with manual `copyWith()` for entities
+- Use `final class` for value objects
 - Separate domain entities from DTOs/models
 - Keep validation close to data (in value objects)
 
@@ -437,7 +483,7 @@ class User with _$User implements Entity {
 ```dart
 test('Product is expensive when price > 100', () {
   final product = Product(
-    id: UniqueId.generate(),
+    id: ProductId.generate(),
     name: 'Test',
     price: 150,
   );
@@ -446,7 +492,7 @@ test('Product is expensive when price > 100', () {
 });
 
 test('Product equality by ID', () {
-  final id = UniqueId.generate();
+  final id = ProductId.generate();
 
   final product1 = Product(id: id, name: 'A', price: 10);
   final product2 = Product(id: id, name: 'B', price: 20);
@@ -477,10 +523,8 @@ group('EmailAddress', () {
   test('invalid format fails', () {
     final email = EmailAddress('notanemail');
 
-    email.value.fold(
-      (failure) => expect(failure, isA<InvalidEmail>()),
-      (_) => fail('Should have failed'),
-    );
+    expect(email.isValid, isFalse);
+    expect(email.getFailuresOrNull(), isNotNull);
   });
 });
 ```
