@@ -4,9 +4,14 @@
 /// They ensure loose coupling and enable easy testing/mocking.
 library;
 
+// Security ports
+export 'i_certificate_service.dart';
+export 'i_circuit_breaker.dart';
+// Error reporting ports
+export 'i_data_filter.dart';
+export 'i_error_reporter.dart';
 // Platform ports
 export 'i_platform_info.dart';
-// Storage ports
 export 'i_secure_storage.dart';
 // Session ports
 export 'i_session_manager.dart';
