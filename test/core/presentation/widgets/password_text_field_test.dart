@@ -1,0 +1,279 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:starter_app/core/domain/value_objects/password.dart';
+import 'package:starter_app/core/presentation/widgets/app_text_field.dart';
+import 'package:starter_app/core/presentation/widgets/password_text_field.dart';
+
+void main() {
+  group('PasswordTextField', () {
+    testWidgets('renders AppTextField with password configuration', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PasswordTextField(
+              password: Password('ValidPassword1!'),
+              showError: false,
+              obscureText: true,
+            ),
+          ),
+        ),
+      );
+
+      final textField = tester.widget<AppTextField>(find.byType(AppTextField));
+      expect(textField.obscureText, isTrue);
+      expect(textField.keyboardType, TextInputType.visiblePassword);
+      expect(textField.maxLines, 1);
+    });
+
+    testWidgets('displays visible text when obscureText is false', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PasswordTextField(
+              password: Password('ValidPassword1!'),
+              showError: false,
+              obscureText: false,
+            ),
+          ),
+        ),
+      );
+
+      final textField = tester.widget<AppTextField>(find.byType(AppTextField));
+      expect(textField.obscureText, isFalse);
+      expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
+    });
+
+    testWidgets('calls onToggleVisibility when icon is pressed', (
+      tester,
+    ) async {
+      var toggleCalled = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PasswordTextField(
+              password: Password('ValidPassword1!'),
+              showError: false,
+              obscureText: true,
+              onToggleVisibility: () => toggleCalled = true,
+            ),
+          ),
+        ),
+      );
+
+      // Tap toggle button
+      await tester.tap(find.byType(IconButton));
+      await tester.pump();
+
+      expect(toggleCalled, isTrue);
+    });
+
+    testWidgets('shows correct icon based on obscureText state', (
+      tester,
+    ) async {
+      // Initially obscured
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PasswordTextField(
+              password: Password('ValidPassword1!'),
+              showError: false,
+              obscureText: true,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.visibility_off_outlined), findsNothing);
+
+      // Now visible
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PasswordTextField(
+              password: Password('ValidPassword1!'),
+              showError: false,
+              obscureText: false,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.visibility_outlined), findsNothing);
+    });
+
+    testWidgets(
+      'shows validation error when showError is true and password is invalid',
+      (tester) async {
+        // Arrange - 'short' is < 8 chars
+        final invalidPassword = Password('short');
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: PasswordTextField(
+                password: invalidPassword,
+                showError: true,
+                obscureText: true,
+              ),
+            ),
+          ),
+        );
+
+        // Assert - Password class generates specific error messages
+        // We check for the first error: length check
+        expect(
+          find.text('Password must be at least 8 characters'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets('does not show validation error when showError is false', (
+      tester,
+    ) async {
+      // Arrange
+      final invalidPassword = Password('short');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PasswordTextField(
+              password: invalidPassword,
+              showError: false,
+              obscureText: true,
+            ),
+          ),
+        ),
+      );
+
+      // Assert
+      expect(find.text('Password must be at least 8 characters'), findsNothing);
+    });
+
+    testWidgets(
+      'shows invalidFormat error when password format is invalid',
+      (tester) async {
+        // Arrange - Password with valid length but missing required characters
+        // (all lowercase, no uppercase, digit, or special char)
+        final invalidPassword = Password('alllowercase');
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: PasswordTextField(
+                password: invalidPassword,
+                showError: true,
+                obscureText: true,
+              ),
+            ),
+          ),
+        );
+
+        // Assert - Should show invalid format error
+        expect(
+          find.text('Password format is invalid'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'shows tooLong error when password exceeds max length',
+      (tester) async {
+        // Arrange - Create password longer than 128 characters
+        // with all required characters (uppercase, lowercase, digit, special)
+        // Using a pattern that ensures all requirements are met
+        final longPassword = '${'A' * 50}${'b' * 50}${'1' * 20}!'; // 121 chars
+        // Make it longer than 128
+        final veryLongPassword = '$longPassword${'x' * 10}'; // 131 chars
+        final invalidPassword = Password(veryLongPassword);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: PasswordTextField(
+                password: invalidPassword,
+                showError: true,
+                obscureText: true,
+              ),
+            ),
+          ),
+        );
+
+        // Assert - Should show too long error
+        expect(
+          find.textContaining('Password must be at most 128 characters'),
+          findsOneWidget,
+        );
+      },
+    );
+
+    testWidgets(
+      'does not show error when password is valid',
+      (tester) async {
+        // Arrange - Valid password meeting all requirements
+        final validPassword = Password('ValidPassword1!');
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: PasswordTextField(
+                password: validPassword,
+                showError: true,
+                obscureText: true,
+              ),
+            ),
+          ),
+        );
+
+        // Assert - No error messages should be shown
+        expect(
+          find.text('Password format is invalid'),
+          findsNothing,
+        );
+        expect(
+          find.textContaining('Password must be at least'),
+          findsNothing,
+        );
+        expect(
+          find.textContaining('Password must be at most'),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets('toggle button is disabled when field is disabled', (
+      tester,
+    ) async {
+      var toggleCalled = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PasswordTextField(
+              password: Password('ValidPassword1!'),
+              showError: false,
+              obscureText: true,
+              enabled: false,
+              onToggleVisibility: () => toggleCalled = true,
+            ),
+          ),
+        ),
+      );
+
+      // Try to tap toggle button
+      await tester.tap(find.byType(IconButton));
+      await tester.pump();
+
+      // Should not trigger callback when disabled
+      expect(toggleCalled, isFalse);
+    });
+  });
+}
