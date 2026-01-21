@@ -1,0 +1,100 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'package:starter_app/core/error/failures/failure.dart';
+
+part 'infrastructure_failures.freezed.dart';
+
+/// Infrastructure layer failures.
+///
+/// These represent technical errors from external systems (API, DB, Network).
+/// Repositories map Exceptions → InfrastructureFailure when no specific
+/// domain mapping is available.
+///
+/// Example in repository:
+/// ```dart
+/// try {
+///   final product = await _api.getProduct(id);
+///   return Right(product);
+/// } on ServerException catch (e) {
+///   // Map generic server errors
+///   return Left(InfrastructureFailure.server(
+///     message: e.message,
+///     statusCode: e.statusCode,
+///   ));
+/// } on NetworkException catch (e) {
+///   return Left(InfrastructureFailure.network(message: e.message));
+/// }
+/// ```
+///
+/// In UI, use Dart 3 pattern matching:
+/// ```dart
+/// final message = switch (failure) {
+///   ServerFailure(:final statusCode) when statusCode == 404 =>
+///     context.l10n.productNotFound,
+///   ServerFailure() => failure.message,
+///   NetworkFailure() => context.l10n.networkError,
+///   CacheFailure() => context.l10n.cacheError,
+///   ParseFailure() => context.l10n.parseError,
+///   _ => context.l10n.unexpectedError,
+/// };
+/// ```
+@freezed
+class InfrastructureFailure extends Failure with _$InfrastructureFailure {
+  const InfrastructureFailure._();
+
+  /// Server error.
+  /// Map from ServerException in repository.
+  const factory InfrastructureFailure.server({
+    required String message,
+    int? statusCode,
+    StackTrace? stackTrace,
+  }) = ServerFailure;
+
+  /// Network error.
+  /// Map from NetworkException in repository.
+  const factory InfrastructureFailure.network({
+    @Default('Network error') String message,
+    StackTrace? stackTrace,
+  }) = NetworkFailure;
+
+  /// Cache error.
+  /// Map from CacheException in repository.
+  const factory InfrastructureFailure.cache({
+    @Default('Cache error') String message,
+    StackTrace? stackTrace,
+  }) = CacheFailure;
+
+  /// Parse error.
+  /// Map from ParseException in repository.
+  const factory InfrastructureFailure.parse({
+    @Default('Parse error') String message,
+    StackTrace? stackTrace,
+  }) = ParseFailure;
+
+  @override
+  bool get isRetryable => when(
+    server: (_, _, _) => true,
+    network: (_, _) => true,
+    cache: (_, _) => false,
+    parse: (_, _) => false,
+  );
+
+  // coverage:ignore-start
+  /// Required by mixin but overridden by generated subclasses.
+  @override
+  String get message => when(
+    server: (message, _, _) => message,
+    network: (message, _) => message,
+    cache: (message, _) => message,
+    parse: (message, _) => message,
+  );
+
+  @override
+  StackTrace? get stackTrace => when(
+    server: (_, _, stackTrace) => stackTrace,
+    network: (_, stackTrace) => stackTrace,
+    cache: (_, stackTrace) => stackTrace,
+    parse: (_, stackTrace) => stackTrace,
+  );
+  // coverage:ignore-end
+}
