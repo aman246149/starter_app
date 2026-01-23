@@ -1,0 +1,86 @@
+{
+    "@@locale": "es",
+    "unauthorized": "Credenciales inválidas o sesión expirada",
+    "@unauthorized": {
+        "description": "Mensaje de error mostrado cuando la autenticación del usuario falla debido a credenciales inválidas o sesión expirada"
+    },
+    "forbidden": "Acceso denegado - permisos insuficientes",
+    "@forbidden": {
+        "description": "Mensaje de error mostrado cuando el usuario autenticado no tiene permisos para la operación solicitada"
+    },
+    "notFound": "Recurso de autenticación no encontrado",
+    "@notFound": {
+        "description": "Mensaje de error mostrado cuando no se puede encontrar un recurso o endpoint relacionado con la autenticación"
+    },
+    "emailLabel": "Correo electrónico",
+    "@emailLabel": {
+        "description": "Etiqueta para el campo de correo electrónico"
+    },
+    "emailHint": "Ingresa tu dirección de correo electrónico",
+    "@emailHint": {
+        "description": "Texto de sugerencia para el campo de correo electrónico"
+    },
+    "continueToEmail": "Continuar",
+    "@continueToEmail": {
+        "description": "Texto del botón para continuar con el correo electrónico"
+    },
+    "welcomeBack": "¡Bienvenido de nuevo, {email}!",
+    "@welcomeBack": {
+        "description": "Mensaje de bienvenida para usuarios existentes",
+        "placeholders": {
+            "email": {
+                "type": "String"
+            }
+        }
+    },
+    "passwordLabel": "Contraseña",
+    "@passwordLabel": {
+        "description": "Etiqueta para el campo de contraseña"
+    },
+    "login": "Iniciar sesión",
+    "@login": {
+        "description": "Texto del botón para iniciar sesión"
+    },
+    "createAccount": "Crea una cuenta para {email}.",
+    "@createAccount": {
+        "description": "Mensaje para nuevos usuarios para crear cuenta",
+        "placeholders": {
+            "email": {
+                "type": "String"
+            }
+        }
+    },
+    "nameLabel": "Tu nombre",
+    "@nameLabel": {
+        "description": "Etiqueta para el campo de nombre"
+    },
+    "nameEmpty": "El nombre no puede estar vacío",
+    "@nameEmpty": {
+        "description": "Mensaje de error cuando el campo de nombre está vacío"
+    },
+    "register": "Registrarse",
+    "@register": {
+        "description": "Texto del botón para registrarse"
+    },
+    "retry": "Reintentar",
+    "@retry": {
+        "description": "Texto del botón para reintentar acción fallida"
+    },
+    "differentEmail": "Usar un correo diferente",
+    "@differentEmail": {
+        "description": "Texto del enlace para cambiar dirección de correo"
+    },
+        "returnHome": "Volver al inicio",
+        "@returnHome": {
+            "description": "Texto del botón para volver a la página de inicio"
+        },
+        "emailAlreadyInUse": "Este correo ya está registrado. Por favor inicia sesión.",
+        "@emailAlreadyInUse": {
+            "description": "Mensaje de error cuando el registro falla porque el correo existe"
+        },
+        "invalidInput": "Por favor verifica tus datos e intenta de nuevo.",
+        "@invalidInput": {
+            "description": "Mensaje de error cuando el servidor rechaza los datos de entrada"
+        }
+    }
+    

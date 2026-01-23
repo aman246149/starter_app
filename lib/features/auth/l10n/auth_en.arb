@@ -1,0 +1,86 @@
+{
+    "@@locale": "en",
+    "unauthorized": "Invalid credentials or session expired",
+    "@unauthorized": {
+        "description": "Error message shown when user authentication fails due to invalid credentials or expired session"
+    },
+    "forbidden": "Access denied - insufficient permissions",
+    "@forbidden": {
+        "description": "Error message shown when authenticated user doesn't have permission for the requested operation"
+    },
+    "notFound": "Authentication resource not found",
+    "@notFound": {
+        "description": "Error message shown when an authentication-related resource or endpoint cannot be found"
+    },
+    "emailLabel": "Email",
+    "@emailLabel": {
+        "description": "Label for email input field"
+    },
+    "emailHint": "Enter your email address",
+    "@emailHint": {
+        "description": "Hint text for email input field"
+    },
+    "continueToEmail": "Continue",
+    "@continueToEmail": {
+        "description": "Button text to continue with email"
+    },
+    "welcomeBack": "Welcome back, {email}!",
+    "@welcomeBack": {
+        "description": "Welcome back message for existing users",
+        "placeholders": {
+            "email": {
+                "type": "String"
+            }
+        }
+    },
+    "passwordLabel": "Password",
+    "@passwordLabel": {
+        "description": "Label for password input field"
+    },
+    "login": "Login",
+    "@login": {
+        "description": "Button text to login"
+    },
+    "createAccount": "Create an account for {email}.",
+    "@createAccount": {
+        "description": "Message for new users to create account",
+        "placeholders": {
+            "email": {
+                "type": "String"
+            }
+        }
+    },
+    "nameLabel": "Your Name",
+    "@nameLabel": {
+        "description": "Label for name input field"
+    },
+    "nameEmpty": "Name cannot be empty",
+    "@nameEmpty": {
+        "description": "Error message when name field is empty"
+    },
+    "register": "Register",
+    "@register": {
+        "description": "Button text to register"
+    },
+    "retry": "Retry",
+    "@retry": {
+        "description": "Button text to retry failed action"
+    },
+    "differentEmail": "Use a different email",
+    "@differentEmail": {
+        "description": "Link text to change email address"
+    },
+        "returnHome": "Return to home",
+        "@returnHome": {
+            "description": "Button text to return to home page"
+        },
+        "emailAlreadyInUse": "This email is already registered. Please login instead.",
+        "@emailAlreadyInUse": {
+            "description": "Error message shown when registration fails because email exists"
+        },
+        "invalidInput": "Please check your input and try again.",
+        "@invalidInput": {
+            "description": "Error message shown when server rejects input data"
+        }
+    }
+    
