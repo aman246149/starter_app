@@ -21,7 +21,7 @@ class InfrastructureFailureMapper extends FailureMessageMapper {
   String map(BuildContext context, Failure failure) {
     final infraFailure = failure as InfrastructureFailure;
     return infraFailure.map(
-      server: (f) => context.appL10n.serverError(f.statusCode),
+      server: (f) => context.appL10n.serverError,
       network: (_) => context.appL10n.networkError,
       cache: (_) => context.appL10n.cacheError,
       parse: (_) => context.appL10n.parseError,
