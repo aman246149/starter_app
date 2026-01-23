@@ -2,7 +2,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:starter_app/core/domain/base/domain_service.dart';
 import 'package:starter_app/core/domain/base/event_dispatcher.dart';
-import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
 import 'package:starter_app/core/types/types.dart';
 import 'package:starter_app/features/auth/domain/entities/auth_credentials.dart';
 import 'package:starter_app/features/auth/domain/entities/user.dart';
@@ -14,7 +13,7 @@ import 'package:starter_app/features/auth/domain/repositories/i_auth_repository.
 /// Orchestrates user registration and dispatches domain events.
 /// Profile creation is now handled by the backend in the same transaction.
 ///
-/// **Strict DDD:** This logic involves 
+/// **Strict DDD:** This logic involves
 ///  cross-cutting concerns (registration + events),
 /// so it belongs in a Domain Service, not an Entity or Use Case.
 @injectable
@@ -34,17 +33,6 @@ class UserRegistrationService extends DomainService {
   FutureResult<User> register({
     required AuthCredentials credentials,
   }) async {
-    // Validate name is present for registration
-    final name = credentials.name;
-    if (name == null || !name.isValid) {
-      return const Left(
-        InfrastructureFailure.server(
-          message: 'Name is required for registration',
-          statusCode: 400,
-        ),
-      );
-    }
-
     // Create Auth User (backend auto-creates profile)
     final userResult = await _authRepository.register(credentials);
 
