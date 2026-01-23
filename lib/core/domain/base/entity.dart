@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 import 'package:starter_app/core/domain/base/unique_id.dart';
 
 /// Base interface for all domain entities.
