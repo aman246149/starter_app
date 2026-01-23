@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:meta/meta.dart';
 
 import 'package:starter_app/core/domain/base/value_object.dart';
+import 'package:starter_app/core/error/failures/email_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 
 /// Email address value object with validation.
@@ -9,12 +10,26 @@ import 'package:starter_app/core/error/failures/value_failure.dart';
 /// Ensures email addresses are valid before being used in the domain.
 /// This is a core value object used across features (auth, profiles, etc.).
 ///
+/// Returns specific [EmailFailure] types for clear error messages:
+/// - [EmailEmpty] - Email is empty
+/// - [EmailTooLong] - Email exceeds 254 characters
+/// - [EmailInvalidFormat] - Email doesn't match RFC 5322 pattern
+///
 /// Example:
 /// ```dart
 /// // User input validation
 /// final email = EmailAddress('user@example.com');
 /// if (email.isValid) {
 ///   // Use email.getOrCrash()
+/// } else {
+///   final failures = email.getFailuresOrNull();
+///   for (final failure in failures!) {
+///     failure.when(
+///       empty: () => print('Email is required'),
+///       tooLong: (max, actual) => print('Email too long'),
+///       invalidFormat: (value) => print('Invalid email format'),
+///     );
+///   }
 /// }
 ///
 /// // From trusted backend
@@ -39,7 +54,7 @@ final class EmailAddress extends ValueObject<String> {
 
   /// Constant empty email address.
   static const empty = EmailAddress._(
-    Left([ValueFailure.empty(fieldName: 'Email')]),
+    Left([EmailFailure.empty()]),
   );
 
   @override
@@ -67,18 +82,18 @@ final class EmailAddress extends ValueObject<String> {
 
   /// Validates email address format and length.
   ///
-  /// Returns single failure for sequential validation
+  /// Returns specific [EmailFailure] types for sequential validation
   /// (if empty, no need to check format).
   static Either<List<ValueFailure<String>>, String> _validateEmailAddress(
     String? input,
   ) {
     if (input == null || input.isEmpty) {
-      return left([const ValueFailure.empty(fieldName: 'Email')]);
+      return left([const EmailFailure.empty()]);
     }
 
     if (input.length > maxLength) {
       return left([
-        ValueFailure.tooLong(
+        EmailFailure.tooLong(
           maxLength: maxLength,
           actualLength: input.length,
         ),
@@ -87,8 +102,7 @@ final class EmailAddress extends ValueObject<String> {
 
     if (!_emailRegex.hasMatch(input)) {
       return left([
-        ValueFailure.invalidFormat(
-          expectedFormat: 'Valid email address (e.g., user@example.com)',
+        EmailFailure.invalidFormat(
           failedValue: input,
         ),
       ]);

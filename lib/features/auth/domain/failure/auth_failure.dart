@@ -1,12 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:starter_app/core/error/failures/failure.dart';
 import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
+import 'package:starter_app/core/error/failures/technical_failure.dart';
 
 part 'auth_failure.freezed.dart';
 
 /// Authentication domain failures.
 ///
 /// Represents business logic errors specific to authentication.
+/// Extends [TechnicalFailure] which provides [isRetryable] and [stackTrace].
+///
 /// Infrastructure failures (network, server, etc.) should use
 /// [InfrastructureFailure] instead.
 ///
@@ -24,7 +26,7 @@ part 'auth_failure.freezed.dart';
 /// }
 /// ```
 @freezed
-class AuthFailure extends Failure with _$AuthFailure {
+class AuthFailure extends TechnicalFailure with _$AuthFailure {
   const AuthFailure._();
 
   /// User or resource not found (HTTP 404).

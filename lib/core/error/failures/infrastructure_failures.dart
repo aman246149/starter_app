@@ -1,12 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:starter_app/core/error/failures/failure.dart';
+import 'package:starter_app/core/error/failures/technical_failure.dart';
 
 part 'infrastructure_failures.freezed.dart';
 
 /// Infrastructure layer failures.
 ///
 /// These represent technical errors from external systems (API, DB, Network).
+/// Extends [TechnicalFailure] which provides [isRetryable] and [stackTrace].
+///
 /// Repositories map Exceptions → InfrastructureFailure when no specific
 /// domain mapping is available.
 ///
@@ -39,7 +41,8 @@ part 'infrastructure_failures.freezed.dart';
 /// };
 /// ```
 @freezed
-class InfrastructureFailure extends Failure with _$InfrastructureFailure {
+class InfrastructureFailure extends TechnicalFailure
+    with _$InfrastructureFailure {
   const InfrastructureFailure._();
 
   /// Server error.

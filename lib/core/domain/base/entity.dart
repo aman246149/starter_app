@@ -16,27 +16,17 @@ import 'package:starter_app/core/domain/base/unique_id.dart';
 /// ```dart
 /// class User extends AggregateRoot {
 ///   User({required this.id,
-///   required this.email,
-///   required this.isEmailVerified});
+///   required this.email});
 ///
 ///   @override
 ///   final UserId id;
 ///   final EmailAddress email;
-///   final bool isEmailVerified;
 ///
-///   /// Business method that returns new instance + emits event.
-///   User verifyEmail() {
-///     if (isEmailVerified) return this;
-///     final updated = copyWith(isEmailVerified: true);
-///     updated.addDomainEvent(UserEmailVerified(updated));
-///     return updated;
-///   }
 ///
-///   User copyWith({UserId? id, EmailAddress? email, bool? isEmailVerified}) {
+///   User copyWith({UserId? id, EmailAddress? email}) {
 ///     return User(
 ///       id: id ?? this.id,
 ///       email: email ?? this.email,
-///       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
 ///     );
 ///   }
 /// }

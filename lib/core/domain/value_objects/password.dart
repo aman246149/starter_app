@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:meta/meta.dart';
 import 'package:starter_app/core/domain/base/value_object.dart';
+import 'package:starter_app/core/error/failures/password_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 
 /// Password strength levels.
@@ -57,14 +58,26 @@ enum PasswordStrength implements Comparable<PasswordStrength> {
 /// - At least one special character
 ///
 /// Returns ALL validation failures at once for better UX.
+/// Each failure is a specific [PasswordFailure] type for clear error messages.
 ///
 /// Example:
 /// ```dart
 /// // User input validation
 /// final password = Password('weak');
 /// if (!password.isValid) {
-///   // Shows all failures: too short, missing uppercase, digit, special char
+///   // Shows specific failures: PasswordTooShort, PasswordMissingUppercase, etc.
 ///   final failures = password.getFailuresOrNull();
+///   for (final failure in failures!) {
+///     failure.when(
+///       empty: () => print('Password is required'),
+///       tooShort: (min, actual) => print('Too short: $actual < $min'),
+///       tooLong: (max, actual) => print('Too long'),
+///       missingUppercase: () => print('Need uppercase'),
+///       missingLowercase: () => print('Need lowercase'),
+///       missingDigit: () => print('Need digit'),
+///       missingSpecialCharacter: () => print('Need special char'),
+///     );
+///   }
 /// }
 ///
 /// // For password comparison (from backend)
@@ -90,7 +103,7 @@ final class Password extends ValueObject<String> {
 
   /// Constant empty password.
   static const empty = Password._(
-    Left([ValueFailure.empty(fieldName: 'Password')]),
+    Left([PasswordFailure.empty()]),
   );
 
   @override
@@ -112,26 +125,27 @@ final class Password extends ValueObject<String> {
   static final RegExp _digitRegex = RegExp('[0-9]');
 
   /// Regex for special character requirement.
-  static final RegExp _specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+  static final RegExp _specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}<>]');
 
   /// Validates password strength and format.
   ///
   /// Accumulates ALL validation failures for better UX.
   /// Users see all requirements they need to meet at once.
+  /// Each failure is a specific [PasswordFailure] type.
   static Either<List<ValueFailure<String>>, String> _validatePassword(
     String? input,
   ) {
     // Early return for empty (no point checking other rules)
     if (input == null || input.isEmpty) {
-      return left([const ValueFailure.empty(fieldName: 'Password')]);
+      return left([const PasswordFailure.empty()]);
     }
 
-    final failures = <ValueFailure<String>>[];
+    final failures = <PasswordFailure>[];
 
     // Check length constraints
     if (input.length < minLength) {
       failures.add(
-        ValueFailure.tooShort(
+        PasswordFailure.tooShort(
           minLength: minLength,
           actualLength: input.length,
         ),
@@ -140,48 +154,28 @@ final class Password extends ValueObject<String> {
 
     if (input.length > maxLength) {
       failures.add(
-        ValueFailure.tooLong(
+        PasswordFailure.tooLong(
           maxLength: maxLength,
           actualLength: input.length,
         ),
       );
     }
 
-    // Check character requirements
+    // Check character requirements with specific failure types
     if (!_uppercaseRegex.hasMatch(input)) {
-      failures.add(
-        const ValueFailure.invalidFormat(
-          expectedFormat: 'At least one uppercase letter',
-          failedValue: 'Missing uppercase letter',
-        ),
-      );
+      failures.add(const PasswordFailure.missingUppercase());
     }
 
     if (!_lowercaseRegex.hasMatch(input)) {
-      failures.add(
-        const ValueFailure.invalidFormat(
-          expectedFormat: 'At least one lowercase letter',
-          failedValue: 'Missing lowercase letter',
-        ),
-      );
+      failures.add(const PasswordFailure.missingLowercase());
     }
 
     if (!_digitRegex.hasMatch(input)) {
-      failures.add(
-        const ValueFailure.invalidFormat(
-          expectedFormat: 'At least one digit',
-          failedValue: 'Missing digit',
-        ),
-      );
+      failures.add(const PasswordFailure.missingDigit());
     }
 
     if (!_specialCharRegex.hasMatch(input)) {
-      failures.add(
-        const ValueFailure.invalidFormat(
-          expectedFormat: r'At least one special character (!@#$%^&*...)',
-          failedValue: 'Missing special character',
-        ),
-      );
+      failures.add(const PasswordFailure.missingSpecialCharacter());
     }
 
     // Return all failures or success
