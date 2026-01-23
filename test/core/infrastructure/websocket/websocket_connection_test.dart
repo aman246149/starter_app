@@ -959,7 +959,7 @@ void main() {
           onError: onError,
           reconnectionPolicy:
               reconnectionConfig ?? WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => fakeChannel,
+          channelFactory: (uri) => fakeChannel,
         );
       }
 
@@ -1212,7 +1212,7 @@ void main() {
             logger: mockLogger,
             onDisconnected: () => onDisconnectedCallCount++,
             reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-            channelFactory: (uri, {protocols}) => localChannel,
+            channelFactory: (uri) => localChannel,
           );
 
           await connection.connect();
@@ -1281,7 +1281,7 @@ void main() {
           url: testUrl,
           logger: mockLogger,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => failingChannel,
+          channelFactory: (uri) => failingChannel,
         );
 
         await connection.connect();
@@ -1339,7 +1339,7 @@ void main() {
             maxAttempts: 3,
             initialDelay: Duration(milliseconds: 10),
           ),
-          channelFactory: (uri, {protocols}) => createFakeChannel(),
+          channelFactory: (uri) => createFakeChannel(),
         );
 
         await connection.connect();
@@ -1373,7 +1373,7 @@ void main() {
             maxAttempts: 3,
             initialDelay: Duration(milliseconds: 10),
           ),
-          channelFactory: (uri, {protocols}) => createFakeChannel(),
+          channelFactory: (uri) => createFakeChannel(),
         );
 
         await connection.connect();
@@ -1401,7 +1401,7 @@ void main() {
             maxAttempts: 0, // No retries allowed
             initialDelay: Duration(milliseconds: 10),
           ),
-          channelFactory: (uri, {protocols}) => createFakeChannel(),
+          channelFactory: (uri) => createFakeChannel(),
         );
 
         final subscription = connection.connectionState.listen((state) {
@@ -1434,7 +1434,7 @@ void main() {
             maxAttempts: 3,
             initialDelay: Duration(milliseconds: 10),
           ),
-          channelFactory: (uri, {protocols}) => createFakeChannel(),
+          channelFactory: (uri) => createFakeChannel(),
         );
 
         await connection.connect();
@@ -1460,7 +1460,7 @@ void main() {
             maxAttempts: 3,
             initialDelay: Duration(milliseconds: 10),
           ),
-          channelFactory: (uri, {protocols}) => createFakeChannel(),
+          channelFactory: (uri) => createFakeChannel(),
         );
 
         await connection.connect();
@@ -1487,7 +1487,7 @@ void main() {
           logger: mockLogger,
           onError: (error) => receivedError = error,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => failingChannel,
+          channelFactory: (uri) => failingChannel,
         );
 
         await connection.connect();
@@ -1512,7 +1512,7 @@ void main() {
           url: testUrl,
           logger: mockLogger,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => failingChannel,
+          channelFactory: (uri) => failingChannel,
         );
 
         final subscription = connection.connectionState.listen(states.add);
@@ -1749,7 +1749,7 @@ void main() {
           url: testUrl,
           logger: mockLogger,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => fakeChannel,
+          channelFactory: (uri) => fakeChannel,
         );
 
         // Clear previous calls but keep when() setups
@@ -1776,7 +1776,7 @@ void main() {
           url: testUrl,
           logger: mockLogger,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => fakeChannel,
+          channelFactory: (uri) => fakeChannel,
         );
 
         // Clear previous calls but keep when() setups
@@ -1800,7 +1800,7 @@ void main() {
           url: testUrl,
           logger: mockLogger,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => fakeChannel,
+          channelFactory: (uri) => fakeChannel,
         );
 
         // Clear previous calls but keep when() setups
@@ -1829,7 +1829,7 @@ void main() {
           url: testUrl,
           logger: mockLogger,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => fakeChannel,
+          channelFactory: (uri) => fakeChannel,
         );
 
         // Clear previous calls but keep when() setups
