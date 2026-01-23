@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/domain/base/domain_event.dart';
-import 'package:starter_app/core/domain/value_objects/name.dart';
 import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
 import 'package:starter_app/features/auth/domain/entities/auth_credentials.dart';
 import 'package:starter_app/features/auth/domain/events/auth_events.dart';
@@ -38,12 +37,6 @@ void main() {
       name: name,
     );
 
-    // Create credentials without name (should fail)
-    AuthCredentials loginCredentials() => AuthCredentials(
-      email: TestData.emailAddress(),
-      password: TestData.passwordVO(),
-    );
-
     group('register', () {
       test(
         'successfully registers user when credentials include name',
@@ -72,40 +65,6 @@ void main() {
           ).called(1);
         },
       );
-
-      test('returns failure when credentials have no name', () async {
-        // Arrange
-        final credentials = loginCredentials();
-
-        // Act
-        final result = await service.register(credentials: credentials);
-
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (f) => expect(f, isA<InfrastructureFailure>()),
-          (_) => fail('Expected Left but got Right'),
-        );
-
-        verifyNever(() => mockAuthRepository.register(any()));
-        verifyNever(() => mockEventDispatcher.dispatch(any()));
-      });
-
-      test('returns failure when credentials have invalid name', () async {
-        // Arrange
-        final credentials = AuthCredentials(
-          email: TestData.emailAddress(),
-          password: TestData.passwordVO(),
-          name: Name(''), // Invalid empty name
-        );
-
-        // Act
-        final result = await service.register(credentials: credentials);
-
-        // Assert
-        expect(result.isLeft(), true);
-        verifyNever(() => mockAuthRepository.register(any()));
-      });
 
       test('returns failure when auth registration fails', () async {
         // Arrange

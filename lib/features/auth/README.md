@@ -127,7 +127,7 @@ authBloc.add(const AuthEvent.logoutRequested());
 
 ```bash
 # Run auth tests
-flutter test test/features/auth/
+very_good test --no-optimization test/features/auth/
 
 # Analyze
 flutter analyze lib/features/auth/
