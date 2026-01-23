@@ -101,9 +101,9 @@ import 'package:starter_app/features/auth/domain/services/user_registration_serv
     as _i772;
 import 'package:starter_app/features/auth/infrastructure/datasources/auth_api_service.dart'
     as _i986;
-import 'package:starter_app/features/auth/infrastructure/datasources/i_auth_remote_data_source.dart'
+import 'package:starter_app/features/auth/infrastructure/datasources/auth_remote_data_source.dart'
     as _i489;
-import 'package:starter_app/features/auth/infrastructure/datasources/i_auth_websocket_data_source.dart'
+import 'package:starter_app/features/auth/infrastructure/datasources/auth_websocket_data_source.dart'
     as _i49;
 import 'package:starter_app/features/auth/infrastructure/mappers/auth_exception_mapper.dart'
     as _i161;
@@ -321,7 +321,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i0.GetProfile(gh<_i148.IUserProfileRepository>()),
     );
     gh.factory<_i493.ProfileBloc>(
-      () => _i493.ProfileBloc(gh<_i0.GetProfile>()),
+      () =>
+          _i493.ProfileBloc(gh<_i0.GetProfile>(), gh<_i696.IEventDispatcher>()),
     );
     gh.lazySingleton<_i870.IAuthRepository>(
       () => _i889.AuthRepositoryImpl(
@@ -332,18 +333,8 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i161.AuthExceptionMapper>(),
       ),
     );
-    gh.factory<_i772.UserRegistrationService>(
-      () => _i772.UserRegistrationService(
-        gh<_i870.IAuthRepository>(),
-        gh<_i148.IUserProfileRepository>(),
-        gh<_i696.IEventDispatcher>(),
-      ),
-    );
     gh.factory<_i12.CheckUserExists>(
       () => _i12.CheckUserExists(gh<_i870.IAuthRepository>()),
-    );
-    gh.factory<_i23.GetCurrentUser>(
-      () => _i23.GetCurrentUser(gh<_i870.IAuthRepository>()),
     );
     gh.factory<_i718.Logout>(() => _i718.Logout(gh<_i870.IAuthRepository>()));
     gh.factory<_i368.RefreshTokenUseCase>(
@@ -352,8 +343,20 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i266.WatchAuthChanges>(
       () => _i266.WatchAuthChanges(gh<_i870.IAuthRepository>()),
     );
+    gh.factory<_i772.UserRegistrationService>(
+      () => _i772.UserRegistrationService(
+        gh<_i870.IAuthRepository>(),
+        gh<_i696.IEventDispatcher>(),
+      ),
+    );
     gh.factory<_i482.Register>(
       () => _i482.Register(gh<_i772.UserRegistrationService>()),
+    );
+    gh.factory<_i23.GetCurrentUser>(
+      () => _i23.GetCurrentUser(
+        gh<_i870.IAuthRepository>(),
+        gh<_i696.IEventDispatcher>(),
+      ),
     );
     gh.factory<_i505.Login>(
       () => _i505.Login(
@@ -394,6 +397,7 @@ extension GetItInjectableX on _i174.GetIt {
         themeCubit: gh<_i455.ThemeCubit>(),
         localeCubit: gh<_i455.LocaleCubit>(),
         authBloc: gh<_i55.AuthBloc>(),
+        profileBloc: gh<_i493.ProfileBloc>(),
         failureMessageService: gh<_i313.FailureMessageService>(),
         appTheme: gh<_i238.AppTheme>(),
         key: key,
