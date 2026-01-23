@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:starter_app/core/constants/constants.dart';
-import 'package:starter_app/core/error/failures/value_failure.dart';
 import 'package:starter_app/core/navigation/app_router.dart';
 import 'package:starter_app/core/presentation/extensions/context_extensions.dart';
 import 'package:starter_app/core/presentation/models/error_model.dart';

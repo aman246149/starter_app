@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:starter_app/core/domain/value_objects/email_address.dart';
-import 'package:starter_app/core/error/failures/value_failure.dart';
+import 'package:starter_app/core/error/failures/email_failure.dart';
 import 'package:starter_app/core/presentation/widgets/app_text_field.dart';
 
 /// Email text field with proper validation and autofill.
@@ -110,24 +110,28 @@ final class EmailTextField extends StatelessWidget {
   /// Whether to show validation error messages.
   final bool showError;
 
+  /// Gets the first relevant error message from email failures.
+  String? _getErrorMessage() {
+    if (!showError) return null;
+
+    final failures = email.getFailuresOrNull();
+    if (failures == null || failures.isEmpty) return null;
+
+    // Use the message property from the first failure
+    final first = failures.first;
+    if (first is EmailFailure) {
+      return first.message;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppTextField(
       label: label,
       hint: hint,
       helperText: helperText,
-      errorText: showError
-          ? email.value.fold(
-              (f) => f.first.mapOrNull(
-                invalidFormat: (f) =>
-                    'Entered value is not a valid email address',
-                tooLong: (f) =>
-                    'Cannot be longer than ${f.maxLength} characters',
-                empty: (f) => 'Email cannot be empty',
-              ),
-              (_) => null,
-            )
-          : null,
+      errorText: _getErrorMessage(),
       prefixIcon: const Icon(Icons.email_outlined),
       enabled: enabled,
       readOnly: readOnly,

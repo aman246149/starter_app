@@ -671,7 +671,7 @@ void main() {
           providers: [BlocProvider<AuthBloc>.value(value: mockAuthBloc)],
         );
 
-        expect(find.text('Name cannot be empty'), findsOneWidget);
+        expect(find.text('Name is required'), findsOneWidget);
       });
 
       testWidgets('Register: dispatches emailChanged("") on different email', (

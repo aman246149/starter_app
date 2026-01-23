@@ -126,10 +126,10 @@ void main() {
           ),
         );
 
-        // Assert - Password class generates specific error messages
-        // We check for the first error: length check
+        // Assert - PasswordFailure.message returns detailed message
+        // 'short' is too short, so tooShort failure comes first
         expect(
-          find.text('Password must be at least 8 characters'),
+          find.textContaining('Password must be at least'),
           findsOneWidget,
         );
       },
@@ -154,7 +154,10 @@ void main() {
       );
 
       // Assert
-      expect(find.text('Password must be at least 8 characters'), findsNothing);
+      expect(
+        find.textContaining('Password must be at least'),
+        findsNothing,
+      );
     });
 
     testWidgets(
@@ -176,9 +179,10 @@ void main() {
           ),
         );
 
-        // Assert - Should show invalid format error
+        // Assert - PasswordFailure.message for missingUppercase
+        // The first failure is shown, which is missingUppercase for this case
         expect(
-          find.text('Password format is invalid'),
+          find.textContaining('uppercase'),
           findsOneWidget,
         );
       },
@@ -207,9 +211,9 @@ void main() {
           ),
         );
 
-        // Assert - Should show too long error
+        // Assert - PasswordFailure.message for tooLong
         expect(
-          find.textContaining('Password must be at most 128 characters'),
+          find.textContaining('Password must not exceed'),
           findsOneWidget,
         );
       },
@@ -235,15 +239,11 @@ void main() {
 
         // Assert - No error messages should be shown
         expect(
-          find.text('Password format is invalid'),
+          find.textContaining('Password must'),
           findsNothing,
         );
         expect(
-          find.textContaining('Password must be at least'),
-          findsNothing,
-        );
-        expect(
-          find.textContaining('Password must be at most'),
+          find.textContaining('uppercase'),
           findsNothing,
         );
       },

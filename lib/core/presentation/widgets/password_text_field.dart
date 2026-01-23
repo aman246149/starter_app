@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:starter_app/core/domain/value_objects/password.dart';
-import 'package:starter_app/core/error/failures/value_failure.dart';
+import 'package:starter_app/core/error/failures/password_failure.dart';
 import 'package:starter_app/core/presentation/widgets/app_text_field.dart';
 
 /// Password text field with visibility toggle.
@@ -126,24 +126,28 @@ final class PasswordTextField extends StatelessWidget {
   /// Typically dispatches an event to toggle `passwordVisible` in BLoC state.
   final VoidCallback? onToggleVisibility;
 
+  /// Gets the first relevant error message from password failures.
+  String? _getErrorMessage() {
+    if (!showError) return null;
+
+    final failures = password.getFailuresOrNull();
+    if (failures == null || failures.isEmpty) return null;
+
+    // Use the message property from the first failure
+    final first = failures.first;
+    if (first is PasswordFailure) {
+      return first.message;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppTextField(
       label: label,
       hint: hint,
       helperText: helperText,
-      errorText: showError
-          ? password.value.fold(
-              (f) => f.first.mapOrNull(
-                invalidFormat: (_) => 'Password format is invalid',
-                tooShort: (f) =>
-                    'Password must be at least ${f.minLength} characters',
-                tooLong: (f) =>
-                    'Password must be at most ${f.maxLength} characters',
-              ),
-              (_) => null,
-            )
-          : null,
+      errorText: _getErrorMessage(),
       prefixIcon: const Icon(Icons.lock_outlined),
       enabled: enabled,
       readOnly: readOnly,

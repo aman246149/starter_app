@@ -42,9 +42,9 @@ void main() {
           ),
         );
 
-        // Assert
+        // Assert - New message from EmailFailure.message
         expect(
-          find.text('Entered value is not a valid email address'),
+          find.text('Please enter a valid email address'),
           findsOneWidget,
         );
       },
@@ -69,7 +69,7 @@ void main() {
 
       // Assert
       expect(
-        find.text('Entered value is not a valid email address'),
+        find.text('Please enter a valid email address'),
         findsNothing,
       );
     });
@@ -92,9 +92,9 @@ void main() {
           ),
         );
 
-        // Assert
+        // Assert - New message from EmailFailure.message
         expect(
-          find.textContaining('Cannot be longer than 254 characters'),
+          find.textContaining('Email must not exceed 254 characters'),
           findsOneWidget,
         );
       },
@@ -117,8 +117,8 @@ void main() {
           ),
         );
 
-        // Assert
-        expect(find.text('Email cannot be empty'), findsOneWidget);
+        // Assert - New message from EmailFailure.message
+        expect(find.text('Email is required'), findsOneWidget);
       },
     );
 
@@ -140,13 +140,13 @@ void main() {
         );
 
         // Assert - No error messages should be shown
-        expect(find.text('Email cannot be empty'), findsNothing);
+        expect(find.text('Email is required'), findsNothing);
         expect(
-          find.text('Entered value is not a valid email address'),
+          find.text('Please enter a valid email address'),
           findsNothing,
         );
         expect(
-          find.textContaining('Cannot be longer than'),
+          find.textContaining('Email must not exceed'),
           findsNothing,
         );
       },

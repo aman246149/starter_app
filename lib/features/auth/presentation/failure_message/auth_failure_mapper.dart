@@ -12,7 +12,7 @@ import 'package:starter_app/features/auth/l10n/l10n_extensions.dart';
 ///
 /// Named differently from [AuthExceptionMapper] in infrastructure layer
 /// to avoid naming conflicts.
-@injectable
+@singleton
 class AuthFailureMessageMapper extends FailureMessageMapper {
   /// Creates this mapper. Registration is automatic via super constructor.
   AuthFailureMessageMapper(super.registry);

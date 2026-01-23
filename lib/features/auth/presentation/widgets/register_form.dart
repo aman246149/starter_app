@@ -22,12 +22,7 @@ final class _RegisterForm extends StatelessWidget {
                 const AuthEvent.nameUnfocused(),
               ),
               errorText: state.validation.nameTouched
-                  ? state.name.value.fold(
-                      (f) => f.first.mapOrNull(
-                        empty: (f) => context.authL10n.nameEmpty,
-                      ),
-                      (_) => null,
-                    )
+                  ? state.name.getFailuresOrNull()?.first.message
                   : null,
             ),
             const ResponsiveVerticalGap(),
