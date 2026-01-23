@@ -9,7 +9,7 @@ import 'package:starter_app/core/presentation/failure_message/failure_message_ma
 ///
 /// Infrastructure failures are feature-independent and handled centrally.
 /// Registered with low priority so feature-specific mappers take precedence.
-@injectable
+@singleton
 class InfrastructureFailureMapper extends FailureMessageMapper {
   /// Creates this mapper with low priority (feature mappers take precedence).
   InfrastructureFailureMapper(super.registry) : super(highPriority: false);
@@ -25,6 +25,8 @@ class InfrastructureFailureMapper extends FailureMessageMapper {
       network: (_) => context.appL10n.networkError,
       cache: (_) => context.appL10n.cacheError,
       parse: (_) => context.appL10n.parseError,
+      circuitBreaker: (_) =>
+          context.appL10n.circuitBreakerError
     );
   }
 }

@@ -25,4 +25,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get parseError => 'Invalid data format received. Please contact support.';
+
+  @override
+  String get circuitBreakerError => 'Circuit breaker tripped. Please try again later.';
 }

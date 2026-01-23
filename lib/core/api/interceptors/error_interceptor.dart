@@ -31,6 +31,10 @@ final class ErrorInterceptor implements Interceptor {
 
       return response;
     } catch (error, stackTrace) {
+      // ServerException should be rethrown, not converted to NetworkException
+      if (error is ServerException) {
+        rethrow;
+      }
       // Use NetworkErrorHandler to properly categorize errors
       _networkErrorHandler.handleError(error, stackTrace);
     }
