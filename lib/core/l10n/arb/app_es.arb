@@ -1,0 +1,24 @@
+{
+    "@@locale": "es",
+    "appName":"Aplicación Inicial",
+    "unexpectedError": "Ocurrió un error inesperado",
+    "@unexpectedError": {
+        "description": "Mensaje de error mostrado cuando ocurre un error inesperado"
+    },
+    "serverError": "Ocurrió un error en el servidor",
+    "@serverError": {
+        "description": "Mensaje de error mostrado cuando ocurre un error en el servidor/API"
+    },
+    "networkError": "Sin conexión a internet",
+    "@networkError": {
+        "description": "Mensaje de error mostrado cuando no hay conectividad de red"
+    },
+    "cacheError": "Error de almacenamiento local",
+    "@cacheError": {
+        "description": "Mensaje de error mostrado cuando fallan las operaciones de caché/almacenamiento local"
+    },
+    "parseError": "Formato de datos inválido recibido",
+    "@parseError": {
+        "description": "Mensaje de error mostrado cuando falla el análisis de datos"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "@@locale": "en",
+    "appName":"Starter App",
+    "unexpectedError": "An unexpected error occurred",
+    "@unexpectedError": {
+        "description": "Error message shown when an unexpected error occurs"
+    },
+    "serverError": "Something went wrong. Please try again.",
+    "@serverError": {
+        "description": "Error message shown when a server/API error occurs"
+    },
+    "networkError": "Couldn't connect to the server. Please check your connection",
+    "@networkError": {
+        "description": "Error message shown when couldn't connect to server"
+    },
+    "cacheError": "Local storage error",
+    "@cacheError": {
+        "description": "Error message shown when local cache/storage operations fail"
+    },
+    "parseError": "Invalid data format received. Please contact support.",
+    "@parseError": {
+        "description": "Error message shown when data parsing fails"
+    }
+}
