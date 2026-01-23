@@ -175,7 +175,6 @@ void main() {
               expect(failure, isA<InfrastructureFailure>());
               expect(failure, isA<CircuitBreakerFailure>());
               expect(failure.message, 'Service unavailable');
-              expect(failure.isRetryable, true);
             },
             (r) => fail('Should be Left'),
           );

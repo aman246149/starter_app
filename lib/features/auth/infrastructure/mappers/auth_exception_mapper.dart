@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:injectable/injectable.dart';
 import 'package:starter_app/core/error/exceptions/server_exception.dart';
-import 'package:starter_app/core/error/failures/failure.dart';
 import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
+import 'package:starter_app/core/error/failures/technical_failure.dart';
 import 'package:starter_app/core/error/i_exception_mapper.dart';
 import 'package:starter_app/features/auth/domain/failure/auth_failure.dart';
 
@@ -22,7 +22,7 @@ class AuthExceptionMapper implements IExceptionMapper {
   const AuthExceptionMapper();
 
   @override
-  Failure mapToFailure(ServerException exception) {
+  TechnicalFailure mapToFailure(ServerException exception) {
     return switch (exception.statusCode) {
       HttpStatus.badRequest => AuthFailure.invalidInput(
         message: exception.message,
