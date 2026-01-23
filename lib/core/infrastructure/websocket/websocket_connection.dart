@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io' show WebSocketException;
 
 import 'package:flutter/foundation.dart';
@@ -26,6 +25,14 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 /// - Error handling and logging
 /// - Stream-based message handling
 ///
+/// ## Authentication
+///
+/// Pass authentication via the `headers` parameter. Internally, the
+/// Authorization Bearer token is extracted and sent as a query parameter
+/// (`?token=...`) because WebSocket subprotocols cannot contain special
+/// characters like `{`, `}`, `:`, etc. Your backend should extract the
+/// token from the query string.
+///
 /// Usage:
 /// ```dart
 /// final connection = WebSocketConnection(
@@ -39,6 +46,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 ///   print('Connection state: ${state.displayName}');
 /// });
 ///
+/// // Pass token in headers - internally converted to query parameter
 /// await connection.connect(headers: {'Authorization': 'Bearer $token'});
 ///
 /// connection.messages.listen((message) {
@@ -49,11 +57,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 /// ```
 /// Factory function type for creating WebSocket channels.
 /// Used for dependency injection in tests.
-typedef WebSocketChannelFactory =
-    WebSocketChannel Function(
-      Uri uri, {
-      Iterable<String>? protocols,
-    });
+typedef WebSocketChannelFactory = WebSocketChannel Function(Uri uri);
 
 class WebSocketConnection implements IWebSocketConnection {
   WebSocketConnection({
@@ -185,13 +189,24 @@ class WebSocketConnection implements IWebSocketConnection {
       _messageController ??= StreamController<String>.broadcast();
 
       // Connect to WebSocket
-      final uri = Uri.parse(_url);
-      final protocols = _lastHeaders != null
-          ? [jsonEncode(_lastHeaders)]
-          : null;
-      _channel =
-          _channelFactory?.call(uri, protocols: protocols) ??
-          WebSocketChannel.connect(uri, protocols: protocols);
+      // Note: WebSocket subprotocols cannot contain special characters like
+      // {, }, :, quotes, etc. So we pass the auth token as a query parameter
+      // instead of in the subprotocol header.
+      var uri = Uri.parse(_url);
+
+      // Extract Bearer token from headers and append as query parameter
+      final authHeader = _lastHeaders?['Authorization'];
+      if (authHeader != null && authHeader.startsWith('Bearer ')) {
+        final token = authHeader.substring(7); // Remove 'Bearer ' prefix
+        uri = uri.replace(
+          queryParameters: {
+            ...uri.queryParameters,
+            'token': token,
+          },
+        );
+      }
+
+      _channel = _channelFactory?.call(uri) ?? WebSocketChannel.connect(uri);
 
       // Wait for actual connection to be established
       // This prevents reporting "connected" before TCP handshake completes

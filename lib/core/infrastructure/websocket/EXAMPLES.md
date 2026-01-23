@@ -2,6 +2,8 @@
 
 This guide shows practical examples of implementing multiple concurrent WebSocket connections using the interface-based hexagonal architecture approach.
 
+> **Note on Authentication**: The examples pass tokens via `headers: {'Authorization': 'Bearer $token'}`. Internally, this is converted to a query parameter (`?token=...`) because WebSocket subprotocols cannot contain special characters. Your backend should extract the token from the query string.
+
 ## Example 1: Notifications Feature
 
 ```dart

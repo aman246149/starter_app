@@ -38,7 +38,7 @@ lib/core/
 - ✅ **Automatic Reconnection**: Reconnects automatically with exponential backoff + jitter
 - ✅ **Connection State Management**: Track connection state (connected, reconnecting, failed, etc.)
 - ✅ **Real-time Communication**: Persistent WebSocket connections for live updates
-- ✅ **Authenticated Connections**: Automatic Bearer token injection in headers
+- ✅ **Authenticated Connections**: Bearer token passed via query parameter (for browser compatibility)
 - ✅ **Independent Lifecycle**: Each connection has its own lifecycle management
 - ✅ **Configurable Retry Strategies**: Default, aggressive, conservative, or custom configurations
 - ✅ **Jitter Support**: Prevents thundering herd problem on server restarts
@@ -326,7 +326,10 @@ authRepository.watchAuthChanges().listen((result) {
 
 Your backend WebSocket endpoints should:
 
-1. **Accept Bearer token authentication** in connection headers
+1. **Accept Bearer token authentication** via query parameter (`?token=...`)
+   - Note: WebSocket subprotocols cannot contain special characters, so Bearer
+     tokens are passed as query parameters for browser compatibility
+   - Example: `ws://example.com/ws/auth?token=eyJhbGciOiJIUzUxMiJ9...`
 2. **Send JSON-formatted messages**
 3. **Handle connection lifecycle** (connect, disconnect, reconnect)
 4. **Follow consistent event format**:
