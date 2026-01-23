@@ -1,76 +1,72 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:starter_app/core/error/failures/email_failure.dart';
+import 'package:starter_app/core/error/failures/name_failure.dart';
+import 'package:starter_app/core/error/failures/password_failure.dart';
+import 'package:starter_app/core/error/failures/token_failure.dart';
+import 'package:starter_app/core/error/failures/unique_id_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 
 void main() {
-  group('ValueFailure', () {
-    group('Empty', () {
-      test('creates empty failure without field name', () {
-        const failure = ValueFailure<String>.empty();
+  group('ValueFailure hierarchy', () {
+    test('all domain-specific failures extend ValueFailure', () {
+      const passwordFailure = PasswordFailure.empty();
+      const emailFailure = EmailFailure.empty();
+      const nameFailure = NameFailure.empty();
+      const tokenFailure = TokenFailure.empty();
+      const uniqueIdFailure = UniqueIdFailure.empty();
 
-        expect(failure, isA<Empty<String>>());
-        failure.when(
-          empty: (fieldName) => expect(fieldName, null),
-          tooShort: (min, actual) => fail('Wrong type'),
-          tooLong: (max, actual) => fail('Wrong type'),
-          invalidFormat: (format, value) => fail('Wrong type'),
-          outOfRange: (min, max, actual) => fail('Wrong type'),
-        );
+      expect(passwordFailure, isA<ValueFailure<String>>());
+      expect(emailFailure, isA<ValueFailure<String>>());
+      expect(nameFailure, isA<ValueFailure<String>>());
+      expect(tokenFailure, isA<ValueFailure<String>>());
+      expect(uniqueIdFailure, isA<ValueFailure<String>>());
+    });
+  });
+
+  group('PasswordFailure', () {
+    group('empty', () {
+      test('creates empty password failure', () {
+        const failure = PasswordFailure.empty();
+
+        expect(failure, isA<PasswordEmpty>());
       });
 
-      test('creates empty failure with field name', () {
-        const failure = ValueFailure<String>.empty(fieldName: 'Email');
-
-        expect(failure, isA<Empty<String>>());
-        failure.when(
-          empty: (fieldName) => expect(fieldName, 'Email'),
-          tooShort: (min, actual) => fail('Wrong type'),
-          tooLong: (max, actual) => fail('Wrong type'),
-          invalidFormat: (format, value) => fail('Wrong type'),
-          outOfRange: (min, max, actual) => fail('Wrong type'),
-        );
-      });
-
-      test('equals another empty failure with same field name', () {
-        const failure1 = ValueFailure<String>.empty(fieldName: 'Email');
-        const failure2 = ValueFailure<String>.empty(fieldName: 'Email');
+      test('equals another empty failure', () {
+        const failure1 = PasswordFailure.empty();
+        const failure2 = PasswordFailure.empty();
 
         expect(failure1, failure2);
       });
-
-      test('not equals empty failure with different field name', () {
-        const failure1 = ValueFailure<String>.empty(fieldName: 'Email');
-        const failure2 = ValueFailure<String>.empty(fieldName: 'Password');
-
-        expect(failure1, isNot(failure2));
-      });
     });
 
-    group('TooShort', () {
-      test('creates too short failure', () {
-        const failure = ValueFailure<String>.tooShort(
+    group('tooShort', () {
+      test('creates too short failure with lengths', () {
+        const failure = PasswordFailure.tooShort(
           minLength: 8,
           actualLength: 5,
         );
 
-        expect(failure, isA<TooShort<String>>());
+        expect(failure, isA<PasswordTooShort>());
         failure.when(
-          empty: (field) => fail('Wrong type'),
+          empty: () => fail('Wrong type'),
           tooShort: (minLength, actualLength) {
             expect(minLength, 8);
             expect(actualLength, 5);
           },
-          tooLong: (max, actual) => fail('Wrong type'),
-          invalidFormat: (format, value) => fail('Wrong type'),
-          outOfRange: (min, max, actual) => fail('Wrong type'),
+          tooLong: (_, _) => fail('Wrong type'),
+          missingUppercase: () => fail('Wrong type'),
+          missingLowercase: () => fail('Wrong type'),
+          missingDigit: () => fail('Wrong type'),
+          missingSpecialCharacter: () => fail('Wrong type'),
         );
       });
 
-      test('equals another too short failure with same values', () {
-        const failure1 = ValueFailure<String>.tooShort(
+      test('equals another tooShort failure with same values', () {
+        const failure1 = PasswordFailure.tooShort(
           minLength: 8,
           actualLength: 5,
         );
-        const failure2 = ValueFailure<String>.tooShort(
+        const failure2 = PasswordFailure.tooShort(
           minLength: 8,
           actualLength: 5,
         );
@@ -78,12 +74,12 @@ void main() {
         expect(failure1, failure2);
       });
 
-      test('not equals too short failure with different values', () {
-        const failure1 = ValueFailure<String>.tooShort(
+      test('not equals tooShort failure with different values', () {
+        const failure1 = PasswordFailure.tooShort(
           minLength: 8,
           actualLength: 5,
         );
-        const failure2 = ValueFailure<String>.tooShort(
+        const failure2 = PasswordFailure.tooShort(
           minLength: 10,
           actualLength: 5,
         );
@@ -92,151 +88,182 @@ void main() {
       });
     });
 
-    group('TooLong', () {
-      test('creates too long failure', () {
-        const failure = ValueFailure<String>.tooLong(
-          maxLength: 100,
+    group('tooLong', () {
+      test('creates too long failure with lengths', () {
+        const failure = PasswordFailure.tooLong(
+          maxLength: 128,
           actualLength: 150,
         );
 
-        expect(failure, isA<TooLong<String>>());
+        expect(failure, isA<PasswordTooLong>());
         failure.when(
-          empty: (field) => fail('Wrong type'),
-          tooShort: (min, actual) => fail('Wrong type'),
+          empty: () => fail('Wrong type'),
+          tooShort: (_, _) => fail('Wrong type'),
           tooLong: (maxLength, actualLength) {
-            expect(maxLength, 100);
+            expect(maxLength, 128);
             expect(actualLength, 150);
           },
-          invalidFormat: (format, value) => fail('Wrong type'),
-          outOfRange: (min, max, actual) => fail('Wrong type'),
-        );
-      });
-
-      test('equals another too long failure with same values', () {
-        const failure1 = ValueFailure<String>.tooLong(
-          maxLength: 100,
-          actualLength: 150,
-        );
-        const failure2 = ValueFailure<String>.tooLong(
-          maxLength: 100,
-          actualLength: 150,
-        );
-
-        expect(failure1, failure2);
-      });
-    });
-
-    group('InvalidFormat', () {
-      test('creates invalid format failure', () {
-        const failure = ValueFailure<String>.invalidFormat(
-          expectedFormat: 'Valid email address',
-          failedValue: 'not-an-email',
-        );
-
-        expect(failure, isA<InvalidFormat<String>>());
-        failure.when(
-          empty: (field) => fail('Wrong type'),
-          tooShort: (min, actual) => fail('Wrong type'),
-          tooLong: (max, actual) => fail('Wrong type'),
-          invalidFormat: (expectedFormat, failedValue) {
-            expect(expectedFormat, 'Valid email address');
-            expect(failedValue, 'not-an-email');
-          },
-          outOfRange: (min, max, actual) => fail('Wrong type'),
-        );
-      });
-
-      test('equals another invalid format failure with same values', () {
-        const failure1 = ValueFailure<String>.invalidFormat(
-          expectedFormat: 'Valid email',
-          failedValue: 'invalid',
-        );
-        const failure2 = ValueFailure<String>.invalidFormat(
-          expectedFormat: 'Valid email',
-          failedValue: 'invalid',
-        );
-
-        expect(failure1, failure2);
-      });
-    });
-
-    group('OutOfRange', () {
-      test('creates out of range failure', () {
-        const failure = ValueFailure<int>.outOfRange(
-          min: 0,
-          max: 100,
-          actual: 150,
-        );
-
-        expect(failure, isA<OutOfRange<int>>());
-        failure.when(
-          empty: (field) => fail('Wrong type'),
-          tooShort: (min, actual) => fail('Wrong type'),
-          tooLong: (max, actual) => fail('Wrong type'),
-          invalidFormat: (format, value) => fail('Wrong type'),
-          outOfRange: (min, max, actual) {
-            expect(min, 0);
-            expect(max, 100);
-            expect(actual, 150);
-          },
-        );
-      });
-
-      test('equals another out of range failure with same values', () {
-        const failure1 = ValueFailure<int>.outOfRange(
-          min: 0,
-          max: 100,
-          actual: 150,
-        );
-        const failure2 = ValueFailure<int>.outOfRange(
-          min: 0,
-          max: 100,
-          actual: 150,
-        );
-
-        expect(failure1, failure2);
-      });
-
-      test('works with decimal values', () {
-        const failure = ValueFailure<double>.outOfRange(
-          min: 0.0,
-          max: 1.0,
-          actual: 1.5,
-        );
-
-        expect(failure, isA<OutOfRange<double>>());
-        failure.when(
-          empty: (field) => fail('Wrong type'),
-          tooShort: (min, actual) => fail('Wrong type'),
-          tooLong: (max, actual) => fail('Wrong type'),
-          invalidFormat: (format, value) => fail('Wrong type'),
-          outOfRange: (min, max, actual) {
-            expect(min, 0.0);
-            expect(max, 1.0);
-            expect(actual, 1.5);
-          },
+          missingUppercase: () => fail('Wrong type'),
+          missingLowercase: () => fail('Wrong type'),
+          missingDigit: () => fail('Wrong type'),
+          missingSpecialCharacter: () => fail('Wrong type'),
         );
       });
     });
 
-    group('type safety', () {
-      test('supports different generic types', () {
-        const stringFailure = ValueFailure<String>.empty();
-        const intFailure = ValueFailure<int>.outOfRange(
-          min: 0,
-          max: 10,
-          actual: 15,
-        );
-        const doubleFailure = ValueFailure<double>.outOfRange(
-          min: 0.0,
-          max: 1.0,
-          actual: 2.0,
-        );
+    group('character requirements', () {
+      test('creates missingUppercase failure', () {
+        const failure = PasswordFailure.missingUppercase();
 
-        expect(stringFailure, isA<ValueFailure<String>>());
-        expect(intFailure, isA<ValueFailure<int>>());
-        expect(doubleFailure, isA<ValueFailure<double>>());
+        expect(failure, isA<PasswordMissingUppercase>());
       });
+
+      test('creates missingLowercase failure', () {
+        const failure = PasswordFailure.missingLowercase();
+
+        expect(failure, isA<PasswordMissingLowercase>());
+      });
+
+      test('creates missingDigit failure', () {
+        const failure = PasswordFailure.missingDigit();
+
+        expect(failure, isA<PasswordMissingDigit>());
+      });
+
+      test('creates missingSpecialCharacter failure', () {
+        const failure = PasswordFailure.missingSpecialCharacter();
+
+        expect(failure, isA<PasswordMissingSpecialCharacter>());
+      });
+
+      test('missingUppercase has correct message', () {
+        const failure = PasswordFailure.missingUppercase();
+
+        expect(
+          failure.message,
+          'Password must contain at least one uppercase letter',
+        );
+      });
+
+      test('missingLowercase has correct message', () {
+        const failure = PasswordFailure.missingLowercase();
+
+        expect(
+          failure.message,
+          'Password must contain at least one lowercase letter',
+        );
+      });
+
+      test('missingDigit has correct message', () {
+        const failure = PasswordFailure.missingDigit();
+
+        expect(failure.message, 'Password must contain at least one digit');
+      });
+
+      test('missingSpecialCharacter has correct message', () {
+        const failure = PasswordFailure.missingSpecialCharacter();
+
+        expect(
+          failure.message,
+          'Password must contain at least one special character',
+        );
+      });
+    });
+
+    group('pattern matching', () {
+      test('when handles all cases', () {
+        const failures = <PasswordFailure>[
+          PasswordFailure.empty(),
+          PasswordFailure.tooShort(minLength: 8, actualLength: 5),
+          PasswordFailure.tooLong(maxLength: 128, actualLength: 150),
+          PasswordFailure.missingUppercase(),
+          PasswordFailure.missingLowercase(),
+          PasswordFailure.missingDigit(),
+          PasswordFailure.missingSpecialCharacter(),
+        ];
+
+        for (final failure in failures) {
+          final message = failure.when(
+            empty: () => 'empty',
+            tooShort: (min, actual) => 'tooShort:$min:$actual',
+            tooLong: (max, actual) => 'tooLong:$max:$actual',
+            missingUppercase: () => 'uppercase',
+            missingLowercase: () => 'lowercase',
+            missingDigit: () => 'digit',
+            missingSpecialCharacter: () => 'special',
+          );
+          expect(message, isNotEmpty);
+        }
+      });
+    });
+  });
+
+  group('EmailFailure', () {
+    test('creates empty failure', () {
+      const failure = EmailFailure.empty();
+
+      expect(failure, isA<EmailEmpty>());
+    });
+
+    test('creates tooLong failure with lengths', () {
+      const failure = EmailFailure.tooLong(
+        maxLength: 254,
+        actualLength: 300,
+      );
+
+      expect(failure, isA<EmailTooLong>());
+      failure.when(
+        empty: () => fail('Wrong type'),
+        tooLong: (maxLength, actualLength) {
+          expect(maxLength, 254);
+          expect(actualLength, 300);
+        },
+        invalidFormat: (_) => fail('Wrong type'),
+      );
+    });
+
+    test('creates invalidFormat failure with failed value', () {
+      const failure = EmailFailure.invalidFormat(failedValue: 'not-an-email');
+
+      expect(failure, isA<EmailInvalidFormat>());
+      failure.when(
+        empty: () => fail('Wrong type'),
+        tooLong: (_, _) => fail('Wrong type'),
+        invalidFormat: (failedValue) {
+          expect(failedValue, 'not-an-email');
+        },
+      );
+    });
+  });
+
+  group('NameFailure', () {
+    test('creates empty failure', () {
+      const failure = NameFailure.empty();
+
+      expect(failure, isA<NameEmpty>());
+    });
+
+    test('equals another empty failure', () {
+      const failure1 = NameFailure.empty();
+      const failure2 = NameFailure.empty();
+
+      expect(failure1, failure2);
+    });
+  });
+
+  group('TokenFailure', () {
+    test('creates empty failure', () {
+      const failure = TokenFailure.empty();
+
+      expect(failure, isA<TokenEmpty>());
+    });
+  });
+
+  group('UniqueIdFailure', () {
+    test('creates empty failure', () {
+      const failure = UniqueIdFailure.empty();
+
+      expect(failure, isA<UniqueIdEmpty>());
     });
   });
 }

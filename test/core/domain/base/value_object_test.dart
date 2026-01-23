@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:starter_app/core/domain/base/value_object.dart';
+import 'package:starter_app/core/error/failures/name_failure.dart';
+import 'package:starter_app/core/error/failures/password_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 
 /// Test implementation of ValueObject for testing purposes.
@@ -30,12 +32,9 @@ void main() {
       });
 
       test('throws UnexpectedValueError when invalid', () {
-        final failures = [
-          const ValueFailure<String>.empty(),
-          const ValueFailure<String>.invalidFormat(
-            expectedFormat: 'Valid format',
-            failedValue: 'invalid',
-          ),
+        final failures = <ValueFailure<String>>[
+          const NameFailure.empty(),
+          const PasswordFailure.missingUppercase(),
         ];
         final valueObject = TestValueObject.invalid(failures);
 
@@ -46,8 +45,8 @@ void main() {
       });
 
       test('throws UnexpectedValueError with correct failures', () {
-        final failures = [
-          const ValueFailure<String>.empty(),
+        final failures = <ValueFailure<String>>[
+          const NameFailure.empty(),
         ];
         final valueObject = TestValueObject.invalid(failures);
 
@@ -73,8 +72,8 @@ void main() {
       });
 
       test('returns null when invalid', () {
-        final failures = [
-          const ValueFailure<String>.empty(),
+        final failures = <ValueFailure<String>>[
+          const NameFailure.empty(),
         ];
         final valueObject = TestValueObject.invalid(failures);
 
@@ -82,12 +81,9 @@ void main() {
       });
 
       test('returns null for multiple failures', () {
-        final failures = [
-          const ValueFailure<String>.empty(),
-          const ValueFailure<String>.invalidFormat(
-            expectedFormat: 'Valid format',
-            failedValue: 'invalid',
-          ),
+        final failures = <ValueFailure<String>>[
+          const NameFailure.empty(),
+          const PasswordFailure.missingUppercase(),
         ];
         final valueObject = TestValueObject.invalid(failures);
 
@@ -104,8 +100,8 @@ void main() {
       });
 
       test('returns failures when invalid', () {
-        final failures = [
-          const ValueFailure<String>.empty(),
+        final failures = <ValueFailure<String>>[
+          const NameFailure.empty(),
         ];
         final valueObject = TestValueObject.invalid(failures);
 
@@ -115,12 +111,9 @@ void main() {
       });
 
       test('returns all failures when multiple failures exist', () {
-        final failures = [
-          const ValueFailure<String>.empty(),
-          const ValueFailure<String>.invalidFormat(
-            expectedFormat: 'Valid format',
-            failedValue: 'invalid',
-          ),
+        final failures = <ValueFailure<String>>[
+          const NameFailure.empty(),
+          const PasswordFailure.missingUppercase(),
         ];
         final valueObject = TestValueObject.invalid(failures);
 
@@ -139,8 +132,8 @@ void main() {
       });
 
       test('returns false when value is invalid', () {
-        final failures = [
-          const ValueFailure<String>.empty(),
+        final failures = <ValueFailure<String>>[
+          const NameFailure.empty(),
         ];
         final valueObject = TestValueObject.invalid(failures);
 
@@ -148,12 +141,9 @@ void main() {
       });
 
       test('returns false when multiple failures exist', () {
-        final failures = [
-          const ValueFailure<String>.empty(),
-          const ValueFailure<String>.invalidFormat(
-            expectedFormat: 'Valid format',
-            failedValue: 'invalid',
-          ),
+        final failures = <ValueFailure<String>>[
+          const NameFailure.empty(),
+          const PasswordFailure.missingUppercase(),
         ];
         final valueObject = TestValueObject.invalid(failures);
 
@@ -165,11 +155,8 @@ void main() {
   group('UnexpectedValueError', () {
     test('creates error with value failures', () {
       final failures = <ValueFailure<dynamic>>[
-        const ValueFailure<String>.empty(),
-        const ValueFailure<String>.invalidFormat(
-          expectedFormat: 'Valid format',
-          failedValue: 'invalid',
-        ),
+        const NameFailure.empty(),
+        const PasswordFailure.missingUppercase(),
       ];
       final error = UnexpectedValueError(failures);
 
@@ -178,7 +165,7 @@ void main() {
 
     test('toString includes explanation and failures', () {
       final failures = <ValueFailure<dynamic>>[
-        const ValueFailure<String>.empty(),
+        const NameFailure.empty(),
       ];
       final error = UnexpectedValueError(failures);
 
@@ -190,17 +177,15 @@ void main() {
 
     test('toString includes all failures', () {
       final failures = <ValueFailure<dynamic>>[
-        const ValueFailure<String>.empty(),
-        const ValueFailure<String>.invalidFormat(
-          expectedFormat: 'Valid format',
-          failedValue: 'invalid',
-        ),
+        const NameFailure.empty(),
+        const PasswordFailure.missingUppercase(),
       ];
       final error = UnexpectedValueError(failures);
 
       final errorString = error.toString();
+      // Freezed classes include the factory name in toString
       expect(errorString, contains('empty'));
-      expect(errorString, contains('invalidFormat'));
+      expect(errorString, contains('missingUppercase'));
     });
 
     test('handles empty failures list', () {
@@ -213,7 +198,7 @@ void main() {
 
     test('is an Error', () {
       final failures = <ValueFailure<dynamic>>[
-        const ValueFailure<String>.empty(),
+        const NameFailure.empty(),
       ];
       final error = UnexpectedValueError(failures);
 

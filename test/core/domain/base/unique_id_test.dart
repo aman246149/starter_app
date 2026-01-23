@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:starter_app/core/domain/base/unique_id.dart';
-import 'package:starter_app/core/error/failures/value_failure.dart';
+import 'package:starter_app/core/error/failures/unique_id_failure.dart';
 
 void main() {
   group('UniqueId', () {
@@ -88,7 +88,7 @@ void main() {
         result.fold(
           (failures) {
             expect(failures, isA<List<dynamic>>());
-            expect(failures.first, isA<Empty<String>>());
+            expect(failures.first, isA<UniqueIdEmpty>());
           },
           (id) => fail('Should not return valid ID'),
         );
@@ -101,7 +101,7 @@ void main() {
         result.fold(
           (failures) {
             expect(failures, isA<List<dynamic>>());
-            expect(failures.first, isA<Empty<String>>());
+            expect(failures.first, isA<UniqueIdEmpty>());
           },
           (id) => fail('Should not return valid ID'),
         );
@@ -114,7 +114,7 @@ void main() {
         result.fold(
           (failures) {
             expect(failures, isA<List<dynamic>>());
-            expect(failures.first, isA<Empty<String>>());
+            expect(failures.first, isA<UniqueIdEmpty>());
           },
           (id) => fail('Should not return valid ID'),
         );

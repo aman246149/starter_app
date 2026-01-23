@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:starter_app/core/domain/base/value_object.dart';
 import 'package:starter_app/core/domain/value_objects/password.dart';
-import 'package:starter_app/core/error/failures/value_failure.dart';
+import 'package:starter_app/core/error/failures/password_failure.dart';
 
 void main() {
   group('Password', () {
@@ -31,7 +31,7 @@ void main() {
         final failures = password.getFailuresOrNull();
         expect(failures, isNotNull);
         expect(failures!.length, 1);
-        expect(failures.first, isA<Empty<String>>());
+        expect(failures.first, isA<PasswordEmpty>());
       });
 
       test('rejects password without uppercase letter', () {
@@ -42,7 +42,7 @@ void main() {
         final failures = password.getFailuresOrNull();
         expect(failures, isNotNull);
         expect(
-          failures!.any((f) => f is InvalidFormat<String>),
+          failures!.any((f) => f is PasswordMissingUppercase),
           true,
         );
       });
@@ -55,7 +55,7 @@ void main() {
         final failures = password.getFailuresOrNull();
         expect(failures, isNotNull);
         expect(
-          failures!.any((f) => f is InvalidFormat<String>),
+          failures!.any((f) => f is PasswordMissingLowercase),
           true,
         );
       });
@@ -68,7 +68,7 @@ void main() {
         final failures = password.getFailuresOrNull();
         expect(failures, isNotNull);
         expect(
-          failures!.any((f) => f is InvalidFormat<String>),
+          failures!.any((f) => f is PasswordMissingDigit),
           true,
         );
       });
@@ -81,7 +81,7 @@ void main() {
         final failures = password.getFailuresOrNull();
         expect(failures, isNotNull);
         expect(
-          failures!.any((f) => f is InvalidFormat<String>),
+          failures!.any((f) => f is PasswordMissingSpecialCharacter),
           true,
         );
       });
@@ -94,7 +94,7 @@ void main() {
         final failures = password.getFailuresOrNull();
         expect(failures, isNotNull);
         expect(
-          failures!.any((f) => f is TooShort<String>),
+          failures!.any((f) => f is PasswordTooShort),
           true,
         );
       });
@@ -108,7 +108,7 @@ void main() {
         final failures = password.getFailuresOrNull();
         expect(failures, isNotNull);
         expect(
-          failures!.any((f) => f is TooLong<String>),
+          failures!.any((f) => f is PasswordTooLong),
           true,
         );
       });
@@ -122,9 +122,11 @@ void main() {
         expect(failures, isNotNull);
         expect(failures!.length, greaterThan(1));
 
-        // Should have multiple failures
-        expect(failures.any((f) => f is TooShort<String>), true);
-        expect(failures.any((f) => f is InvalidFormat<String>), true);
+        // Should have multiple specific failures
+        expect(failures.any((f) => f is PasswordTooShort), true);
+        expect(failures.any((f) => f is PasswordMissingUppercase), true);
+        expect(failures.any((f) => f is PasswordMissingDigit), true);
+        expect(failures.any((f) => f is PasswordMissingSpecialCharacter), true);
       });
 
       test('accepts password with exactly minimum length', () {
@@ -337,6 +339,38 @@ void main() {
         final password = Password('');
 
         expect(password.isValid, false);
+      });
+    });
+
+    group('message property', () {
+      test('empty failure has correct message', () {
+        final password = Password('');
+        final failures = password.getFailuresOrNull();
+
+        expect(failures!.first.message, 'Password is required');
+      });
+
+      test('tooShort failure has correct message', () {
+        final password = Password('T1!a');
+        final failures = password.getFailuresOrNull();
+        final tooShort = failures!.whereType<PasswordTooShort>().first;
+
+        expect(
+          tooShort.message,
+          contains('at least ${Password.minLength} characters'),
+        );
+      });
+
+      test('missingUppercase failure has correct message', () {
+        const failure = PasswordFailure.missingUppercase();
+
+        expect(failure.message, contains('uppercase'));
+      });
+
+      test('missingDigit failure has correct message', () {
+        const failure = PasswordFailure.missingDigit();
+
+        expect(failure.message, contains('digit'));
       });
     });
   });

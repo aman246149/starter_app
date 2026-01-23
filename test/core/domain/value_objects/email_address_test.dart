@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:starter_app/core/domain/base/value_object.dart';
 import 'package:starter_app/core/domain/value_objects/email_address.dart';
-import 'package:starter_app/core/error/failures/value_failure.dart';
+import 'package:starter_app/core/error/failures/email_failure.dart';
 
 void main() {
   group('EmailAddress', () {
@@ -63,7 +63,7 @@ void main() {
         final failures = email.getFailuresOrNull();
         expect(failures, isNotNull);
         expect(failures!.length, 1);
-        expect(failures.first, isA<Empty<String>>());
+        expect(failures.first, isA<EmailEmpty>());
       });
 
       test('rejects null email', () {
@@ -71,7 +71,7 @@ void main() {
 
         expect(email.isValid, false);
         final failures = email.getFailuresOrNull();
-        expect(failures!.first, isA<Empty<String>>());
+        expect(failures!.first, isA<EmailEmpty>());
       });
 
       test('rejects email exceeding max length', () {
@@ -80,7 +80,7 @@ void main() {
 
         expect(email.isValid, false);
         final failures = email.getFailuresOrNull();
-        expect(failures!.first, isA<TooLong<String>>());
+        expect(failures!.first, isA<EmailTooLong>());
       });
 
       test('rejects invalid email formats', () {
@@ -104,7 +104,7 @@ void main() {
 
           final failures = email.getFailuresOrNull();
           expect(failures, isNotNull);
-          expect(failures!.first, isA<InvalidFormat<String>>());
+          expect(failures!.first, isA<EmailInvalidFormat>());
         }
       });
     });
