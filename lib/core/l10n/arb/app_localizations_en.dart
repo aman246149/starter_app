@@ -28,4 +28,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get circuitBreakerError => 'Circuit breaker tripped. Please try again later.';
+
+  @override
+  String get passwordEmpty => 'Password is required';
+
+  @override
+  String passwordTooShort(int minLength) {
+    return 'Password must be at least $minLength characters';
+  }
+
+  @override
+  String passwordTooLong(int maxLength) {
+    return 'Password must not exceed $maxLength characters';
+  }
+
+  @override
+  String get passwordMissingUppercase => 'Password must contain at least one uppercase letter';
+
+  @override
+  String get passwordMissingLowercase => 'Password must contain at least one lowercase letter';
+
+  @override
+  String get passwordMissingDigit => 'Password must contain at least one digit';
+
+  @override
+  String get passwordMissingSpecialCharacter => 'Password must contain at least one special character';
+
+  @override
+  String get emailEmpty => 'Email is required';
+
+  @override
+  String emailTooLong(int maxLength) {
+    return 'Email must not exceed $maxLength characters';
+  }
+
+  @override
+  String get emailInvalidFormat => 'Please enter a valid email address';
+
+  @override
+  String get nameEmpty => 'Name is required';
 }

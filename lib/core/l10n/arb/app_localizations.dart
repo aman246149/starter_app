@@ -136,6 +136,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Circuit breaker tripped. Please try again later.'**
   String get circuitBreakerError;
+
+  /// Error when password field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordEmpty;
+
+  /// Error when password is too short
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least {minLength} characters'**
+  String passwordTooShort(int minLength);
+
+  /// Error when password is too long
+  ///
+  /// In en, this message translates to:
+  /// **'Password must not exceed {maxLength} characters'**
+  String passwordTooLong(int maxLength);
+
+  /// Error when password lacks uppercase letter
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one uppercase letter'**
+  String get passwordMissingUppercase;
+
+  /// Error when password lacks lowercase letter
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one lowercase letter'**
+  String get passwordMissingLowercase;
+
+  /// Error when password lacks digit
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one digit'**
+  String get passwordMissingDigit;
+
+  /// Error when password lacks special character
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one special character'**
+  String get passwordMissingSpecialCharacter;
+
+  /// Error when email field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get emailEmpty;
+
+  /// Error when email is too long
+  ///
+  /// In en, this message translates to:
+  /// **'Email must not exceed {maxLength} characters'**
+  String emailTooLong(int maxLength);
+
+  /// Error when email format is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email address'**
+  String get emailInvalidFormat;
+
+  /// Error when name field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get nameEmpty;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

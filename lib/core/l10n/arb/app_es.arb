@@ -21,5 +21,67 @@
     "@parseError": {
         "description": "Mensaje de error mostrado cuando falla el análisis de datos"
     },
-    "circuitBreakerError": "El disyuntor se ha disparado. Inténtelo de nuevo más tarde."
+    "circuitBreakerError": "El disyuntor se ha disparado. Inténtelo de nuevo más tarde.",
+    "@circuitBreakerError": {
+        "description": "Mensaje de error mostrado cuando se dispara el disyuntor"
+    },
+    "passwordEmpty": "La contraseña es requerida",
+    "@passwordEmpty": {
+        "description": "Error cuando el campo de contraseña está vacío"
+    },
+    "passwordTooShort": "La contraseña debe tener al menos {minLength} caracteres",
+    "@passwordTooShort": {
+        "description": "Error cuando la contraseña es demasiado corta",
+        "placeholders": {
+            "minLength": {
+                "type": "int"
+            }
+        }
+    },
+    "passwordTooLong": "La contraseña no debe exceder {maxLength} caracteres",
+    "@passwordTooLong": {
+        "description": "Error cuando la contraseña es demasiado larga",
+        "placeholders": {
+            "maxLength": {
+                "type": "int"
+            }
+        }
+    },
+    "passwordMissingUppercase": "La contraseña debe contener al menos una letra mayúscula",
+    "@passwordMissingUppercase": {
+        "description": "Error cuando la contraseña no tiene letra mayúscula"
+    },
+    "passwordMissingLowercase": "La contraseña debe contener al menos una letra minúscula",
+    "@passwordMissingLowercase": {
+        "description": "Error cuando la contraseña no tiene letra minúscula"
+    },
+    "passwordMissingDigit": "La contraseña debe contener al menos un dígito",
+    "@passwordMissingDigit": {
+        "description": "Error cuando la contraseña no tiene dígito"
+    },
+    "passwordMissingSpecialCharacter": "La contraseña debe contener al menos un carácter especial",
+    "@passwordMissingSpecialCharacter": {
+        "description": "Error cuando la contraseña no tiene carácter especial"
+    },
+    "emailEmpty": "El correo electrónico es requerido",
+    "@emailEmpty": {
+        "description": "Error cuando el campo de correo está vacío"
+    },
+    "emailTooLong": "El correo no debe exceder {maxLength} caracteres",
+    "@emailTooLong": {
+        "description": "Error cuando el correo es demasiado largo",
+        "placeholders": {
+            "maxLength": {
+                "type": "int"
+            }
+        }
+    },
+    "emailInvalidFormat": "Por favor ingresa un correo electrónico válido",
+    "@emailInvalidFormat": {
+        "description": "Error cuando el formato de correo es inválido"
+    },
+    "nameEmpty": "El nombre es requerido",
+    "@nameEmpty": {
+        "description": "Error cuando el campo de nombre está vacío"
+    }
 }

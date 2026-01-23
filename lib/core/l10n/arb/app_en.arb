@@ -24,5 +24,64 @@
     "circuitBreakerError": "Circuit breaker tripped. Please try again later.",
     "@circuitBreakerError": {
         "description": "Error message shown when circuit breaker is tripped"
+    },
+    "passwordEmpty": "Password is required",
+    "@passwordEmpty": {
+        "description": "Error when password field is empty"
+    },
+    "passwordTooShort": "Password must be at least {minLength} characters",
+    "@passwordTooShort": {
+        "description": "Error when password is too short",
+        "placeholders": {
+            "minLength": {
+                "type": "int"
+            }
+        }
+    },
+    "passwordTooLong": "Password must not exceed {maxLength} characters",
+    "@passwordTooLong": {
+        "description": "Error when password is too long",
+        "placeholders": {
+            "maxLength": {
+                "type": "int"
+            }
+        }
+    },
+    "passwordMissingUppercase": "Password must contain at least one uppercase letter",
+    "@passwordMissingUppercase": {
+        "description": "Error when password lacks uppercase letter"
+    },
+    "passwordMissingLowercase": "Password must contain at least one lowercase letter",
+    "@passwordMissingLowercase": {
+        "description": "Error when password lacks lowercase letter"
+    },
+    "passwordMissingDigit": "Password must contain at least one digit",
+    "@passwordMissingDigit": {
+        "description": "Error when password lacks digit"
+    },
+    "passwordMissingSpecialCharacter": "Password must contain at least one special character",
+    "@passwordMissingSpecialCharacter": {
+        "description": "Error when password lacks special character"
+    },
+    "emailEmpty": "Email is required",
+    "@emailEmpty": {
+        "description": "Error when email field is empty"
+    },
+    "emailTooLong": "Email must not exceed {maxLength} characters",
+    "@emailTooLong": {
+        "description": "Error when email is too long",
+        "placeholders": {
+            "maxLength": {
+                "type": "int"
+            }
+        }
+    },
+    "emailInvalidFormat": "Please enter a valid email address",
+    "@emailInvalidFormat": {
+        "description": "Error when email format is invalid"
+    },
+    "nameEmpty": "Name is required",
+    "@nameEmpty": {
+        "description": "Error when name field is empty"
     }
 }
