@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/application/app_error_handling_service.dart';
-import 'package:starter_app/core/error/i_error_reporter.dart';
+import 'package:starter_app/core/domain/ports/i_error_reporter.dart';
 
 import '../../helpers/mock_helpers.dart';
 

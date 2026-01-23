@@ -56,7 +56,7 @@ void main() {
                     statusCode: 500,
                   ),
                 ),
-                contains('Server error'),
+                contains('Something went wrong'),
               );
               expect(
                 mapper.map(context, const InfrastructureFailure.cache()),

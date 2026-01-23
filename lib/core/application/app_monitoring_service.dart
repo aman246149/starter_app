@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:starter_app/core/application/application_environment.dart';
+import 'package:starter_app/core/domain/ports/i_error_reporter.dart';
 import 'package:starter_app/core/domain/ports/i_platform_info.dart';
-import 'package:starter_app/core/error/i_error_reporter.dart';
 import 'package:starter_app/core/logging/i_app_logger.dart';
 
 /// Service responsible for application monitoring and diagnostics.

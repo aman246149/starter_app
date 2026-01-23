@@ -22,7 +22,7 @@ void main() {
           url: testUrl,
           logger: mockLogger,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => channel,
+          channelFactory: (uri) => channel,
         );
 
         await connection.connect();
@@ -54,7 +54,7 @@ void main() {
           url: testUrl,
           logger: mockLogger,
           reconnectionPolicy: WebSocketReconnectionConfig.noReconnection,
-          channelFactory: (uri, {protocols}) => channel,
+          channelFactory: (uri) => channel,
         );
 
         await connection.connect();

@@ -1,5 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:meta/meta.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 import 'package:uuid/uuid.dart';
 
