@@ -41,6 +41,7 @@ void main() {
                 network: (_, _) => null,
                 cache: (_, _) => null,
                 parse: (_, _) => null,
+                circuitBreaker: (_, _) => null,
               ),
               500,
             );
@@ -160,7 +161,7 @@ void main() {
       });
 
       test(
-        'maps CircuitBreakerException to InfrastructureFailure.server',
+        'maps CircuitBreakerException to InfrastructureFailure.circuitBreaker',
         () async {
           final result = await exceptionHandler.handle(
             operation: () async => throw const CircuitBreakerException(
@@ -172,17 +173,9 @@ void main() {
           result.fold(
             (failure) {
               expect(failure, isA<InfrastructureFailure>());
+              expect(failure, isA<CircuitBreakerFailure>());
               expect(failure.message, 'Service unavailable');
-              // statusCode is null since no HTTP call was made
-              expect(
-                (failure as InfrastructureFailure).when(
-                  server: (msg, code, _) => code,
-                  network: (_, _) => null,
-                  cache: (_, _) => null,
-                  parse: (_, _) => null,
-                ),
-                isNull,
-              );
+              expect(failure.isRetryable, true);
             },
             (r) => fail('Should be Left'),
           );

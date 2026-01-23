@@ -74,21 +74,17 @@ void main() {
         expect(
           () => interceptor.intercept(mockChain),
           throwsA(
-            isA<NetworkException>().having(
-              (e) => e.originalError,
-              'originalError',
-              isA<ServerException>()
-                  .having(
-                    (s) => s.message,
-                    'message',
-                    'Not Found',
-                  )
-                  .having(
-                    (s) => s.statusCode,
-                    'statusCode',
-                    404,
-                  ),
-            ),
+            isA<ServerException>()
+                .having(
+                  (s) => s.message,
+                  'message',
+                  'Not Found',
+                )
+                .having(
+                  (s) => s.statusCode,
+                  'statusCode',
+                  404,
+                ),
           ),
         );
       });
@@ -116,21 +112,17 @@ void main() {
         expect(
           () => interceptor.intercept(mockChain),
           throwsA(
-            isA<NetworkException>().having(
-              (e) => e.originalError,
-              'originalError',
-              isA<ServerException>()
-                  .having(
-                    (s) => s.message,
-                    'message',
-                    'Internal Server Error',
-                  )
-                  .having(
-                    (s) => s.statusCode,
-                    'statusCode',
-                    500,
-                  ),
-            ),
+            isA<ServerException>()
+                .having(
+                  (s) => s.message,
+                  'message',
+                  'Internal Server Error',
+                )
+                .having(
+                  (s) => s.statusCode,
+                  'statusCode',
+                  500,
+                ),
           ),
         );
       });
@@ -155,14 +147,10 @@ void main() {
         expect(
           () => interceptor.intercept(mockChain),
           throwsA(
-            isA<NetworkException>().having(
-              (e) => e.originalError,
-              'originalError',
-              isA<ServerException>().having(
-                (s) => s.message,
-                'message',
-                'Bad Request',
-              ),
+            isA<ServerException>().having(
+              (s) => s.message,
+              'message',
+              'Bad Request',
             ),
           ),
         );
@@ -184,14 +172,10 @@ void main() {
         expect(
           () => interceptor.intercept(mockChain),
           throwsA(
-            isA<NetworkException>().having(
-              (e) => e.originalError,
-              'originalError',
-              isA<ServerException>().having(
-                (s) => s.message,
-                'message',
-                'Invalid request',
-              ),
+            isA<ServerException>().having(
+              (s) => s.message,
+              'message',
+              'Invalid request',
             ),
           ),
         );
@@ -221,14 +205,10 @@ void main() {
           expect(
             () => interceptor.intercept(mockChain),
             throwsA(
-              isA<NetworkException>().having(
-                (e) => e.originalError,
-                'originalError',
-                isA<ServerException>().having(
-                  (s) => s.message,
-                  'message',
-                  'Not Found',
-                ),
+              isA<ServerException>().having(
+                (s) => s.message,
+                'message',
+                'Not Found',
               ),
             ),
           );
@@ -255,14 +235,10 @@ void main() {
           expect(
             () => interceptor.intercept(mockChain),
             throwsA(
-              isA<NetworkException>().having(
-                (e) => e.originalError,
-                'originalError',
-                isA<ServerException>().having(
-                  (s) => s.message,
-                  'message',
-                  'HTTP Error',
-                ),
+              isA<ServerException>().having(
+                (s) => s.message,
+                'message',
+                'HTTP Error',
               ),
             ),
           );

@@ -66,6 +66,13 @@ void main() {
                 mapper.map(context, const InfrastructureFailure.parse()),
                 'Invalid data format received. Please contact support.',
               );
+              expect(
+                mapper.map(
+                  context,
+                  const InfrastructureFailure.circuitBreaker(),
+                ),
+                contains('Circuit breaker tripped'),
+              );
               return const SizedBox();
             },
           ),
