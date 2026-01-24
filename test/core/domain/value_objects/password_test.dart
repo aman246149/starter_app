@@ -342,35 +342,35 @@ void main() {
       });
     });
 
-    group('message property', () {
-      test('empty failure has correct message', () {
+    // Note: 'message property' tests removed since PasswordFailure no longer
+    // has message getter. For localized messages, use FailureMessageService.
+    group('type-based validation', () {
+      test('empty password creates PasswordEmpty failure', () {
         final password = Password('');
         final failures = password.getFailuresOrNull();
 
-        expect(failures!.first.message, 'Password is required');
+        expect(failures!.first, isA<PasswordEmpty>());
       });
 
-      test('tooShort failure has correct message', () {
+      test('short password creates PasswordTooShort failure', () {
         final password = Password('T1!a');
         final failures = password.getFailuresOrNull();
         final tooShort = failures!.whereType<PasswordTooShort>().first;
 
-        expect(
-          tooShort.message,
-          contains('at least ${Password.minLength} characters'),
-        );
+        expect(tooShort.minLength, Password.minLength);
+        expect(tooShort.actualLength, 4);
       });
 
-      test('missingUppercase failure has correct message', () {
+      test('missingUppercase failure is correct type', () {
         const failure = PasswordFailure.missingUppercase();
 
-        expect(failure.message, contains('uppercase'));
+        expect(failure, isA<PasswordMissingUppercase>());
       });
 
-      test('missingDigit failure has correct message', () {
+      test('missingDigit failure is correct type', () {
         const failure = PasswordFailure.missingDigit();
 
-        expect(failure.message, contains('digit'));
+        expect(failure, isA<PasswordMissingDigit>());
       });
     });
   });

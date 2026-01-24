@@ -583,7 +583,10 @@ void main() {
           result.fold(
             (failure) {
               expect(failure, isA<InfrastructureFailure>());
-              expect(failure.message, 'Server Error');
+              expect(
+                (failure as InfrastructureFailure).message,
+                'Server Error',
+              );
               // Check specific failure type if possible, or just message/mapping
             },
             (user) => fail('Should return Left'),
@@ -611,7 +614,10 @@ void main() {
           result.fold(
             (failure) {
               expect(failure, isA<InfrastructureFailure>());
-              expect(failure.message, 'Network Error');
+              expect(
+                (failure as InfrastructureFailure).message,
+                'Network Error',
+              );
             },
             (user) => fail('Should return Left'),
           );
@@ -637,7 +643,7 @@ void main() {
           result.fold(
             (failure) {
               expect(failure, isA<InfrastructureFailure>());
-              expect(failure.message, 'Cache Error');
+              expect((failure as InfrastructureFailure).message, 'Cache Error');
             },
             (user) => fail('Should return Left'),
           );
@@ -663,7 +669,10 @@ void main() {
           result.fold(
             (failure) {
               expect(failure, isA<InfrastructureFailure>());
-              expect(failure.message, 'Format Error');
+              expect(
+                (failure as InfrastructureFailure).message,
+                'Format Error',
+              );
             },
             (user) => fail('Should return Left'),
           );
@@ -687,7 +696,10 @@ void main() {
           result.fold(
             (failure) {
               expect(failure, isA<InfrastructureFailure>());
-              expect(failure.message, contains('Connection lost'));
+              expect(
+                (failure as InfrastructureFailure).message,
+                contains('Connection lost'),
+              );
             },
             (user) => fail('Should return Left'),
           );
@@ -814,7 +826,7 @@ void main() {
         result.fold(
           (failure) {
             expect(failure, isA<AuthFailure>());
-            expect(failure.message, contains('expired'));
+            expect((failure as AuthFailure).message, contains('expired'));
           },
           (r) => fail('Should return Left'),
         );

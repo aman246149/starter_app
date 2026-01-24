@@ -93,7 +93,10 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, tFailure);
-          expect(failure.message, 'Email already registered');
+          expect(
+            (failure as AuthFailure).message,
+            'Email already registered',
+          );
         },
         (_) => fail('Should return Left'),
       );

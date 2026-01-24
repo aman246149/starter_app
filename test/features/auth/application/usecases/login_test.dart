@@ -81,7 +81,7 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, tFailure);
-          expect(failure.message, 'Invalid credentials');
+          expect((failure as AuthFailure).message, 'Invalid credentials');
         },
         (_) => fail('Should return Left'),
       );
@@ -152,7 +152,7 @@ void main() {
         // Then - login fails with appropriate error
         expect(result.isLeft(), true);
         result.fold(
-          (f) => expect(f.message, contains('Invalid')),
+          (f) => expect((f as AuthFailure).message, contains('Invalid')),
           (_) => fail('Should fail'),
         );
       });

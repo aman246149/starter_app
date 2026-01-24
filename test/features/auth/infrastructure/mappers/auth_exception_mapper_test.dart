@@ -186,7 +186,7 @@ void main() {
 
         final result = mapper.mapToFailure(exception);
 
-        expect(result.message, customMessage);
+        expect((result as AuthFailure).message, customMessage);
       });
 
       test('preserves status code in infrastructure failures', () {

@@ -14,7 +14,7 @@ class TestTechnicalFailure extends TechnicalFailure {
   final bool testIsRetryable;
   final StackTrace? testStackTrace;
 
-  @override
+  /// Message for testing (not from base class).
   String get message => testMessage;
 
   @override

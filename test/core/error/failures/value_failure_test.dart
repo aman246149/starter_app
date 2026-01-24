@@ -136,38 +136,6 @@ void main() {
         expect(failure, isA<PasswordMissingSpecialCharacter>());
       });
 
-      test('missingUppercase has correct message', () {
-        const failure = PasswordFailure.missingUppercase();
-
-        expect(
-          failure.message,
-          'Password must contain at least one uppercase letter',
-        );
-      });
-
-      test('missingLowercase has correct message', () {
-        const failure = PasswordFailure.missingLowercase();
-
-        expect(
-          failure.message,
-          'Password must contain at least one lowercase letter',
-        );
-      });
-
-      test('missingDigit has correct message', () {
-        const failure = PasswordFailure.missingDigit();
-
-        expect(failure.message, 'Password must contain at least one digit');
-      });
-
-      test('missingSpecialCharacter has correct message', () {
-        const failure = PasswordFailure.missingSpecialCharacter();
-
-        expect(
-          failure.message,
-          'Password must contain at least one special character',
-        );
-      });
     });
 
     group('pattern matching', () {

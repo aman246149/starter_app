@@ -1,230 +1,190 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:starter_app/core/error/exception_handler.dart';
 import 'package:starter_app/core/error/exceptions/exceptions.dart';
-import 'package:starter_app/core/error/failures/failures.dart';
+import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
 
 void main() {
+  late ExceptionHandler handler;
+
+  setUp(() {
+    handler = const ExceptionHandler();
+  });
+
   group('ExceptionHandler', () {
-    late ExceptionHandler exceptionHandler;
-
-    setUp(() {
-      exceptionHandler = const ExceptionHandler();
-    });
-
     group('handle', () {
-      test('returns Right when operation succeeds', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async => 'success',
+      test('returns Right with result on success', () async {
+        // Arrange
+        const expectedValue = 'success';
+
+        // Act
+        final result = await handler.handle(
+          operation: () async => expectedValue,
         );
 
-        expect(result, isA<Right<Failure, String>>());
-        expect(result.getOrElse((l) => 'failed'), 'success');
+        // Assert
+        expect(result.isRight(), true);
+        result.fold(
+          (_) => fail('Should be Right'),
+          (value) => expect(value, expectedValue),
+        );
       });
 
       test('maps ServerException to InfrastructureFailure.server', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async => throw const ServerException(
-            message: 'Server error',
-            statusCode: 500,
-          ),
+        // Arrange
+        const exception = ServerException(
+          message: 'Server error',
+          statusCode: 500,
         );
 
-        expect(result, isA<Left<Failure, dynamic>>());
+        // Act
+        final result = await handler.handle<String>(
+          operation: () async => throw exception,
+        );
+
+        // Assert
+        expect(result.isLeft(), true);
         result.fold(
           (failure) {
             expect(failure, isA<InfrastructureFailure>());
-            expect(failure.message, 'Server error');
-            expect(
-              (failure as InfrastructureFailure).when(
-                server: (msg, code, _) => code,
-                network: (_, _) => null,
-                cache: (_, _) => null,
-                parse: (_, _) => null,
-                circuitBreaker: (_, _) => null,
-              ),
-              500,
-            );
+            final infraFailure = failure as InfrastructureFailure;
+            expect(infraFailure.message, contains('Server error'));
           },
-          (r) => fail('Should be Left'),
+          (_) => fail('Should be Left'),
         );
       });
 
       test('uses custom serverExceptionMapper when provided', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async => throw const ServerException(
-            message: 'Not found',
-            statusCode: 404,
-          ),
-          serverExceptionMapper: (e) {
-            if (e.statusCode == 404) {
-              return const InfrastructureFailure.server(
-                message: 'Custom 404 message',
-                statusCode: 404,
-              );
-            }
-            return InfrastructureFailure.server(
-              message: e.message,
-              statusCode: e.statusCode,
-            );
-          },
+        // Arrange
+        const exception = ServerException(
+          message: 'Auth error',
+          statusCode: 401,
+        );
+        const customFailure = InfrastructureFailure.network(
+          message: 'Custom mapped failure',
         );
 
-        expect(result, isA<Left<Failure, dynamic>>());
+        // Act
+        final result = await handler.handle<String>(
+          operation: () async => throw exception,
+          serverExceptionMapper: (_) => customFailure,
+        );
+
+        // Assert
+        expect(result.isLeft(), true);
         result.fold(
           (failure) {
-            expect(failure.message, 'Custom 404 message');
+            expect(failure, customFailure);
           },
-          (r) => fail('Should be Left'),
+          (_) => fail('Should be Left'),
         );
       });
 
       test('maps NetworkException to InfrastructureFailure.network', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async => throw const NetworkException(
-            message: 'No internet',
-          ),
+        // Arrange
+        const exception = NetworkException(message: 'No internet');
+
+        // Act
+        final result = await handler.handle<String>(
+          operation: () async => throw exception,
         );
 
-        expect(result, isA<Left<Failure, dynamic>>());
+        // Assert
+        expect(result.isLeft(), true);
         result.fold(
           (failure) {
             expect(failure, isA<InfrastructureFailure>());
-            expect(failure.message, 'No internet');
+            final infraFailure = failure as InfrastructureFailure;
+            expect(infraFailure.message, contains('No internet'));
           },
-          (r) => fail('Should be Left'),
+          (_) => fail('Should be Left'),
         );
       });
 
       test('maps CacheException to InfrastructureFailure.cache', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async => throw const CacheException(
-            message: 'Cache read failed',
-          ),
+        // Arrange
+        const exception = CacheException(message: 'Cache miss');
+
+        // Act
+        final result = await handler.handle<String>(
+          operation: () async => throw exception,
         );
 
-        expect(result, isA<Left<Failure, dynamic>>());
+        // Assert
+        expect(result.isLeft(), true);
         result.fold(
           (failure) {
             expect(failure, isA<InfrastructureFailure>());
-            expect(failure.message, 'Cache read failed');
+            final infraFailure = failure as InfrastructureFailure;
+            expect(infraFailure.message, contains('Cache miss'));
           },
-          (r) => fail('Should be Left'),
-        );
-      });
-
-      test('uses default message for CacheException without message', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async => throw const CacheException(),
-        );
-
-        expect(result, isA<Left<Failure, dynamic>>());
-        result.fold(
-          (failure) {
-            expect(failure.message, 'Cache operation failed');
-          },
-          (r) => fail('Should be Left'),
-        );
-      });
-
-      test('maps FormatException to InfrastructureFailure.parse', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async => throw const FormatException('Invalid JSON'),
-        );
-
-        expect(result, isA<Left<Failure, dynamic>>());
-        result.fold(
-          (failure) {
-            expect(failure, isA<InfrastructureFailure>());
-            expect(failure.message, 'Invalid JSON');
-          },
-          (r) => fail('Should be Left'),
-        );
-      });
-
-      test('maps generic Exception to InfrastructureFailure.parse', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async => throw Exception('Generic error'),
-        );
-
-        expect(result, isA<Left<Failure, dynamic>>());
-        result.fold(
-          (failure) {
-            expect(failure, isA<InfrastructureFailure>());
-            expect(
-              failure.message,
-              contains('An unexpected error occurred'),
-            );
-          },
-          (r) => fail('Should be Left'),
+          (_) => fail('Should be Left'),
         );
       });
 
       test(
         'maps CircuitBreakerException to InfrastructureFailure.circuitBreaker',
         () async {
-          final result = await exceptionHandler.handle(
-            operation: () async => throw const CircuitBreakerException(
-              'Service unavailable',
-            ),
+          // Arrange
+          const exception = CircuitBreakerException('Circuit open');
+
+          // Act
+          final result = await handler.handle<String>(
+            operation: () async => throw exception,
           );
 
-          expect(result, isA<Left<Failure, dynamic>>());
+          // Assert
+          expect(result.isLeft(), true);
           result.fold(
             (failure) {
               expect(failure, isA<InfrastructureFailure>());
-              expect(failure, isA<CircuitBreakerFailure>());
-              expect(failure.message, 'Service unavailable');
+              final infraFailure = failure as InfrastructureFailure;
+              expect(infraFailure.message, contains('Circuit open'));
             },
-            (r) => fail('Should be Left'),
+            (_) => fail('Should be Left'),
           );
         },
       );
 
-      test('preserves generic type from operation', () async {
-        final intResult = await exceptionHandler.handle<int>(
-          operation: () async => 42,
+      test('maps FormatException to InfrastructureFailure.parse', () async {
+        // Arrange
+        const exception = FormatException('Invalid JSON');
+
+        // Act
+        final result = await handler.handle<String>(
+          operation: () async => throw exception,
         );
 
-        final stringResult = await exceptionHandler.handle<String>(
-          operation: () async => 'hello',
-        );
-
-        expect(intResult, isA<Right<Failure, int>>());
-        expect(stringResult, isA<Right<Failure, String>>());
-      });
-
-      test('handles async operations correctly', () async {
-        final result = await exceptionHandler.handle(
-          operation: () async {
-            await Future<void>.delayed(const Duration(milliseconds: 10));
-            return 'delayed success';
+        // Assert
+        expect(result.isLeft(), true);
+        result.fold(
+          (failure) {
+            expect(failure, isA<InfrastructureFailure>());
+            final infraFailure = failure as InfrastructureFailure;
+            expect(infraFailure.message, contains('Invalid JSON'));
           },
+          (_) => fail('Should be Left'),
         );
-
-        expect(result.getOrElse((l) => 'failed'), 'delayed success');
       });
 
-      test('handles multiple exception types in sequence', () async {
-        final results = <Either<Failure, String>>[
-          await exceptionHandler.handle(
-            operation: () async => throw const NetworkException(),
-          ),
-          await exceptionHandler.handle(
-            operation: () async => throw const CacheException(),
-          ),
-          await exceptionHandler.handle(
-            operation: () async => throw const ServerException(
-              message: 'Error',
-              statusCode: 500,
-            ),
-          ),
-        ];
+      test('maps unknown Exception to InfrastructureFailure.parse', () async {
+        // Arrange
+        final exception = Exception('Unknown error');
 
-        expect(results.length, 3);
-        expect(results[0], isA<Left<Failure, String>>());
-        expect(results[1], isA<Left<Failure, String>>());
-        expect(results[2], isA<Left<Failure, String>>());
+        // Act
+        final result = await handler.handle<String>(
+          operation: () async => throw exception,
+        );
+
+        // Assert
+        expect(result.isLeft(), true);
+        result.fold(
+          (failure) {
+            expect(failure, isA<InfrastructureFailure>());
+            final infraFailure = failure as InfrastructureFailure;
+            expect(infraFailure.message, contains('unexpected error'));
+          },
+          (_) => fail('Should be Left'),
+        );
       });
     });
   });

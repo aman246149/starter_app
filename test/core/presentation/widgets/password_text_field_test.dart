@@ -1,22 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/domain/value_objects/password.dart';
+import 'package:starter_app/core/error/failures/failure.dart';
+import 'package:starter_app/core/error/failures/password_failure.dart';
+import 'package:starter_app/core/presentation/services/failure_message_service.dart';
 import 'package:starter_app/core/presentation/widgets/app_text_field.dart';
 import 'package:starter_app/core/presentation/widgets/password_text_field.dart';
 
+class MockFailureMessageService extends Mock implements FailureMessageService {}
+
+class FakeFailure extends Fake implements Failure {}
+
+class FakeBuildContext extends Fake implements BuildContext {}
+
 void main() {
+  late MockFailureMessageService mockFailureMessageService;
+
+  setUpAll(() {
+    registerFallbackValue(FakeFailure());
+    registerFallbackValue(FakeBuildContext());
+  });
+
+  setUp(() {
+    mockFailureMessageService = MockFailureMessageService();
+    when(
+      () => mockFailureMessageService.getLocalizedMessage(any(), any()),
+    ).thenAnswer((invocation) {
+      final failure = invocation.positionalArguments[1];
+      if (failure is PasswordEmpty) {
+        return 'Password is required';
+      } else if (failure is PasswordTooShort) {
+        return 'Password must be at least 8 characters';
+      } else if (failure is PasswordTooLong) {
+        return 'Password must not exceed 128 characters';
+      } else if (failure is PasswordMissingUppercase) {
+        return 'Password must contain at least one uppercase letter';
+      } else if (failure is PasswordMissingLowercase) {
+        return 'Password must contain at least one lowercase letter';
+      } else if (failure is PasswordMissingDigit) {
+        return 'Password must contain at least one digit';
+      } else if (failure is PasswordMissingSpecialCharacter) {
+        return 'Password must contain at least one special character';
+      }
+      return 'Unknown error';
+    });
+  });
+
+  Widget wrapWithProvider(Widget child) {
+    return MaterialApp(
+      home: RepositoryProvider<FailureMessageService>.value(
+        value: mockFailureMessageService,
+        child: Scaffold(body: child),
+      ),
+    );
+  }
+
   group('PasswordTextField', () {
     testWidgets('renders AppTextField with password configuration', (
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: PasswordTextField(
-              password: Password('ValidPassword1!'),
-              showError: false,
-              obscureText: true,
-            ),
+        wrapWithProvider(
+          PasswordTextField(
+            password: Password('ValidPassword1!'),
+            showError: false,
+            obscureText: true,
           ),
         ),
       );
@@ -31,13 +81,11 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: PasswordTextField(
-              password: Password('ValidPassword1!'),
-              showError: false,
-              obscureText: false,
-            ),
+        wrapWithProvider(
+          PasswordTextField(
+            password: Password('ValidPassword1!'),
+            showError: false,
+            obscureText: false,
           ),
         ),
       );
@@ -53,14 +101,12 @@ void main() {
       var toggleCalled = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: PasswordTextField(
-              password: Password('ValidPassword1!'),
-              showError: false,
-              obscureText: true,
-              onToggleVisibility: () => toggleCalled = true,
-            ),
+        wrapWithProvider(
+          PasswordTextField(
+            password: Password('ValidPassword1!'),
+            showError: false,
+            obscureText: true,
+            onToggleVisibility: () => toggleCalled = true,
           ),
         ),
       );
@@ -77,13 +123,11 @@ void main() {
     ) async {
       // Initially obscured
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: PasswordTextField(
-              password: Password('ValidPassword1!'),
-              showError: false,
-              obscureText: true,
-            ),
+        wrapWithProvider(
+          PasswordTextField(
+            password: Password('ValidPassword1!'),
+            showError: false,
+            obscureText: true,
           ),
         ),
       );
@@ -93,13 +137,11 @@ void main() {
 
       // Now visible
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: PasswordTextField(
-              password: Password('ValidPassword1!'),
-              showError: false,
-              obscureText: false,
-            ),
+        wrapWithProvider(
+          PasswordTextField(
+            password: Password('ValidPassword1!'),
+            showError: false,
+            obscureText: false,
           ),
         ),
       );
@@ -115,13 +157,11 @@ void main() {
         final invalidPassword = Password('short');
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: PasswordTextField(
-                password: invalidPassword,
-                showError: true,
-                obscureText: true,
-              ),
+          wrapWithProvider(
+            PasswordTextField(
+              password: invalidPassword,
+              showError: true,
+              obscureText: true,
             ),
           ),
         );
@@ -142,13 +182,11 @@ void main() {
       final invalidPassword = Password('short');
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: PasswordTextField(
-              password: invalidPassword,
-              showError: false,
-              obscureText: true,
-            ),
+        wrapWithProvider(
+          PasswordTextField(
+            password: invalidPassword,
+            showError: false,
+            obscureText: true,
           ),
         ),
       );
@@ -168,13 +206,11 @@ void main() {
         final invalidPassword = Password('alllowercase');
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: PasswordTextField(
-                password: invalidPassword,
-                showError: true,
-                obscureText: true,
-              ),
+          wrapWithProvider(
+            PasswordTextField(
+              password: invalidPassword,
+              showError: true,
+              obscureText: true,
             ),
           ),
         );
@@ -200,13 +236,11 @@ void main() {
         final invalidPassword = Password(veryLongPassword);
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: PasswordTextField(
-                password: invalidPassword,
-                showError: true,
-                obscureText: true,
-              ),
+          wrapWithProvider(
+            PasswordTextField(
+              password: invalidPassword,
+              showError: true,
+              obscureText: true,
             ),
           ),
         );
@@ -226,13 +260,11 @@ void main() {
         final validPassword = Password('ValidPassword1!');
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: PasswordTextField(
-                password: validPassword,
-                showError: true,
-                obscureText: true,
-              ),
+          wrapWithProvider(
+            PasswordTextField(
+              password: validPassword,
+              showError: true,
+              obscureText: true,
             ),
           ),
         );
@@ -255,15 +287,13 @@ void main() {
       var toggleCalled = false;
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: PasswordTextField(
-              password: Password('ValidPassword1!'),
-              showError: false,
-              obscureText: true,
-              enabled: false,
-              onToggleVisibility: () => toggleCalled = true,
-            ),
+        wrapWithProvider(
+          PasswordTextField(
+            password: Password('ValidPassword1!'),
+            showError: false,
+            obscureText: true,
+            enabled: false,
+            onToggleVisibility: () => toggleCalled = true,
           ),
         ),
       );
