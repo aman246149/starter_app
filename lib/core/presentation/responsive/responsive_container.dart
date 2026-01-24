@@ -100,7 +100,7 @@ final class ResponsiveContainer extends StatelessWidget {
 ///   child: Text('Content'),
 /// )
 /// ```
-class ResponsivePadding extends StatelessWidget {
+final class ResponsivePadding extends StatelessWidget {
   /// Creates a [ResponsivePadding] widget.
   const ResponsivePadding({
     required this.child,
@@ -164,14 +164,13 @@ class ResponsivePadding extends StatelessWidget {
 ///   ],
 /// )
 /// ```
-class ResponsiveGrid extends StatelessWidget {
+final class ResponsiveGrid extends StatelessWidget {
   /// Creates a [ResponsiveGrid].
   const ResponsiveGrid({
     required this.children,
     this.crossAxisSpacing = 16,
     this.mainAxisSpacing = 16,
     this.childAspectRatio = 1.0,
-    this.padding,
     super.key,
   });
 
@@ -187,9 +186,6 @@ class ResponsiveGrid extends StatelessWidget {
   /// The aspect ratio of each grid item.
   final double childAspectRatio;
 
-  /// Optional padding around the grid.
-  final EdgeInsets? padding;
-
   @override
   Widget build(BuildContext context) {
     return AdaptiveLayoutBuilder(
@@ -202,17 +198,14 @@ class ResponsiveGrid extends StatelessWidget {
           ScreenSize.extraLarge => 6,
         };
 
-        return GridView.count(
-          crossAxisCount: columns,
-          crossAxisSpacing: crossAxisSpacing,
-          mainAxisSpacing: mainAxisSpacing,
-          childAspectRatio: childAspectRatio,
-          padding:
-              padding ??
-              EdgeInsets.all(
-                screenSize.isMobile ? 16.0 : 24.0,
-              ),
-          children: children,
+        return ResponsivePadding(
+          child: GridView.count(
+            crossAxisCount: columns,
+            crossAxisSpacing: crossAxisSpacing,
+            mainAxisSpacing: mainAxisSpacing,
+            childAspectRatio: childAspectRatio,
+            children: children,
+          ),
         );
       },
     );
