@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:meta/meta.dart';
 
 import 'package:starter_app/core/domain/base/value_object.dart';
+import 'package:starter_app/core/error/failures/token_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 
 /// Authentication token (JWT) value object with validation.
@@ -13,6 +14,10 @@ import 'package:starter_app/core/error/failures/value_failure.dart';
 /// - Not empty
 /// - Valid JWT structure (three base64url parts separated by dots)
 /// - Header.Payload.Signature format
+///
+/// Returns [TokenFailure] types for clear error messages:
+/// - [TokenEmpty] - Token is empty
+/// - [TokenInvalidFormat] - Token doesn't match JWT format
 ///
 /// Example:
 /// ```dart
@@ -58,14 +63,13 @@ class AuthToken extends ValueObject<String> {
     String? input,
   ) {
     if (input == null || input.isEmpty) {
-      return left([const ValueFailure.empty(fieldName: 'Auth Token')]);
+      return left([const TokenFailure.empty()]);
     }
 
     if (!_jwtRegex.hasMatch(input)) {
       return left([
-        const ValueFailure.invalidFormat(
+        const TokenFailure.invalidFormat(
           expectedFormat: 'Valid JWT token (header.payload.signature)',
-          failedValue: 'Invalid JWT format',
         ),
       ]);
     }

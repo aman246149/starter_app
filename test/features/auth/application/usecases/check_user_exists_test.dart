@@ -88,7 +88,7 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, tFailure);
-          expect(failure.message, 'Service unavailable');
+          expect((failure as AuthFailure).message, 'Service unavailable');
         },
         (_) => fail('Should return Left'),
       );
@@ -192,7 +192,10 @@ void main() {
         // Then - error is returned
         expect(result.isLeft(), true);
         result.fold(
-          (f) => expect(f.message, contains('unavailable')),
+          (f) => expect(
+            (f as AuthFailure).message,
+            contains('unavailable'),
+          ),
           (_) => fail('Should fail'),
         );
       });

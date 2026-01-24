@@ -1,5 +1,5 @@
 import 'package:starter_app/core/error/exceptions/server_exception.dart';
-import 'package:starter_app/core/error/failures/failure.dart';
+import 'package:starter_app/core/error/failures/failures.dart';
 import 'package:starter_app/core/infrastructure/base_repository.dart';
 
 /// Interface for mapping [ServerException] to domain-specific [Failure]s.
@@ -61,7 +61,7 @@ import 'package:starter_app/core/infrastructure/base_repository.dart';
 /// }
 /// ```
 abstract interface class IExceptionMapper {
-  /// Maps a [ServerException] to an appropriate [Failure].
+  /// Maps a [ServerException] to an appropriate [TechnicalFailure].
   ///
   /// This method is called by [BaseRepository] when a [ServerException]
   /// is caught during repository operations.
@@ -69,5 +69,5 @@ abstract interface class IExceptionMapper {
   /// Implementations should map HTTP status codes to domain-specific
   /// failures (e.g., 401 → AuthFailure.unauthorized) or fall back to
   /// infrastructure failures for generic errors.
-  Failure mapToFailure(ServerException exception);
+  TechnicalFailure mapToFailure(ServerException exception);
 }

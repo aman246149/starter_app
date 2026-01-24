@@ -15,6 +15,5 @@ library;
 import 'package:starter_app/core/domain/base/value_object.dart';
 
 export 'email_address.dart';
-export 'image_url.dart';
 export 'name.dart';
 export 'password.dart';

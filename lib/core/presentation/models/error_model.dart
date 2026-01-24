@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:starter_app/core/error/failures/failure.dart';
+import 'package:starter_app/core/error/failures/technical_failure.dart';
+import 'package:starter_app/core/error/failures/value_failure.dart';
 import 'package:starter_app/core/presentation/services/failure_message_service.dart';
 
 part 'error_model.freezed.dart';
@@ -42,10 +44,17 @@ abstract class ErrorModel with _$ErrorModel {
   }) = _ErrorModel;
 
   /// Factory to create from a Failure (used by BLoC).
+  ///
+  /// Only [TechnicalFailure] types (infrastructure, auth) are retryable.
+  /// [ValueFailure] types (validation errors) are never retryable since
+  /// they require user correction.
   factory ErrorModel.fromFailure(Failure failure) {
+    // Only technical failures can be retryable
+    final isRetryable = failure is TechnicalFailure && failure.isRetryable;
+
     return ErrorModel(
       failure: failure,
-      isRetryable: failure.isRetryable,
+      isRetryable: isRetryable,
     );
   }
 }

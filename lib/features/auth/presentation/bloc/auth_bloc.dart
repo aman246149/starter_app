@@ -73,9 +73,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       _watchAuthChanges(),
       onData: (result) => result.fold(
         (failure) {
-          _logger.error(
-            failure.message,
-          );
+          _logger.error(failure.toString());
           add(const AuthEvent.authUserChanged(null));
         },
         (user) {
@@ -104,7 +102,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await _getCurrentUser.call();
     result.fold(
       (failure) {
-        _logger.warning('Failed to get current user: ${failure.message}');
+        _logger.warning('Failed to get current user: $failure');
         emit(AuthState.empty());
       },
       (user) {
@@ -377,7 +375,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await _logout();
 
     result.fold(
-      (failure) => _logger.warning(failure.message),
+      (failure) => _logger.warning('$failure'),
       (_) => _logger.debug('Logout successful'),
     );
 

@@ -1,21 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/domain/value_objects/email_address.dart';
+import 'package:starter_app/core/error/failures/email_failure.dart';
+import 'package:starter_app/core/error/failures/failure.dart';
+import 'package:starter_app/core/presentation/services/failure_message_service.dart';
 import 'package:starter_app/core/presentation/widgets/app_text_field.dart';
 import 'package:starter_app/core/presentation/widgets/email_text_field.dart';
 
+class MockFailureMessageService extends Mock implements FailureMessageService {}
+
+class FakeFailure extends Fake implements Failure {}
+
+class FakeBuildContext extends Fake implements BuildContext {}
+
 void main() {
+  late MockFailureMessageService mockFailureMessageService;
+
+  setUpAll(() {
+    registerFallbackValue(FakeFailure());
+    registerFallbackValue(FakeBuildContext());
+  });
+
+  setUp(() {
+    mockFailureMessageService = MockFailureMessageService();
+    when(
+      () => mockFailureMessageService.getLocalizedMessage(any(), any()),
+    ).thenAnswer((invocation) {
+      final failure = invocation.positionalArguments[1];
+      if (failure is EmailEmpty) {
+        return 'Email is required';
+      } else if (failure is EmailTooLong) {
+        return 'Email must not exceed 254 characters';
+      } else if (failure is EmailInvalidFormat) {
+        return 'Please enter a valid email address';
+      }
+      return 'Unknown error';
+    });
+  });
+
+  Widget wrapWithProvider(Widget child) {
+    return MaterialApp(
+      home: RepositoryProvider<FailureMessageService>.value(
+        value: mockFailureMessageService,
+        child: Scaffold(body: child),
+      ),
+    );
+  }
+
   group('EmailTextField', () {
     testWidgets('renders AppTextField with email configuration', (
       tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: EmailTextField(
-              email: EmailAddress('test@example.com'),
-              showError: false,
-            ),
+        wrapWithProvider(
+          EmailTextField(
+            email: EmailAddress('test@example.com'),
+            showError: false,
           ),
         ),
       );
@@ -32,19 +74,17 @@ void main() {
         final invalidEmail = EmailAddress('invalid');
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: EmailTextField(
-                email: invalidEmail,
-                showError: true,
-              ),
+          wrapWithProvider(
+            EmailTextField(
+              email: invalidEmail,
+              showError: true,
             ),
           ),
         );
 
-        // Assert
+        // Assert - New message from EmailFailure.message
         expect(
-          find.text('Entered value is not a valid email address'),
+          find.text('Please enter a valid email address'),
           findsOneWidget,
         );
       },
@@ -57,19 +97,17 @@ void main() {
       final invalidEmail = EmailAddress('invalid');
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: EmailTextField(
-              email: invalidEmail,
-              showError: false,
-            ),
+        wrapWithProvider(
+          EmailTextField(
+            email: invalidEmail,
+            showError: false,
           ),
         ),
       );
 
       // Assert
       expect(
-        find.text('Entered value is not a valid email address'),
+        find.text('Please enter a valid email address'),
         findsNothing,
       );
     });
@@ -82,19 +120,17 @@ void main() {
         final invalidEmail = EmailAddress(longEmail);
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: EmailTextField(
-                email: invalidEmail,
-                showError: true,
-              ),
+          wrapWithProvider(
+            EmailTextField(
+              email: invalidEmail,
+              showError: true,
             ),
           ),
         );
 
-        // Assert
+        // Assert - New message from EmailFailure.message
         expect(
-          find.textContaining('Cannot be longer than 254 characters'),
+          find.textContaining('Email must not exceed 254 characters'),
           findsOneWidget,
         );
       },
@@ -107,18 +143,16 @@ void main() {
         final emptyEmail = EmailAddress('');
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: EmailTextField(
-                email: emptyEmail,
-                showError: true,
-              ),
+          wrapWithProvider(
+            EmailTextField(
+              email: emptyEmail,
+              showError: true,
             ),
           ),
         );
 
-        // Assert
-        expect(find.text('Email cannot be empty'), findsOneWidget);
+        // Assert - New message from EmailFailure.message
+        expect(find.text('Email is required'), findsOneWidget);
       },
     );
 
@@ -129,24 +163,22 @@ void main() {
         final validEmail = EmailAddress('test@example.com');
 
         await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: EmailTextField(
-                email: validEmail,
-                showError: true,
-              ),
+          wrapWithProvider(
+            EmailTextField(
+              email: validEmail,
+              showError: true,
             ),
           ),
         );
 
         // Assert - No error messages should be shown
-        expect(find.text('Email cannot be empty'), findsNothing);
+        expect(find.text('Email is required'), findsNothing);
         expect(
-          find.text('Entered value is not a valid email address'),
+          find.text('Please enter a valid email address'),
           findsNothing,
         );
         expect(
-          find.textContaining('Cannot be longer than'),
+          find.textContaining('Email must not exceed'),
           findsNothing,
         );
       },

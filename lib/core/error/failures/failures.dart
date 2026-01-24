@@ -1,29 +1,44 @@
 /// Failure types for error handling throughout the application.
 ///
 /// **Architecture:**
-/// - `Failure` - Base interface for all failures
-/// - `InfrastructureFailure` - Server, network, cache errors
-/// - `DomainFailure` - Validation, business rules (domain layer)
-/// - `ValueFailure` - Generic validation failures for value objects
+/// ```text
+/// Failure (abstract)
+/// ├── TechnicalFailure (abstract) - isRetryable, stackTrace
+/// │   ├── InfrastructureFailure (freezed) - server, network, cache, parse
+/// │   └── AuthFailure (freezed) - unauthorized, forbidden, etc.
+/// └── ValueFailure<T> (abstract) - domain validation base
+///     ├── PasswordFailure - empty, tooShort, missingUppercase, etc.
+///     ├── EmailFailure - empty, tooLong, invalidFormat
+///     ├── NameFailure - empty
+///     ├── TokenFailure - empty
+///     └── UniqueIdFailure - empty
+/// ```
 ///
 /// **Separation of Concerns:**
-/// - Infrastructure failures = External system errors (API, database, network)
-/// - Domain failures = Business logic and validation errors
-/// - Features can define their own specific failure types extending `Failure`
+/// - Technical failures = External system errors (API, database, network, auth)
+/// - Value failures = Domain validation errors with specific failure types
+/// - Features can define their own specific failure types
 ///
 /// **Usage:**
 /// ```dart
 /// // Infrastructure layer
 /// return Left(InfrastructureFailure.server(message: 'API error'));
 ///
-/// // Domain layer
-/// return Left(DomainFailure.validation(errors: [...]));
+/// // Auth layer (also technical)
+/// return Left(AuthFailure.unauthorized(message: 'Session expired'));
 ///
-/// // Feature-specific
-/// return Left(OrderFailure.insufficientStock(...));
+/// // Domain validation with specific failures
+/// return Left(PasswordFailure.missingUppercase());
+/// return Left(EmailFailure.invalidFormat(failedValue: input));
 /// ```
 library;
 
+export 'email_failure.dart';
 export 'failure.dart';
 export 'infrastructure_failures.dart';
+export 'name_failure.dart';
+export 'password_failure.dart';
+export 'technical_failure.dart';
+export 'token_failure.dart';
+export 'unique_id_failure.dart';
 export 'value_failure.dart';

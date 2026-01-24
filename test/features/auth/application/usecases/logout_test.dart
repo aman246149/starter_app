@@ -65,7 +65,10 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, tFailure);
-          expect(failure.message, 'Server error during logout');
+          expect(
+            (failure as InfrastructureFailure).message,
+            'Server error during logout',
+          );
         },
         (_) => fail('Should return Left'),
       );

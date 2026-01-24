@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:starter_app/core/domain/base/value_object.dart';
 import 'package:starter_app/core/domain/value_objects/name.dart';
-import 'package:starter_app/core/error/failures/value_failure.dart';
+import 'package:starter_app/core/error/failures/name_failure.dart';
 
 void main() {
   group('Name', () {
@@ -42,7 +42,7 @@ void main() {
 
         final failures = name.value.fold((l) => l, (_) => null);
         expect(failures, isNotNull);
-        expect(failures!.first, isA<Empty<String>>());
+        expect(failures!.first, isA<NameEmpty>());
       });
 
       test('rejects name with only whitespace', () {
@@ -52,7 +52,7 @@ void main() {
 
         final failures = name.value.fold((l) => l, (_) => null);
         expect(failures, isNotNull);
-        expect(failures!.first, isA<Empty<String>>());
+        expect(failures!.first, isA<NameEmpty>());
       });
     });
 

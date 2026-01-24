@@ -18,13 +18,7 @@ class MockFailureMessageMapper extends Mock implements FailureMessageMapper {}
 class MockBuildContext extends Mock implements BuildContext {}
 
 // Create a concrete failure for testing runtime type matching
-class TestFailure extends Failure {
-  @override
-  bool get isRetryable => false;
-
-  @override
-  String get message => 'Test failure message';
-}
+class TestFailure extends Failure {}
 
 void main() {
   late MockFailureMapperRegistry registry;

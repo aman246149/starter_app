@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:starter_app/core/error/failures/token_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 import 'package:starter_app/features/auth/domain/value_objects/auth_token.dart';
 
@@ -23,7 +24,7 @@ void main() {
         expect(token.isValid, false);
         expect(
           token.getFailuresOrNull(),
-          contains(isA<Empty<String>>()),
+          contains(isA<TokenEmpty>()),
         );
       });
 
@@ -33,7 +34,7 @@ void main() {
         expect(token.isValid, false);
         expect(
           token.getFailuresOrNull(),
-          contains(isA<InvalidFormat<String>>()),
+          contains(isA<TokenInvalidFormat>()),
         );
       });
 
@@ -43,7 +44,7 @@ void main() {
         expect(token.isValid, false);
         expect(
           token.getFailuresOrNull(),
-          contains(isA<InvalidFormat<String>>()),
+          contains(isA<TokenInvalidFormat>()),
         );
       });
 
@@ -53,7 +54,7 @@ void main() {
         expect(token.isValid, false);
         expect(
           token.getFailuresOrNull(),
-          contains(isA<InvalidFormat<String>>()),
+          contains(isA<TokenInvalidFormat>()),
         );
       });
 
@@ -145,7 +146,7 @@ void main() {
         final token = AuthToken('not-a-jwt');
 
         final failures = token.getFailuresOrNull();
-        expect(failures?.first, isA<InvalidFormat<String>>());
+        expect(failures?.first, isA<TokenInvalidFormat>());
       });
     });
 

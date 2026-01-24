@@ -72,10 +72,16 @@ import 'package:starter_app/core/navigation/app_router.dart' as _i954;
 import 'package:starter_app/core/navigation/auth_change_notifier.dart' as _i247;
 import 'package:starter_app/core/navigation/page_builder.dart' as _i18;
 import 'package:starter_app/core/presentation/bloc/bloc.dart' as _i455;
+import 'package:starter_app/core/presentation/failure_message/email_failure_mapper.dart'
+    as _i1023;
 import 'package:starter_app/core/presentation/failure_message/failure_mapper_registry.dart'
     as _i184;
 import 'package:starter_app/core/presentation/failure_message/infrastructure_failure_mapper.dart'
     as _i659;
+import 'package:starter_app/core/presentation/failure_message/name_failure_mapper.dart'
+    as _i91;
+import 'package:starter_app/core/presentation/failure_message/password_failure_mapper.dart'
+    as _i270;
 import 'package:starter_app/core/presentation/services/failure_message_service.dart'
     as _i313;
 import 'package:starter_app/core/theme/app_theme.dart' as _i238;
@@ -222,9 +228,18 @@ extension GetItInjectableX on _i174.GetIt {
       () => errorModule.provideStagingReporter(gh<_i439.IDataFilter>()),
       registerFor: {_staging, _production},
     );
+    gh.singleton<_i1023.EmailFailureMapper>(
+      () => _i1023.EmailFailureMapper(gh<_i184.FailureMapperRegistry>()),
+    );
     gh.singleton<_i659.InfrastructureFailureMapper>(
       () =>
           _i659.InfrastructureFailureMapper(gh<_i184.FailureMapperRegistry>()),
+    );
+    gh.singleton<_i91.NameFailureMapper>(
+      () => _i91.NameFailureMapper(gh<_i184.FailureMapperRegistry>()),
+    );
+    gh.singleton<_i270.PasswordFailureMapper>(
+      () => _i270.PasswordFailureMapper(gh<_i184.FailureMapperRegistry>()),
     );
     gh.singleton<_i984.AuthFailureMessageMapper>(
       () => _i984.AuthFailureMessageMapper(gh<_i184.FailureMapperRegistry>()),

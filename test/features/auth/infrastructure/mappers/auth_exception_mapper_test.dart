@@ -140,6 +140,7 @@ void main() {
             network: (_, _) => fail('Should be server failure'),
             cache: (_, _) => fail('Should be server failure'),
             parse: (_, _) => fail('Should be server failure'),
+            circuitBreaker: (_, _) => fail('Should be server failure'),
           );
         },
       );
@@ -161,6 +162,7 @@ void main() {
           network: (_, _) => fail('Should be server failure'),
           cache: (_, _) => fail('Should be server failure'),
           parse: (_, _) => fail('Should be server failure'),
+          circuitBreaker: (_, _) => fail('Should be server failure'),
         );
       });
 
@@ -184,7 +186,7 @@ void main() {
 
         final result = mapper.mapToFailure(exception);
 
-        expect(result.message, customMessage);
+        expect((result as AuthFailure).message, customMessage);
       });
 
       test('preserves status code in infrastructure failures', () {
@@ -203,6 +205,7 @@ void main() {
           network: (_, _) => fail('Should be server failure'),
           cache: (_, _) => fail('Should be server failure'),
           parse: (_, _) => fail('Should be server failure'),
+          circuitBreaker: (_, _) => fail('Should be server failure'),
         );
       });
     });

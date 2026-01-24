@@ -75,7 +75,7 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, tFailure);
-          expect(failure.message, 'Invalid refresh token');
+          expect((failure as AuthFailure).message, 'Invalid refresh token');
         },
         (_) => fail('Should return Left'),
       );
@@ -143,7 +143,7 @@ void main() {
         // Then - should redirect to login
         expect(result.isLeft(), true);
         result.fold(
-          (f) => expect(f.message, contains('login again')),
+          (f) => expect((f as AuthFailure).message, contains('login again')),
           (_) => fail('Should fail'),
         );
       });
@@ -163,7 +163,7 @@ void main() {
         // Then - should require re-login
         expect(result.isLeft(), true);
         result.fold(
-          (f) => expect(f.message, contains('revoked')),
+          (f) => expect((f as AuthFailure).message, contains('revoked')),
           (_) => fail('Should fail'),
         );
       });

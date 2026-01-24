@@ -1,5 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:meta/meta.dart';
+import 'package:starter_app/core/error/failures/unique_id_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 import 'package:uuid/uuid.dart';
 
@@ -10,6 +11,9 @@ import 'package:uuid/uuid.dart';
 /// and makes the domain model more expressive.
 ///
 /// For feature-specific IDs, create subclasses (e.g., `UserId`, `ProfileId`).
+///
+/// Returns specific [UniqueIdFailure] types for clear error messages:
+/// - [UniqueIdEmpty] - ID is empty or null
 ///
 /// Example:
 /// ```dart
@@ -27,6 +31,15 @@ import 'package:uuid/uuid.dart';
 ///   final UserId id;  // Feature-specific ID type
 ///   final EmailAddress email;
 /// }
+///
+/// // Validate untrusted input
+/// final result = UniqueId.fromUntrusted(userInput);
+/// result.fold(
+///   (failures) => failures.first.when(
+///     empty: () => print('ID is required'),
+///   ),
+///   (id) => print('Valid ID: $id'),
+/// );
 /// ```
 @immutable
 final class UniqueId {
@@ -55,13 +68,13 @@ final class UniqueId {
 
   /// Creates a [UniqueId] from a string, validating that it's not empty.
   ///
-  /// Returns [Left] with a list of [ValueFailure] if validation fails,
+  /// Returns [Left] with a list of [UniqueIdFailure] if validation fails,
   /// or [Right] with a valid [UniqueId] if successful.
   static Either<List<ValueFailure<String>>, UniqueId> fromUntrusted(
     String? input,
   ) {
     if (input == null || input.trim().isEmpty) {
-      return left([const ValueFailure.empty()]);
+      return left([const UniqueIdFailure.empty()]);
     }
     return right(UniqueId._(input.trim()));
   }

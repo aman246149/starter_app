@@ -109,7 +109,9 @@ void main() {
         act: (bloc) => bloc.add(const AuthEvent.watchStarted()),
         expect: () => <AuthState>[], // No state change, but side effect
         verify: (_) {
-          verify(() => mockLogger.error('Stream Error')).called(1);
+          verify(
+            () => mockLogger.error(any(that: contains('Stream Error'))),
+          ).called(1);
           // Verify indirect effect if possible, or just the logging
         },
       );
@@ -843,7 +845,9 @@ void main() {
           isA<Initial>(),
         ],
         verify: (_) {
-          verify(() => mockLogger.warning('Logout Error')).called(1);
+          verify(
+            () => mockLogger.warning(any(that: contains('Logout Error'))),
+          ).called(1);
         },
       );
 

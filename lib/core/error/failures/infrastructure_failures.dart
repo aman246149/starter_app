@@ -1,12 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:starter_app/core/error/failures/failure.dart';
+import 'package:starter_app/core/error/failures/technical_failure.dart';
 
 part 'infrastructure_failures.freezed.dart';
 
 /// Infrastructure layer failures.
 ///
 /// These represent technical errors from external systems (API, DB, Network).
+/// Extends [TechnicalFailure] which provides [isRetryable] and [stackTrace].
+///
 /// Repositories map Exceptions → InfrastructureFailure when no specific
 /// domain mapping is available.
 ///
@@ -26,20 +28,14 @@ part 'infrastructure_failures.freezed.dart';
 /// }
 /// ```
 ///
-/// In UI, use Dart 3 pattern matching:
+/// In UI, use FailureMessageService for localized messages:
 /// ```dart
-/// final message = switch (failure) {
-///   ServerFailure(:final statusCode) when statusCode == 404 =>
-///     context.l10n.productNotFound,
-///   ServerFailure() => failure.message,
-///   NetworkFailure() => context.l10n.networkError,
-///   CacheFailure() => context.l10n.cacheError,
-///   ParseFailure() => context.l10n.parseError,
-///   _ => context.l10n.unexpectedError,
-/// };
+/// final messageService = context.read<FailureMessageService>();
+/// final message = messageService.getLocalizedMessage(context, failure);
 /// ```
 @freezed
-class InfrastructureFailure extends Failure with _$InfrastructureFailure {
+abstract class InfrastructureFailure extends TechnicalFailure
+    with _$InfrastructureFailure {
   const InfrastructureFailure._();
 
   /// Server error.
@@ -88,16 +84,6 @@ class InfrastructureFailure extends Failure with _$InfrastructureFailure {
   );
 
   // coverage:ignore-start
-  /// Required by mixin but overridden by generated subclasses.
-  @override
-  String get message => when(
-    server: (message, _, _) => message,
-    network: (message, _) => message,
-    cache: (message, _) => message,
-    parse: (message, _) => message,
-    circuitBreaker: (message, _) => message,
-  );
-
   @override
   StackTrace? get stackTrace => when(
     server: (_, _, stackTrace) => stackTrace,

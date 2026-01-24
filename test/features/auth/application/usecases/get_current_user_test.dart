@@ -88,7 +88,7 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, tFailure);
-          expect(failure.message, 'Token expired');
+          expect((failure as AuthFailure).message, 'Token expired');
         },
         (_) => fail('Should return Left'),
       );
@@ -175,7 +175,7 @@ void main() {
         // Then - should redirect to login
         expect(result.isLeft(), true);
         result.fold(
-          (f) => expect(f.message, contains('expired')),
+          (f) => expect((f as AuthFailure).message, contains('expired')),
           (_) => fail('Should fail'),
         );
       });

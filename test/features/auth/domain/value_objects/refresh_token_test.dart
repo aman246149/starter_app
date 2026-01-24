@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:starter_app/core/error/failures/token_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 import 'package:starter_app/features/auth/domain/value_objects/refresh_token.dart';
 
@@ -28,7 +29,7 @@ void main() {
         expect(token.isValid, false);
         expect(
           token.getFailuresOrNull(),
-          contains(isA<Empty<String>>()),
+          contains(isA<TokenEmpty>()),
         );
       });
 
@@ -39,7 +40,7 @@ void main() {
         expect(token.isValid, false);
         expect(
           token.getFailuresOrNull(),
-          contains(isA<TooShort<String>>()),
+          contains(isA<TokenTooShort>()),
         );
       });
 
@@ -148,14 +149,14 @@ void main() {
         final token = RefreshToken('short');
 
         final failures = token.getFailuresOrNull();
-        expect(failures?.first, isA<TooShort<String>>());
+        expect(failures?.first, isA<TokenTooShort>());
       });
 
       test('returns Empty failure for empty token', () {
         final token = RefreshToken('');
 
         final failures = token.getFailuresOrNull();
-        expect(failures?.first, isA<Empty<String>>());
+        expect(failures?.first, isA<TokenEmpty>());
       });
     });
 

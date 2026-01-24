@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:meta/meta.dart';
 
 import 'package:starter_app/core/domain/base/value_object.dart';
+import 'package:starter_app/core/error/failures/token_failure.dart';
 import 'package:starter_app/core/error/failures/value_failure.dart';
 
 /// Refresh token value object with validation.
@@ -18,6 +19,10 @@ import 'package:starter_app/core/error/failures/value_failure.dart';
 /// Validates:
 /// - Not empty
 /// - Minimum length (16 characters for security)
+///
+/// Returns [TokenFailure] types for clear error messages:
+/// - [TokenEmpty] - Token is empty
+/// - [TokenTooShort] - Token is too short
 ///
 /// Example:
 /// ```dart
@@ -60,12 +65,12 @@ class RefreshToken extends ValueObject<String> {
     String? input,
   ) {
     if (input == null || input.isEmpty) {
-      return left([const ValueFailure.empty(fieldName: 'Refresh Token')]);
+      return left([const TokenFailure.empty()]);
     }
 
     if (input.length < minLength) {
       return left([
-        ValueFailure.tooShort(
+        TokenFailure.tooShort(
           minLength: minLength,
           actualLength: input.length,
         ),

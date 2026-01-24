@@ -100,6 +100,77 @@ void main() {
       );
     });
 
+    test('passwordEmpty returns correct Spanish translation', () {
+      expect(localizations.passwordEmpty, 'La contraseña es requerida');
+    });
+
+    test('passwordTooShort returns correct Spanish translation', () {
+      expect(
+        localizations.passwordTooShort(8),
+        'La contraseña debe tener al menos 8 caracteres',
+      );
+    });
+
+    test('passwordTooLong returns correct Spanish translation', () {
+      expect(
+        localizations.passwordTooLong(128),
+        'La contraseña no debe exceder 128 caracteres',
+      );
+    });
+
+    test('passwordMissingUppercase returns correct Spanish translation', () {
+      expect(
+        localizations.passwordMissingUppercase,
+        'La contraseña debe contener al menos una letra mayúscula',
+      );
+    });
+
+    test('passwordMissingLowercase returns correct Spanish translation', () {
+      expect(
+        localizations.passwordMissingLowercase,
+        'La contraseña debe contener al menos una letra minúscula',
+      );
+    });
+
+    test('passwordMissingDigit returns correct Spanish translation', () {
+      expect(
+        localizations.passwordMissingDigit,
+        'La contraseña debe contener al menos un dígito',
+      );
+    });
+
+    test(
+      'passwordMissingSpecialCharacter returns correct Spanish translation',
+      () {
+        expect(
+          localizations.passwordMissingSpecialCharacter,
+          'La contraseña debe contener al menos un carácter especial',
+        );
+      },
+    );
+
+    test('emailEmpty returns correct Spanish translation', () {
+      expect(localizations.emailEmpty, 'El correo electrónico es requerido');
+    });
+
+    test('emailTooLong returns correct Spanish translation', () {
+      expect(
+        localizations.emailTooLong(254),
+        'El correo no debe exceder 254 caracteres',
+      );
+    });
+
+    test('emailInvalidFormat returns correct Spanish translation', () {
+      expect(
+        localizations.emailInvalidFormat,
+        'Por favor ingresa un correo electrónico válido',
+      );
+    });
+
+    test('nameEmpty returns correct Spanish translation', () {
+      expect(localizations.nameEmpty, 'El nombre es requerido');
+    });
+
     test('localeName is set correctly', () {
       expect(localizations.localeName, 'es');
     });

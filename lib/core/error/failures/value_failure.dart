@@ -1,52 +1,36 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:starter_app/core/error/failures/failures.dart';
 
-part 'value_failure.freezed.dart';
-
-/// Represents generic validation failures for value objects.
+/// Abstract base class for all domain validation failures.
 ///
-/// These are ONLY truly generic failures that apply across all domains.
-/// Domain-specific failures (email, URL, etc.) should be defined alongside
-/// their respective value objects.
+/// Value failures represent validation errors for value objects in the domain
+/// layer. Unlike [TechnicalFailure] which represents infrastructure/technical
+/// errors with retry capability, value failures are business rule violations
+/// that typically require user correction.
+///
+/// Each domain concept has its own specific failure type:
+/// - [PasswordFailure] - Password validation errors
+/// - [EmailFailure] - Email validation errors
+/// - [NameFailure] - Name validation errors
+/// - [TokenFailure] - Token validation errors
+/// - [UniqueIdFailure] - Unique ID validation errors
 ///
 /// Example:
 /// ```dart
-/// // Generic validation
-/// if (input.isEmpty) {
-///   return left(const ValueFailure.empty());
+/// // In Password value object
+/// if (!_uppercaseRegex.hasMatch(input)) {
+///   failures.add(const PasswordFailure.missingUppercase());
 /// }
 ///
-/// // Domain-specific validation should be in its own failure type
-/// // See: lib/core/domain/value_objects/ for examples
+/// // In UI mapper
+/// final message = failure.when(
+///   missingUppercase: () => context.l10n.passwordMissingUppercase,
+///   // ...
+/// );
 /// ```
-@freezed
-class ValueFailure<T> with _$ValueFailure<T> {
-  /// Value is null or empty.
-  const factory ValueFailure.empty({
-    String? fieldName,
-  }) = Empty<T>;
-
-  /// Value is shorter than the minimum required length.
-  const factory ValueFailure.tooShort({
-    required int minLength,
-    required int actualLength,
-  }) = TooShort<T>;
-
-  /// Value exceeds the maximum allowed length.
-  const factory ValueFailure.tooLong({
-    required int maxLength,
-    required int actualLength,
-  }) = TooLong<T>;
-
-  /// Value doesn't match the expected format/pattern.
-  const factory ValueFailure.invalidFormat({
-    required String expectedFormat,
-    required String failedValue,
-  }) = InvalidFormat<T>;
-
-  /// Value is outside the valid numeric range.
-  const factory ValueFailure.outOfRange({
-    required num min,
-    required num max,
-    required num actual,
-  }) = OutOfRange<T>;
+///
+/// The type parameter [T] represents the underlying value type being validated
+/// (e.g., String for passwords, emails).
+abstract class ValueFailure<T> extends Failure {
+  /// Creates a [ValueFailure].
+  const ValueFailure();
 }

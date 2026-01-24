@@ -8,6 +8,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/domain/value_objects/email_address.dart';
 import 'package:starter_app/core/domain/value_objects/name.dart';
 import 'package:starter_app/core/domain/value_objects/password.dart';
+import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
 import 'package:starter_app/core/l10n/arb/app_localizations.dart';
 import 'package:starter_app/core/presentation/models/error_model.dart';
 import 'package:starter_app/core/presentation/services/failure_message_service.dart';
@@ -33,6 +34,8 @@ class FakeBuildContext extends Fake implements BuildContext {}
 
 class FakeAuthFailure extends Fake implements AuthFailure {}
 
+class FakeInfrastructureFailure extends Fake implements InfrastructureFailure {}
+
 void main() {
   late MockAuthBloc mockAuthBloc;
   late MockFailureMessageService mockFailureMessageService;
@@ -40,6 +43,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue(FakeBuildContext());
     registerFallbackValue(FakeAuthFailure());
+    registerFallbackValue(FakeInfrastructureFailure());
   });
 
   setUp(() async {
@@ -315,7 +319,7 @@ void main() {
         tester,
       ) async {
         setUpViewSize(tester);
-        const failure = AuthFailure.unauthorized(message: 'fake');
+        const failure = InfrastructureFailure.network(message: 'fake');
         when(
           () => mockFailureMessageService.getLocalizedMessage(any(), any()),
         ).thenReturn('Error');
@@ -351,7 +355,7 @@ void main() {
         tester,
       ) async {
         setUpViewSize(tester);
-        const failure = AuthFailure.unauthorized(message: 'fake');
+        const failure = InfrastructureFailure.network(message: 'fake');
         when(
           () => mockFailureMessageService.getLocalizedMessage(any(), any()),
         ).thenReturn('Error');
@@ -393,7 +397,7 @@ void main() {
         'retries last action on snackbar action tap (registration)',
         (tester) async {
           setUpViewSize(tester);
-          const failure = AuthFailure.unauthorized(message: 'fake');
+          const failure = InfrastructureFailure.network(message: 'fake');
           when(
             () => mockFailureMessageService.getLocalizedMessage(any(), any()),
           ).thenReturn('Error');
@@ -663,6 +667,14 @@ void main() {
           ),
         );
 
+        // Stub failure message service for NameFailure
+        when(
+          () => mockFailureMessageService.getLocalizedMessage(
+            any(),
+            any(),
+          ),
+        ).thenReturn('Name is required');
+
         await tester.pumpAppWithBloc(
           RepositoryProvider<FailureMessageService>.value(
             value: mockFailureMessageService,
@@ -671,7 +683,7 @@ void main() {
           providers: [BlocProvider<AuthBloc>.value(value: mockAuthBloc)],
         );
 
-        expect(find.text('Name cannot be empty'), findsOneWidget);
+        expect(find.text('Name is required'), findsOneWidget);
       });
 
       testWidgets('Register: dispatches emailChanged("") on different email', (
