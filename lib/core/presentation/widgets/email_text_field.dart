@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:starter_app/core/domain/value_objects/email_address.dart';
-import 'package:starter_app/core/error/failures/email_failure.dart';
+import 'package:starter_app/core/presentation/services/failure_message_service.dart';
 import 'package:starter_app/core/presentation/widgets/app_text_field.dart';
 
 /// Email text field with proper validation and autofill.
@@ -111,18 +112,21 @@ final class EmailTextField extends StatelessWidget {
   final bool showError;
 
   /// Gets the first relevant error message from email failures.
-  String? _getErrorMessage() {
+  String? _getErrorMessage(BuildContext context) {
     if (!showError) return null;
 
     final failures = email.getFailuresOrNull();
     if (failures == null || failures.isEmpty) return null;
 
-    // Use the message property from the first failure
-    final first = failures.first;
-    if (first is EmailFailure) {
-      return first.message;
-    }
-    return null;
+    // Use FailureMessageService for localized messages
+    final first = failures.firstOrNull;
+
+    if (first == null) return null;
+
+    return context.read<FailureMessageService>().getLocalizedMessage(
+      context,
+      first,
+    );
   }
 
   @override
@@ -131,7 +135,7 @@ final class EmailTextField extends StatelessWidget {
       label: label,
       hint: hint,
       helperText: helperText,
-      errorText: _getErrorMessage(),
+      errorText: _getErrorMessage(context),
       prefixIcon: const Icon(Icons.email_outlined),
       enabled: enabled,
       readOnly: readOnly,

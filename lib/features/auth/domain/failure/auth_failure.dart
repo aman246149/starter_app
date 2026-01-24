@@ -26,7 +26,7 @@ part 'auth_failure.freezed.dart';
 /// }
 /// ```
 @freezed
-class AuthFailure extends TechnicalFailure with _$AuthFailure {
+abstract class AuthFailure extends TechnicalFailure with _$AuthFailure {
   const AuthFailure._();
 
   /// User or resource not found (HTTP 404).
@@ -69,14 +69,6 @@ class AuthFailure extends TechnicalFailure with _$AuthFailure {
   );
 
   // coverage:ignore-start
-  @override
-  String get message => when(
-    notFound: (message, _) => message,
-    unauthorized: (message, _) => message,
-    forbidden: (message, _) => message,
-    emailAlreadyInUse: (message, _) => message,
-    invalidInput: (message, _) => message,
-  );
 
   @override
   StackTrace? get stackTrace => when(

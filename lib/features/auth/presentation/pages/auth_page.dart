@@ -35,13 +35,16 @@ final class AuthPage extends StatelessWidget {
 
           context.showSnackBar(
             message: message,
-            action: SnackBarAction(
-              label: context.authL10n.retry,
-              onPressed: () => _retryLastAction(context),
-            ),
+            action: error.isRetryable
+                ? SnackBarAction(
+                    label: context.authL10n.retry,
+                    onPressed: () => _retryLastAction(context),
+                  )
+                : null,
           );
           return;
         }
+
         state.maybeWhen(
           authenticated: (user) => const DashboardRoute().go(context),
           orElse: () => null,

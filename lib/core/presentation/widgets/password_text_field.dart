@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:starter_app/core/domain/value_objects/password.dart';
-import 'package:starter_app/core/error/failures/password_failure.dart';
+import 'package:starter_app/core/presentation/services/failure_message_service.dart';
 import 'package:starter_app/core/presentation/widgets/app_text_field.dart';
 
 /// Password text field with visibility toggle.
@@ -127,18 +128,21 @@ final class PasswordTextField extends StatelessWidget {
   final VoidCallback? onToggleVisibility;
 
   /// Gets the first relevant error message from password failures.
-  String? _getErrorMessage() {
+  String? _getErrorMessage(BuildContext context) {
     if (!showError) return null;
 
     final failures = password.getFailuresOrNull();
     if (failures == null || failures.isEmpty) return null;
 
-    // Use the message property from the first failure
-    final first = failures.first;
-    if (first is PasswordFailure) {
-      return first.message;
-    }
-    return null;
+    // Use FailureMessageService for localized messages
+    final first = failures.firstOrNull;
+
+    if (first == null) return null;
+
+    return context.read<FailureMessageService>().getLocalizedMessage(
+      context,
+      first,
+    );
   }
 
   @override
@@ -147,7 +151,7 @@ final class PasswordTextField extends StatelessWidget {
       label: label,
       hint: hint,
       helperText: helperText,
-      errorText: _getErrorMessage(),
+      errorText: _getErrorMessage(context),
       prefixIcon: const Icon(Icons.lock_outlined),
       enabled: enabled,
       readOnly: readOnly,

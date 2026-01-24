@@ -28,20 +28,13 @@ part 'infrastructure_failures.freezed.dart';
 /// }
 /// ```
 ///
-/// In UI, use Dart 3 pattern matching:
+/// In UI, use FailureMessageService for localized messages:
 /// ```dart
-/// final message = switch (failure) {
-///   ServerFailure(:final statusCode) when statusCode == 404 =>
-///     context.l10n.productNotFound,
-///   ServerFailure() => failure.message,
-///   NetworkFailure() => context.l10n.networkError,
-///   CacheFailure() => context.l10n.cacheError,
-///   ParseFailure() => context.l10n.parseError,
-///   _ => context.l10n.unexpectedError,
-/// };
+/// final messageService = context.read<FailureMessageService>();
+/// final message = messageService.getLocalizedMessage(context, failure);
 /// ```
 @freezed
-class InfrastructureFailure extends TechnicalFailure
+abstract class InfrastructureFailure extends TechnicalFailure
     with _$InfrastructureFailure {
   const InfrastructureFailure._();
 
@@ -91,16 +84,6 @@ class InfrastructureFailure extends TechnicalFailure
   );
 
   // coverage:ignore-start
-  /// Required by mixin but overridden by generated subclasses.
-  @override
-  String get message => when(
-    server: (message, _, _) => message,
-    network: (message, _) => message,
-    cache: (message, _) => message,
-    parse: (message, _) => message,
-    circuitBreaker: (message, _) => message,
-  );
-
   @override
   StackTrace? get stackTrace => when(
     server: (_, _, stackTrace) => stackTrace,

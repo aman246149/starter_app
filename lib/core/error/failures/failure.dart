@@ -5,7 +5,7 @@
 ///
 /// This is the root of the failure hierarchy:
 /// ```text
-/// Failure (abstract) - has message
+/// Failure (abstract)
 /// ├── TechnicalFailure (abstract) - adds isRetryable, stackTrace
 /// │   ├── InfrastructureFailure
 /// │   └── AuthFailure
@@ -14,6 +14,10 @@
 ///     ├── EmailFailure
 ///     └── ...
 /// ```
+///
+/// Failures are type-safe and should be pattern matched for specific handling.
+/// For localized error messages,
+/// use `FailureMessageService.getLocalizedMessage()`.
 ///
 /// Example:
 /// ```dart
@@ -35,7 +39,4 @@
 abstract class Failure {
   /// Creates a [Failure].
   const Failure();
-
-  /// User-friendly error message describing the failure.
-  String get message;
 }

@@ -21,9 +21,7 @@ final class _RegisterForm extends StatelessWidget {
               onEditingComplete: () => context.read<AuthBloc>().add(
                 const AuthEvent.nameUnfocused(),
               ),
-              errorText: state.validation.nameTouched
-                  ? state.name.getFailuresOrNull()?.first.message
-                  : null,
+              errorText: _getNameError(context),
             ),
             const ResponsiveVerticalGap(),
             PasswordTextField(
@@ -58,6 +56,17 @@ final class _RegisterForm extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  /// Gets the name validation error using localized messages.
+  String? _getNameError(BuildContext context) {
+    if (!state.validation.nameTouched) return null;
+    final failure = state.name.getFailuresOrNull()?.first;
+    if (failure == null) return null;
+    return context.read<FailureMessageService>().getLocalizedMessage(
+      context,
+      failure,
     );
   }
 }
