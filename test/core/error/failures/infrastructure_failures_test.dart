@@ -139,6 +139,7 @@ void main() {
             network: (_, _) => null,
             cache: (_, _) => null,
             parse: (_, _) => null,
+            circuitBreaker: (_, _) => null,
           ),
           500,
         );
@@ -159,6 +160,7 @@ void main() {
             network: (_, _) => null,
             cache: (_, _) => null,
             parse: (_, _) => null,
+            circuitBreaker: (_, _) => null,
           ),
           500,
         );
@@ -444,6 +446,100 @@ void main() {
       });
     });
 
+    group('CircuitBreakerFailure', () {
+      test('creates circuit breaker failure with default message', () {
+        const failure = InfrastructureFailure.circuitBreaker();
+
+        expect(failure, isA<CircuitBreakerFailure>());
+        expect(failure.message, 'Service temporarily unavailable');
+        expect(failure.isRetryable, true);
+        expect(failure.stackTrace, isNull);
+      });
+
+      test('creates circuit breaker failure with stackTrace', () {
+        final stackTrace = StackTrace.current;
+        final failure = InfrastructureFailure.circuitBreaker(
+          stackTrace: stackTrace,
+        );
+
+        expect(failure.stackTrace, stackTrace);
+      });
+
+      test('creates circuit breaker failure with custom message', () {
+        const failure = InfrastructureFailure.circuitBreaker(
+          message: 'Circuit is open, try again later',
+        );
+
+        expect(failure.message, 'Circuit is open, try again later');
+      });
+
+      test('is retryable', () {
+        const failure = InfrastructureFailure.circuitBreaker();
+
+        expect(failure.isRetryable, true);
+      });
+
+      test('equals another circuit breaker failure with same message', () {
+        const failure1 = InfrastructureFailure.circuitBreaker();
+        const failure2 = InfrastructureFailure.circuitBreaker();
+
+        expect(failure1, failure2);
+      });
+
+      test(
+        'equals another circuit breaker failure with same custom message',
+        () {
+          const failure1 = InfrastructureFailure.circuitBreaker(
+            message: 'Custom circuit breaker error',
+          );
+          const failure2 = InfrastructureFailure.circuitBreaker(
+            message: 'Custom circuit breaker error',
+          );
+
+          expect(failure1, failure2);
+        },
+      );
+
+      test('not equals circuit breaker failure with different message', () {
+        const failure1 = InfrastructureFailure.circuitBreaker(
+          message: 'Error 1',
+        );
+        const failure2 = InfrastructureFailure.circuitBreaker(
+          message: 'Error 2',
+        );
+
+        expect(failure1, isNot(failure2));
+      });
+
+      test('has consistent hashCode for equal instances', () {
+        const failure1 = InfrastructureFailure.circuitBreaker();
+        const failure2 = InfrastructureFailure.circuitBreaker();
+
+        expect(failure1.hashCode, failure2.hashCode);
+      });
+
+      test('has different hashCode for different messages', () {
+        const failure1 = InfrastructureFailure.circuitBreaker(
+          message: 'Error 1',
+        );
+        const failure2 = InfrastructureFailure.circuitBreaker(
+          message: 'Error 2',
+        );
+
+        expect(failure1.hashCode, isNot(failure2.hashCode));
+      });
+
+      test('copyWith creates new instance with updated message', () {
+        const original = InfrastructureFailure.circuitBreaker(
+          message: 'Original',
+        );
+        final updated = original.copyWith(message: 'Updated');
+
+        expect(updated.message, 'Updated');
+        expect(original.message, 'Original');
+      });
+    });
+
     group('when pattern matching', () {
       test('matches server failure', () {
         const failure = InfrastructureFailure.server(
@@ -456,6 +552,7 @@ void main() {
           network: (message, _) => 'Network: $message',
           cache: (message, _) => 'Cache: $message',
           parse: (message, _) => 'Parse: $message',
+          circuitBreaker: (message, _) => 'CircuitBreaker: $message',
         );
 
         expect(result, 'Server: Server error');
@@ -472,6 +569,7 @@ void main() {
           network: (message, _) => 'Network: $message',
           cache: (message, _) => 'Cache: $message',
           parse: (message, _) => 'Parse: $message',
+          circuitBreaker: (message, _) => 'CircuitBreaker: $message',
         );
 
         expect(result, 'Server: Server error (code: null)');
@@ -487,6 +585,7 @@ void main() {
           network: (message, _) => 'Network: $message',
           cache: (message, _) => 'Cache',
           parse: (message, _) => 'Parse',
+          circuitBreaker: (message, _) => 'CircuitBreaker',
         );
 
         expect(result, 'Network: No connection');
@@ -500,6 +599,7 @@ void main() {
           network: (message, _) => 'Network',
           cache: (message, _) => 'Cache: $message',
           parse: (message, _) => 'Parse',
+          circuitBreaker: (message, _) => 'CircuitBreaker',
         );
 
         expect(result, 'Cache: Cache failed');
@@ -513,9 +613,26 @@ void main() {
           network: (message, _) => 'Network',
           cache: (message, _) => 'Cache',
           parse: (message, _) => 'Parse: $message',
+          circuitBreaker: (message, _) => 'CircuitBreaker',
         );
 
         expect(result, 'Parse: Parse failed');
+      });
+
+      test('matches circuit breaker failure', () {
+        const failure = InfrastructureFailure.circuitBreaker(
+          message: 'Circuit open',
+        );
+
+        final result = failure.when(
+          server: (message, statusCode, _) => 'Server',
+          network: (message, _) => 'Network',
+          cache: (message, _) => 'Cache',
+          parse: (message, _) => 'Parse',
+          circuitBreaker: (message, _) => 'CircuitBreaker: $message',
+        );
+
+        expect(result, 'CircuitBreaker: Circuit open');
       });
     });
 
@@ -580,6 +697,19 @@ void main() {
         );
 
         expect(result, 'Other');
+      });
+
+      test('matches circuit breaker failure with maybeWhen', () {
+        const failure = InfrastructureFailure.circuitBreaker(
+          message: 'Circuit open',
+        );
+
+        final result = failure.maybeWhen(
+          circuitBreaker: (message, _) => 'CircuitBreaker: $message',
+          orElse: () => 'Other',
+        );
+
+        expect(result, 'CircuitBreaker: Circuit open');
       });
     });
 
@@ -669,6 +799,24 @@ void main() {
         expect(message, 'Parse error');
         expect(failure.message, 'Parse error');
       });
+
+      test('returns correct message for circuit breaker failure', () {
+        const failure = InfrastructureFailure.circuitBreaker(
+          message: 'Circuit breaker message',
+        );
+
+        final message = failure.message;
+        expect(message, 'Circuit breaker message');
+        expect(failure.message, 'Circuit breaker message');
+      });
+
+      test('returns default message for circuit breaker failure', () {
+        const failure = InfrastructureFailure.circuitBreaker();
+
+        final message = failure.message;
+        expect(message, 'Service temporarily unavailable');
+        expect(failure.message, 'Service temporarily unavailable');
+      });
     });
 
     group('isRetryable getter', () {
@@ -689,6 +837,12 @@ void main() {
 
         expect(cache.isRetryable, false);
         expect(parse.isRetryable, false);
+      });
+
+      test('returns true for circuit breaker failure', () {
+        const circuitBreaker = InfrastructureFailure.circuitBreaker();
+
+        expect(circuitBreaker.isRetryable, true);
       });
     });
 
@@ -741,6 +895,14 @@ void main() {
         expect(string, contains('InfrastructureFailure.parse'));
         expect(string, contains('Parse error'));
       });
+
+      test('returns string representation for circuit breaker failure', () {
+        const failure = InfrastructureFailure.circuitBreaker();
+
+        final string = failure.toString();
+        expect(string, contains('InfrastructureFailure.circuitBreaker'));
+        expect(string, contains('Service temporarily unavailable'));
+      });
     });
 
     group('type safety', () {
@@ -769,11 +931,13 @@ void main() {
         const network = InfrastructureFailure.network();
         const cache = InfrastructureFailure.cache();
         const parse = InfrastructureFailure.parse();
+        const circuitBreaker = InfrastructureFailure.circuitBreaker();
 
         expect(server, isA<Failure>());
         expect(network, isA<Failure>());
         expect(cache, isA<Failure>());
         expect(parse, isA<Failure>());
+        expect(circuitBreaker, isA<Failure>());
       });
     });
   });

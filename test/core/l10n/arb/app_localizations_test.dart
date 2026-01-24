@@ -45,6 +45,13 @@ void main() {
       );
     });
 
+    test('circuitBreakerError returns correct English translation', () {
+      expect(
+        localizations.circuitBreakerError,
+        'Circuit breaker tripped. Please try again later.',
+      );
+    });
+
     test('localeName is set correctly', () {
       expect(localizations.localeName, 'en');
     });
@@ -84,6 +91,13 @@ void main() {
 
     test('parseError returns correct Spanish translation', () {
       expect(localizations.parseError, 'Formato de datos inválido recibido');
+    });
+
+    test('circuitBreakerError returns correct Spanish translation', () {
+      expect(
+        localizations.circuitBreakerError,
+        'El disyuntor se ha disparado. Inténtelo de nuevo más tarde.',
+      );
     });
 
     test('localeName is set correctly', () {

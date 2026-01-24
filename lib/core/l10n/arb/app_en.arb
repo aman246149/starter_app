@@ -20,5 +20,9 @@
     "parseError": "Invalid data format received. Please contact support.",
     "@parseError": {
         "description": "Error message shown when data parsing fails"
+    },
+    "circuitBreakerError": "Circuit breaker tripped. Please try again later.",
+    "@circuitBreakerError": {
+        "description": "Error message shown when circuit breaker is tripped"
     }
 }

@@ -20,5 +20,6 @@
     "parseError": "Formato de datos inválido recibido",
     "@parseError": {
         "description": "Mensaje de error mostrado cuando falla el análisis de datos"
-    }
+    },
+    "circuitBreakerError": "El disyuntor se ha disparado. Inténtelo de nuevo más tarde."
 }

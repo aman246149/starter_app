@@ -102,9 +102,9 @@ import 'package:starter_app/features/auth/domain/services/user_registration_serv
 import 'package:starter_app/features/auth/infrastructure/datasources/auth_api_service.dart'
     as _i986;
 import 'package:starter_app/features/auth/infrastructure/datasources/auth_remote_data_source.dart'
-    as _i489;
+    as _i737;
 import 'package:starter_app/features/auth/infrastructure/datasources/auth_websocket_data_source.dart'
-    as _i49;
+    as _i394;
 import 'package:starter_app/features/auth/infrastructure/mappers/auth_exception_mapper.dart'
     as _i161;
 import 'package:starter_app/features/auth/infrastructure/repositories/auth_repository_impl.dart'
@@ -222,11 +222,11 @@ extension GetItInjectableX on _i174.GetIt {
       () => errorModule.provideStagingReporter(gh<_i439.IDataFilter>()),
       registerFor: {_staging, _production},
     );
-    gh.factory<_i659.InfrastructureFailureMapper>(
+    gh.singleton<_i659.InfrastructureFailureMapper>(
       () =>
           _i659.InfrastructureFailureMapper(gh<_i184.FailureMapperRegistry>()),
     );
-    gh.factory<_i984.AuthFailureMessageMapper>(
+    gh.singleton<_i984.AuthFailureMessageMapper>(
       () => _i984.AuthFailureMessageMapper(gh<_i184.FailureMapperRegistry>()),
     );
     gh.singleton<_i944.ICircuitBreaker>(
@@ -296,8 +296,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i927.ProfileApiService>(
       () => _i927.ProfileApiService.create(gh<_i31.ChopperClient>()),
     );
-    gh.lazySingleton<_i49.IAuthWebSocketDataSource>(
-      () => _i49.AuthWebSocketDataSource(
+    gh.lazySingleton<_i394.IAuthWebSocketDataSource>(
+      () => _i394.AuthWebSocketDataSource(
         gh<_i354.IWebSocketManager>(),
         gh<_i170.ITokenStorage>(),
         gh<_i533.ITokenRefreshNotifier>(),
@@ -314,8 +314,8 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1007.ExceptionHandler>(),
       ),
     );
-    gh.lazySingleton<_i489.IAuthRemoteDataSource>(
-      () => _i489.AuthRemoteDataSourceImpl(gh<_i986.AuthApiService>()),
+    gh.lazySingleton<_i737.IAuthRemoteDataSource>(
+      () => _i737.AuthRemoteDataSourceImpl(gh<_i986.AuthApiService>()),
     );
     gh.factory<_i0.GetProfile>(
       () => _i0.GetProfile(gh<_i148.IUserProfileRepository>()),
@@ -326,8 +326,8 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i870.IAuthRepository>(
       () => _i889.AuthRepositoryImpl(
-        gh<_i489.IAuthRemoteDataSource>(),
-        gh<_i49.IAuthWebSocketDataSource>(),
+        gh<_i737.IAuthRemoteDataSource>(),
+        gh<_i394.IAuthWebSocketDataSource>(),
         gh<_i170.ITokenStorage>(),
         gh<_i1007.ExceptionHandler>(),
         gh<_i161.AuthExceptionMapper>(),

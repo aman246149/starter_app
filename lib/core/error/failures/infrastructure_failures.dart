@@ -71,12 +71,20 @@ class InfrastructureFailure extends Failure with _$InfrastructureFailure {
     StackTrace? stackTrace,
   }) = ParseFailure;
 
+  /// Circuit breaker open error.
+  /// Map from CircuitBreakerException in repository.
+  const factory InfrastructureFailure.circuitBreaker({
+    @Default('Service temporarily unavailable') String message,
+    StackTrace? stackTrace,
+  }) = CircuitBreakerFailure;
+
   @override
   bool get isRetryable => when(
     server: (_, _, _) => true,
     network: (_, _) => true,
     cache: (_, _) => false,
     parse: (_, _) => false,
+    circuitBreaker: (_, _) => true,
   );
 
   // coverage:ignore-start
@@ -87,6 +95,7 @@ class InfrastructureFailure extends Failure with _$InfrastructureFailure {
     network: (message, _) => message,
     cache: (message, _) => message,
     parse: (message, _) => message,
+    circuitBreaker: (message, _) => message,
   );
 
   @override
@@ -95,6 +104,7 @@ class InfrastructureFailure extends Failure with _$InfrastructureFailure {
     network: (_, stackTrace) => stackTrace,
     cache: (_, stackTrace) => stackTrace,
     parse: (_, stackTrace) => stackTrace,
+    circuitBreaker: (_, stackTrace) => stackTrace,
   );
   // coverage:ignore-end
 }

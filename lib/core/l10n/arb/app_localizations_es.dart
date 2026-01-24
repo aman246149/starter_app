@@ -25,4 +25,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get parseError => 'Formato de datos inválido recibido';
+
+  @override
+  String get circuitBreakerError => 'El disyuntor se ha disparado. Inténtelo de nuevo más tarde.';
 }

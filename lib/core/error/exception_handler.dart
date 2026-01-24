@@ -48,6 +48,7 @@ class ExceptionHandler {
   /// Maps common infrastructure exceptions to failures:
   /// - [NetworkException] → [InfrastructureFailure.network]
   /// - [CacheException] → [InfrastructureFailure.cache]
+  /// - [CircuitBreakerException] → [InfrastructureFailure.circuitBreaker]
   /// - [ServerException] → Uses custom [serverExceptionMapper] if provided,
   ///   otherwise maps to [InfrastructureFailure.server]
   /// - [FormatException] → [InfrastructureFailure.parse]
@@ -92,7 +93,7 @@ class ExceptionHandler {
       );
     } on CircuitBreakerException catch (e, stackTrace) {
       return Left(
-        InfrastructureFailure.server(
+        InfrastructureFailure.circuitBreaker(
           message: e.message,
           stackTrace: stackTrace,
         ),

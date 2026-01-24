@@ -130,6 +130,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid data format received. Please contact support.'**
   String get parseError;
+
+  /// Error message shown when circuit breaker is tripped
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit breaker tripped. Please try again later.'**
+  String get circuitBreakerError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
