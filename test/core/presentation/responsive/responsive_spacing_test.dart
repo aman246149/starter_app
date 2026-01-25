@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:starter_app/core/presentation/responsive/responsive_container.dart';
-import 'package:starter_app/core/presentation/responsive/responsive_spacing.dart';
+import 'package:starter_app/core/presentation/responsive/responsive.dart';
 
 // ignore_for_file: prefer_const_constructors -
 //to be able to test the constructors
@@ -147,7 +146,10 @@ void main() {
       await pumpWidgetWithSize(
         tester,
         const Size(400, 800),
-        ResponsiveGrid(children: List.generate(4, (_) => const SizedBox())),
+        ResponsiveGrid.builder(
+          itemCount: 4,
+          itemBuilder: (context, index) => const SizedBox(),
+        ),
       );
 
       final grid = tester.widget<GridView>(find.byType(GridView));
@@ -160,7 +162,10 @@ void main() {
       await pumpWidgetWithSize(
         tester,
         const Size(700, 1000),
-        ResponsiveGrid(children: List.generate(4, (_) => const SizedBox())),
+        ResponsiveGrid.builder(
+          itemCount: 4,
+          itemBuilder: (context, index) => const SizedBox(),
+        ),
       );
 
       final grid = tester.widget<GridView>(find.byType(GridView));
@@ -173,7 +178,10 @@ void main() {
       await pumpWidgetWithSize(
         tester,
         const Size(1000, 800),
-        ResponsiveGrid(children: List.generate(8, (_) => const SizedBox())),
+        ResponsiveGrid.builder(
+          itemCount: 8,
+          itemBuilder: (context, index) => const SizedBox(),
+        ),
       );
 
       final grid = tester.widget<GridView>(find.byType(GridView));
@@ -186,7 +194,10 @@ void main() {
       await pumpWidgetWithSize(
         tester,
         const Size(1400, 900),
-        ResponsiveGrid(children: List.generate(6, (_) => const SizedBox())),
+        ResponsiveGrid.builder(
+          itemCount: 6,
+          itemBuilder: (context, index) => const SizedBox(),
+        ),
       );
 
       final grid = tester.widget<GridView>(find.byType(GridView));
@@ -199,7 +210,10 @@ void main() {
       await pumpWidgetWithSize(
         tester,
         const Size(1800, 1000),
-        ResponsiveGrid(children: List.generate(12, (_) => const SizedBox())),
+        ResponsiveGrid.builder(
+          itemCount: 12,
+          itemBuilder: (context, index) => const SizedBox(),
+        ),
       );
 
       final grid = tester.widget<GridView>(find.byType(GridView));

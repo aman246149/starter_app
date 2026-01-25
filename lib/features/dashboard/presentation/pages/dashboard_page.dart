@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:starter_app/core/presentation/responsive/responsive_container.dart';
+import 'package:starter_app/core/presentation/responsive/responsive.dart';
 import 'package:starter_app/features/dashboard/l10n/l10n_extensions.dart';
 
 /// Dashboard page displaying a responsive grid layout.
@@ -21,16 +21,14 @@ final class DashboardPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.appBarTitle)),
-      body: ResponsiveGrid(
-        children: List.generate(
-          boxCount,
-          (index) => ColoredBox(
-            color: Color.fromARGB(
-              (index + 1) * randomLimit ~/ 4,
-              random.nextInt(randomLimit),
-              random.nextInt(randomLimit),
-              random.nextInt(randomLimit),
-            ),
+      body: ResponsiveGrid.builder(
+        itemCount: boxCount,
+        itemBuilder: (context, index) => ColoredBox(
+          color: Color.fromARGB(
+            (index + 1) * randomLimit ~/ 4,
+            random.nextInt(randomLimit),
+            random.nextInt(randomLimit),
+            random.nextInt(randomLimit),
           ),
         ),
       ),

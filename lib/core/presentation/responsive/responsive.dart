@@ -70,5 +70,7 @@ library;
 export 'adaptive_layout_builder.dart';
 export 'build_context_extension.dart';
 export 'responsive_container.dart';
+export 'responsive_grid.dart';
+export 'responsive_padding.dart';
 export 'responsive_spacing.dart';
 export 'screen_size.dart';

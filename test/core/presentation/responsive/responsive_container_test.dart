@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:starter_app/core/presentation/responsive/adaptive_layout_builder.dart';
-import 'package:starter_app/core/presentation/responsive/responsive_container.dart';
+import 'package:starter_app/core/presentation/responsive/responsive.dart';
 
 void main() {
   Future<void> pumpResponsiveContainer(
