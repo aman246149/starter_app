@@ -1,0 +1,11 @@
+{
+    "@@locale": "en",
+    "appBarTitle": "Profile",
+    "@appBarTitle": {
+        "description": "Profile page app bar title"
+    },
+    "welcome": "Welcome",
+    "@welcome": {
+        "description": "Welcome message on auth page app bar"
+    }
+}

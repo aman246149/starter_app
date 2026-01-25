@@ -1,0 +1,11 @@
+{
+    "@@locale": "es",
+    "appBarTitle": "Perfil",
+    "@appBarTitle": {
+        "description": "Título de la barra de la página de perfil"
+    },
+    "welcome": "Bienvenido",
+    "@welcome": {
+        "description": "Mensaje de bienvenida en la barra de la página de autenticación"
+    }
+}
