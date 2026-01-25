@@ -13,4 +13,13 @@ class ProfileLocalizationsEn extends ProfileLocalizations {
 
   @override
   String get welcome => 'Welcome';
+
+  @override
+  String get unexpectedError => 'An unexpected error occurred.';
+
+  @override
+  String get serverError => 'A server error occurred. Please try again later.';
+
+  @override
+  String get notFound => 'Profile not found.';
 }

@@ -127,10 +127,14 @@ import 'package:starter_app/features/profile/infrastructure/datasources/profile_
     as _i927;
 import 'package:starter_app/features/profile/infrastructure/datasources/user_profile_remote_data_source.dart'
     as _i937;
+import 'package:starter_app/features/profile/infrastructure/mappers/profile_exception_mapper.dart'
+    as _i458;
 import 'package:starter_app/features/profile/infrastructure/repositories/user_profile_repository_impl.dart'
     as _i45;
 import 'package:starter_app/features/profile/presentation/bloc/profile_bloc.dart'
     as _i493;
+import 'package:starter_app/features/profile/presentation/failure_message/profile_failure_mapper.dart'
+    as _i873;
 import 'package:synchronized/synchronized.dart' as _i409;
 
 const String _development = 'development';
@@ -153,6 +157,9 @@ extension GetItInjectableX on _i174.GetIt {
     final errorModule = _$ErrorModule();
     gh.factory<_i161.AuthExceptionMapper>(
       () => const _i161.AuthExceptionMapper(),
+    );
+    gh.factory<_i458.ProfileExceptionMapper>(
+      () => const _i458.ProfileExceptionMapper(),
     );
     gh.singleton<_i409.Lock>(() => networkModule.provideTokenRefreshLock());
     gh.singleton<_i448.CircuitBreakerConfig>(
@@ -227,6 +234,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i449.IErrorReporter>(
       () => errorModule.provideStagingReporter(gh<_i439.IDataFilter>()),
       registerFor: {_staging, _production},
+    );
+    gh.factory<_i873.ProfileFailureMapper>(
+      () => _i873.ProfileFailureMapper(gh<_i184.FailureMapperRegistry>()),
     );
     gh.singleton<_i1023.EmailFailureMapper>(
       () => _i1023.EmailFailureMapper(gh<_i184.FailureMapperRegistry>()),
@@ -323,21 +333,15 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i937.UserProfileRemoteDataSourceImpl(gh<_i927.ProfileApiService>()),
     );
+    gh.lazySingleton<_i737.IAuthRemoteDataSource>(
+      () => _i737.AuthRemoteDataSourceImpl(gh<_i986.AuthApiService>()),
+    );
     gh.lazySingleton<_i148.IUserProfileRepository>(
       () => _i45.UserProfileRepositoryImpl(
         gh<_i937.IUserProfileRemoteDataSource>(),
         gh<_i1007.ExceptionHandler>(),
+        gh<_i458.ProfileExceptionMapper>(),
       ),
-    );
-    gh.lazySingleton<_i737.IAuthRemoteDataSource>(
-      () => _i737.AuthRemoteDataSourceImpl(gh<_i986.AuthApiService>()),
-    );
-    gh.factory<_i0.GetProfile>(
-      () => _i0.GetProfile(gh<_i148.IUserProfileRepository>()),
-    );
-    gh.factory<_i493.ProfileBloc>(
-      () =>
-          _i493.ProfileBloc(gh<_i0.GetProfile>(), gh<_i696.IEventDispatcher>()),
     );
     gh.lazySingleton<_i870.IAuthRepository>(
       () => _i889.AuthRepositoryImpl(
@@ -358,6 +362,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i266.WatchAuthChanges>(
       () => _i266.WatchAuthChanges(gh<_i870.IAuthRepository>()),
     );
+    gh.factory<_i0.GetProfile>(
+      () => _i0.GetProfile(gh<_i148.IUserProfileRepository>()),
+    );
     gh.factory<_i772.UserRegistrationService>(
       () => _i772.UserRegistrationService(
         gh<_i870.IAuthRepository>(),
@@ -366,6 +373,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i482.Register>(
       () => _i482.Register(gh<_i772.UserRegistrationService>()),
+    );
+    gh.factory<_i493.ProfileBloc>(
+      () =>
+          _i493.ProfileBloc(gh<_i0.GetProfile>(), gh<_i696.IEventDispatcher>()),
     );
     gh.factory<_i23.GetCurrentUser>(
       () => _i23.GetCurrentUser(

@@ -95,7 +95,7 @@ abstract class ProfileLocalizations {
     Locale('es')
   ];
 
-  /// No description provided for @appBarTitle.
+  /// Profile page app bar title
   ///
   /// In en, this message translates to:
   /// **'Profile'**
@@ -106,6 +106,24 @@ abstract class ProfileLocalizations {
   /// In en, this message translates to:
   /// **'Welcome'**
   String get welcome;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred.'**
+  String get unexpectedError;
+
+  /// No description provided for @serverError.
+  ///
+  /// In en, this message translates to:
+  /// **'A server error occurred. Please try again later.'**
+  String get serverError;
+
+  /// No description provided for @notFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile not found.'**
+  String get notFound;
 }
 
 class _ProfileLocalizationsDelegate extends LocalizationsDelegate<ProfileLocalizations> {

@@ -7,5 +7,17 @@
     "welcome": "Bienvenido",
     "@welcome": {
         "description": "Mensaje de bienvenida en la barra de la página de autenticación"
+    },
+    "unexpectedError": "Ocurrió un error inesperado.",
+    "@unexpectedError": {
+        "description": "Generic unexpected error message"
+    },
+    "serverError": "Ocurrió un error en el servidor. Inténtalo de nuevo más tarde.",
+    "@serverError": {
+        "description": "Error message when server request fails"
+    },
+    "notFound": "Perfil no encontrado.",
+    "@notFound": {
+        "description": "Error message when profile is not found"
     }
 }

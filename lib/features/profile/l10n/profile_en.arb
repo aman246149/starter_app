@@ -7,5 +7,17 @@
     "welcome": "Welcome",
     "@welcome": {
         "description": "Welcome message on auth page app bar"
+    },
+    "unexpectedError": "An unexpected error occurred.",
+    "@unexpectedError": {
+        "description": "Generic unexpected error message"
+    },
+    "serverError": "A server error occurred. Please try again later.",
+    "@serverError": {
+        "description": "Error message when server request fails"
+    },
+    "notFound": "Profile not found.",
+    "@notFound": {
+        "description": "Error message when profile is not found"
     }
 }
