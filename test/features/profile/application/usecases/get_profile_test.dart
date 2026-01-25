@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
 import 'package:starter_app/features/profile/application/usecases/get_profile.dart';
+import 'package:starter_app/features/profile/domain/failure/profile_failure.dart';
 
 import '../../../../helpers/mock_helpers.dart';
 import '../../../../helpers/test_data.dart';
@@ -42,8 +42,9 @@ void main() {
 
     test('should return failure when repository fails', () async {
       // Arrange
+      const failure = ProfileFailure.serverError(message: 'Server error');
       when(() => mockRepository.getCurrentProfile()).thenAnswer(
-        (_) async => const Left(NetworkFailure()),
+        (_) async => const Left(failure),
       );
 
       // Act
@@ -52,7 +53,7 @@ void main() {
       // Assert
       expect(result.isLeft(), isTrue);
       result.fold(
-        (failure) => expect(failure, isA<NetworkFailure>()),
+        (failure) => expect(failure, isA<ProfileFailure>()),
         (_) => fail('Expected Left but got Right'),
       );
     });

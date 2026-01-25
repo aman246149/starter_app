@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/error/exception_handler.dart';
 import 'package:starter_app/features/profile/domain/entities/user_profile.dart';
 import 'package:starter_app/features/profile/infrastructure/datasources/user_profile_remote_data_source.dart';
+import 'package:starter_app/features/profile/infrastructure/mappers/profile_exception_mapper.dart';
 import 'package:starter_app/features/profile/infrastructure/repositories/user_profile_repository_impl.dart';
 
 import '../../../../helpers/test_data.dart';
@@ -29,11 +30,11 @@ void main() {
     repository = UserProfileRepositoryImpl(
       mockDataSource,
       exceptionHandler,
+      const ProfileExceptionMapper(),
     );
   });
 
   group('UserProfileRepositoryImpl', () {
-
     group('getCurrentProfile', () {
       test('should call remote data source getMyProfile', () async {
         // Arrange

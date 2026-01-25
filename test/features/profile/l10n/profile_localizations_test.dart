@@ -108,6 +108,30 @@ void main() {
 
       expect(localizations.welcome, equals('Welcome'));
     });
+
+    test('unexpectedError returns An unexpected error occurred.', () {
+      final localizations = ProfileLocalizationsEn();
+
+      expect(
+        localizations.unexpectedError,
+        equals('An unexpected error occurred.'),
+      );
+    });
+
+    test('serverError returns A server error occurred...', () {
+      final localizations = ProfileLocalizationsEn();
+
+      expect(
+        localizations.serverError,
+        equals('A server error occurred. Please try again later.'),
+      );
+    });
+
+    test('notFound returns Profile not found.', () {
+      final localizations = ProfileLocalizationsEn();
+
+      expect(localizations.notFound, equals('Profile not found.'));
+    });
   });
 
   group('ProfileLocalizationsEs', () {
@@ -127,6 +151,32 @@ void main() {
       final localizations = ProfileLocalizationsEs();
 
       expect(localizations.welcome, equals('Bienvenido'));
+    });
+
+    test('unexpectedError returns Ocurrió un error inesperado.', () {
+      final localizations = ProfileLocalizationsEs();
+
+      expect(
+        localizations.unexpectedError,
+        equals('Ocurrió un error inesperado.'),
+      );
+    });
+
+    test('serverError returns Ocurrió un error en el servidor...', () {
+      final localizations = ProfileLocalizationsEs();
+
+      expect(
+        localizations.serverError,
+        equals(
+          'Ocurrió un error en el servidor. Inténtalo de nuevo más tarde.',
+        ),
+      );
+    });
+
+    test('notFound returns Perfil no encontrado.', () {
+      final localizations = ProfileLocalizationsEs();
+
+      expect(localizations.notFound, equals('Perfil no encontrado.'));
     });
   });
 }

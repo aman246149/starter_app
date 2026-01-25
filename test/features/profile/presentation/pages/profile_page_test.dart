@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/di/injection.dart';
+import 'package:starter_app/core/error/failures/failure.dart';
 import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
 import 'package:starter_app/core/presentation/models/error_model.dart';
+import 'package:starter_app/core/presentation/services/failure_message_service.dart';
 import 'package:starter_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:starter_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:starter_app/features/profile/presentation/bloc/profile_bloc.dart';
@@ -19,6 +21,11 @@ import '../../../../helpers/test_data.dart';
 void main() {
   late MockAuthBloc mockAuthBloc;
   late MockProfileBloc mockProfileBloc;
+  setUpAll(() {
+    registerFallbackValue(MockBuildContext());
+    registerFallbackValue(FakeFailure());
+  });
+
   setUp(() {
     mockAuthBloc = MockAuthBloc();
     mockProfileBloc = MockProfileBloc();
@@ -139,15 +146,25 @@ void main() {
         () => mockProfileBloc.state,
       ).thenReturn(ProfileState.error(errorModel));
 
+      final mockFailureMessageService = MockFailureMessageService();
+      when(
+        () => mockFailureMessageService.getLocalizedMessage(any(), any()),
+      ).thenReturn('Localized error message');
+
       await tester.pumpAppWithBloc(
-        const ProfilePage(),
+        RepositoryProvider<FailureMessageService>.value(
+          value: mockFailureMessageService,
+          child: const ProfilePage(),
+        ),
         providers: [
           BlocProvider<AuthBloc>.value(value: mockAuthBloc),
           BlocProvider<ProfileBloc>.value(value: mockProfileBloc),
         ],
       );
 
-      expect(find.textContaining('Error'), findsOneWidget);
+      expect(find.text('Localized error message'), findsOneWidget);
     });
   });
 }
+
+class FakeFailure extends Fake implements Failure {}
