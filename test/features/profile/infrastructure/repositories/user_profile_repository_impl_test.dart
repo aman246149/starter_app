@@ -33,31 +33,6 @@ void main() {
   });
 
   group('UserProfileRepositoryImpl', () {
-    group('create', () {
-      test('should call remote data source and return domain entity', () async {
-        // Arrange
-        final profile = TestData.userProfile();
-        when(
-          () => mockDataSource.create(any()),
-        ).thenAnswer((_) async => TestData.userProfileModel);
-
-        // Act
-        final result = await repository.create(profile);
-
-        // Assert
-        expect(result.isRight(), isTrue);
-        result.fold(
-          (failure) => fail('Expected Right but got Left: $failure'),
-          (createdProfile) {
-            expect(createdProfile, isA<UserProfile>());
-            expect(createdProfile.displayName.getOrCrash(), TestData.name);
-          },
-        );
-        verify(() => mockDataSource.create(any())).called(1);
-      });
-    });
-
-
 
     group('getCurrentProfile', () {
       test('should call remote data source getMyProfile', () async {

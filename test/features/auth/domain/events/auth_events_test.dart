@@ -64,37 +64,4 @@ void main() {
     });
   });
 
-  group('UserEmailVerified', () {
-    test('stores user correctly', () {
-      final user = TestData.user();
-      final event = UserEmailVerified(user);
-
-      expect(event.user, user);
-    });
-
-    test('extends AuthDomainEvent', () {
-      final user = TestData.user();
-      final event = UserEmailVerified(user);
-
-      expect(event, isA<AuthDomainEvent>());
-    });
-  });
-
-  group('UserEmailChanged', () {
-    test('stores user and oldEmail correctly', () {
-      final user = TestData.user();
-      const oldEmail = 'old@example.com';
-      final event = UserEmailChanged(user, oldEmail);
-
-      expect(event.user, user);
-      expect(event.oldEmail, oldEmail);
-    });
-
-    test('extends AuthDomainEvent', () {
-      final user = TestData.user();
-      final event = UserEmailChanged(user, 'old@example.com');
-
-      expect(event, isA<AuthDomainEvent>());
-    });
-  });
 }

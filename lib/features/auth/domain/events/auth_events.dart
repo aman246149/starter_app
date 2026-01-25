@@ -15,8 +15,6 @@ import 'package:starter_app/features/auth/domain/entities/user_id.dart';
 ///   case UserRegistered(): // New account created
 ///   case UserSessionRestored(): // Session restored from tokens on app restart
 ///   case UserLoggedOut(): // User actively logged out
-///   case UserEmailVerified(): // Email verification completed
-///   case UserEmailChanged(): // User changed their email
 /// }
 /// ```
 ///
@@ -26,8 +24,6 @@ import 'package:starter_app/features/auth/domain/entities/user_id.dart';
 /// - [UserRegistered] - New user account was created
 /// - [UserSessionRestored] - Session restored from stored tokens (app restart)
 /// - [UserLoggedOut] - User logged out (active or forced)
-/// - [UserEmailVerified] - User's email was verified
-/// - [UserEmailChanged] - User changed their email address
 ///
 /// ## Usage with IEventDispatcher
 ///
@@ -70,19 +66,6 @@ class UserRegistered extends AuthDomainEvent {
 class UserLoggedOut extends AuthDomainEvent {
   const UserLoggedOut(this.userId);
   final UserId userId;
-}
-
-/// Event fired when a user's email is verified.
-class UserEmailVerified extends AuthDomainEvent {
-  const UserEmailVerified(this.user);
-  final User user;
-}
-
-/// Event fired when a user changes their email address.
-class UserEmailChanged extends AuthDomainEvent {
-  const UserEmailChanged(this.user, this.oldEmail);
-  final User user;
-  final String oldEmail;
 }
 
 /// Event fired when a user's session is restored from stored tokens.
