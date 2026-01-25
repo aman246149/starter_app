@@ -36,21 +36,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   /// Listen to cross-feature domain events.
   /// Auto-triggers profile fetch on login/registration/session restore.
   void _setupEventListeners() {
-    _eventSubscription = _eventDispatcher.events.listen((event) {
-      if (event is! AuthDomainEvent) return;
+    _eventSubscription = _eventDispatcher.on<AuthDomainEvent>().listen((event) {
+      final profileEvent = switch (event) {
+        UserRegistered() ||
+        UserLoggedIn() ||
+        UserSessionRestored() => const ProfileEvent.getMyProfile(),
+        UserLoggedOut() => const ProfileEvent.reset(),
+      };
 
-      switch (event) {
-        case UserRegistered():
-        case UserLoggedIn():
-        case UserSessionRestored():
-          add(const ProfileEvent.getMyProfile());
-        case UserLoggedOut():
-          add(const ProfileEvent.reset());
-        case UserEmailVerified():
-        case UserEmailChanged():
-          // No action needed for profile
-          break;
-      }
+      add(profileEvent);
     });
   }
 

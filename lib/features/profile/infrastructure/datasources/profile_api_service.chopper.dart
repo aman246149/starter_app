@@ -19,16 +19,6 @@ final class _$ProfileApiService extends ProfileApiService {
   final Type definitionType = ProfileApiService;
 
   @override
-  Future<Response<Map<String, dynamic>>> createProfile(
-    Map<String, dynamic> body,
-  ) {
-    final Uri $url = Uri.parse('/api/v1/profiles/');
-    final $body = body;
-    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
-    return client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
-  }
-
-  @override
   Future<Response<Map<String, dynamic>>> getMyProfile() {
     final Uri $url = Uri.parse('/api/v1/profiles/me');
     final Request $request = Request('GET', $url, client.baseUrl);

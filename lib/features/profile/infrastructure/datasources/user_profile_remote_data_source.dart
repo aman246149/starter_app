@@ -6,7 +6,6 @@ import 'package:starter_app/features/profile/infrastructure/models/user_profile_
 
 /// Remote data source for user profiles.
 abstract interface class IUserProfileRemoteDataSource {
-  Future<UserProfileModel> create(UserProfileModel profile);
   Future<UserProfileModel> getMyProfile();
 }
 
@@ -17,14 +16,6 @@ class UserProfileRemoteDataSourceImpl extends BaseRemoteDataSource
   UserProfileRemoteDataSourceImpl(this._apiService);
 
   final ProfileApiService _apiService;
-
-  @override
-  Future<UserProfileModel> create(UserProfileModel profile) => execute(
-    () async {
-      final response = await _apiService.createProfile(profile.toJson());
-      return UserProfileModel.fromJson(response.requireBody);
-    },
-  );
 
   @override
   Future<UserProfileModel> getMyProfile() => execute(

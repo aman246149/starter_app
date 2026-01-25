@@ -11,11 +11,6 @@ abstract class ProfileApiService extends ChopperService {
   static ProfileApiService create(ChopperClient client) =>
       _$ProfileApiService(client);
 
-  @POST(path: ProfileEndpoints.profiles)
-  Future<Response<Map<String, dynamic>>> createProfile(
-    @Body() Map<String, dynamic> body,
-  );
-
 
   @GET(path: ProfileEndpoints.me)
   Future<Response<Map<String, dynamic>>> getMyProfile();
