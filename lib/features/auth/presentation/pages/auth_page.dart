@@ -12,7 +12,8 @@ import 'package:starter_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:starter_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:starter_app/features/auth/presentation/bloc/auth_state.dart';
 
-part '../widgets/email_form.dart';
+import 'package:starter_app/features/auth/presentation/widgets/email_form.dart';
+
 part '../widgets/login_form.dart';
 part '../widgets/register_form.dart';
 
@@ -97,9 +98,19 @@ final class AuthPage extends StatelessWidget {
                 );
               },
               child: state.maybeMap(
-                initial: (s) => _EmailForm(
+                initial: (s) => EmailForm(
                   key: emailValueKey,
-                  state: s,
+                  email: s.email,
+                  showError: s.validation.emailTouched,
+                  onEmailChanged: (email) => context.read<AuthBloc>().add(
+                    AuthEvent.emailChanged(email),
+                  ),
+                  onEmailUnfocused: () => context.read<AuthBloc>().add(
+                    const AuthEvent.emailUnfocused(),
+                  ),
+                  onSubmitted: () => context.read<AuthBloc>().add(
+                    const AuthEvent.emailSubmitted(),
+                  ),
                 ),
                 loginRequired: (s) => _LoginForm(
                   key: loginValueKey,

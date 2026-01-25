@@ -95,7 +95,7 @@ abstract class AppLocalizations {
     Locale('es')
   ];
 
-  /// No description provided for @appName.
+  /// App name
   ///
   /// In en, this message translates to:
   /// **'Starter App'**

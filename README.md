@@ -328,6 +328,37 @@ See [MASON_GUIDE.md](./MASON_GUIDE.md) for detailed templates.
 
 ---
 
+## 🔌 Backend (Optional)
+
+Want to test with a real backend? A companion **Spring Boot** server is available:
+
+👉 **[starter_app_backend](https://github.com/deveminsahin/starter_app_backend)**
+
+```bash
+# Option 1: Run with Docker
+git clone https://github.com/deveminsahin/starter_app_backend.git
+cd starter_app_backend
+docker-compose up
+
+# Option 2: Run directly (requires Java 25+)
+./gradlew bootRun
+```
+
+Backend runs at `http://localhost:8080`. The Flutter app is pre-configured to connect.
+
+### Backend Features
+
+| Feature | Endpoint | Description |
+|---------|----------|-------------|
+| 🔐 Authentication | `/api/v1/auth/*` | Register, Login, Refresh, Logout |
+| 👤 Profile | `/api/v1/profiles/*` | Create, Read, Update profile |
+| 🔄 WebSocket | `/ws/auth` | Real-time auth state notifications |
+
+> [!NOTE]
+> The backend uses an in-memory H2 database for development. All data resets on restart.
+
+---
+
 ## 🤝 Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup, code style, and PR guidelines.

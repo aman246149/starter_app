@@ -22,7 +22,8 @@ import 'package:starter_app/features/auth/infrastructure/models/login_request_mo
 import 'package:starter_app/features/auth/infrastructure/models/register_request_model.dart';
 
 @LazySingleton(as: IAuthRepository)
-class AuthRepositoryImpl extends BaseRepository implements IAuthRepository {
+final class AuthRepositoryImpl extends BaseRepository
+    implements IAuthRepository {
   AuthRepositoryImpl(
     this._remoteDataSource,
     this._webSocketDataSource,

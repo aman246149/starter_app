@@ -1,6 +1,9 @@
 {
     "@@locale": "es",
-    "appName":"Aplicación Inicial",
+    "appName": "Aplicación Inicial",
+    "@appName": {
+        "description": "Nombre de la aplicación"
+    },
     "unexpectedError": "Ocurrió un error inesperado",
     "@unexpectedError": {
         "description": "Mensaje de error mostrado cuando ocurre un error inesperado"

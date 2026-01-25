@@ -1,8 +1,25 @@
-part of '../pages/auth_page.dart';
+import 'package:flutter/material.dart';
+import 'package:starter_app/core/constants/constants.dart';
+import 'package:starter_app/core/domain/value_objects/email_address.dart';
+import 'package:starter_app/core/presentation/responsive/responsive.dart';
+import 'package:starter_app/core/presentation/widgets/email_text_field.dart';
+import 'package:starter_app/features/auth/l10n/l10n_extensions.dart';
 
-final class _EmailForm extends StatelessWidget {
-  const _EmailForm({required this.state, super.key});
-  final Initial state;
+final class EmailForm extends StatelessWidget {
+  const EmailForm({
+    required this.email,
+    required this.showError,
+    required this.onEmailChanged,
+    required this.onEmailUnfocused,
+    required this.onSubmitted,
+    super.key,
+  });
+
+  final EmailAddress email;
+  final bool showError;
+  final ValueChanged<String> onEmailChanged;
+  final VoidCallback onEmailUnfocused;
+  final VoidCallback onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -13,25 +30,17 @@ final class _EmailForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             EmailTextField(
-              email: state.email,
-              showError: state.validation.emailTouched,
+              email: email,
+              showError: showError,
               label: context.authL10n.emailLabel,
               hint: context.authL10n.emailHint,
-              onChanged: (email) => context.read<AuthBloc>().add(
-                AuthEvent.emailChanged(email),
-              ),
-              onEditingComplete: () => context.read<AuthBloc>().add(
-                const AuthEvent.emailUnfocused(),
-              ),
-              onSubmitted: (email) => context.read<AuthBloc>().add(
-                const AuthEvent.emailSubmitted(),
-              ),
+              onChanged: onEmailChanged,
+              onEditingComplete: onEmailUnfocused,
+              onSubmitted: (_) => onSubmitted(),
             ),
             const ResponsiveVerticalGap(),
             ElevatedButton(
-              onPressed: () => context.read<AuthBloc>().add(
-                const AuthEvent.emailSubmitted(),
-              ),
+              onPressed: onSubmitted,
               child: Text(context.authL10n.continueToEmail),
             ),
           ],

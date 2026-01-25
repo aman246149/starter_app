@@ -5,10 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/domain/base/domain_event.dart';
-import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
 import 'package:starter_app/core/presentation/models/error_model.dart';
 import 'package:starter_app/features/auth/domain/events/auth_events.dart';
 import 'package:starter_app/features/profile/application/usecases/get_profile.dart';
+import 'package:starter_app/features/profile/domain/failure/profile_failure.dart';
 import 'package:starter_app/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:starter_app/features/profile/presentation/bloc/profile_event.dart';
 import 'package:starter_app/features/profile/presentation/bloc/profile_state.dart';
@@ -72,8 +72,9 @@ void main() {
       blocTest<ProfileBloc, ProfileState>(
         'emits [loading, error] when GetProfile fails',
         build: () {
+          const failure = ProfileFailure.serverError(message: 'Server error');
           when(() => mockRepository.getCurrentProfile()).thenAnswer(
-            (_) async => const Left(NetworkFailure()),
+            (_) async => const Left(failure),
           );
           return ProfileBloc(getProfile, eventDispatcher);
         },
@@ -156,7 +157,6 @@ void main() {
         act: (bloc) => eventController.add(UserLoggedOut(TestData.user().id)),
         expect: () => [const ProfileState.initial()],
       );
-
 
       test('ignores non-AuthDomainEvent events', () async {
         // Create a custom non-auth event for testing

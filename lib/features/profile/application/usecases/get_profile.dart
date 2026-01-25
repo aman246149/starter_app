@@ -11,7 +11,7 @@ final class GetProfile extends QueryNoParams<UserProfile> {
   final IUserProfileRepository _repository;
 
   @override
-  FutureResult<UserProfile> call() {
+  FutureResult<UserProfile> call() async {
     return _repository.getCurrentProfile();
   }
 }

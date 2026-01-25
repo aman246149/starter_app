@@ -18,7 +18,7 @@ import 'package:starter_app/features/auth/domain/failure/auth_failure.dart';
 /// - 404 Not Found → [AuthFailure.notFound]
 /// - Other 4xx/5xx → [InfrastructureFailure.server]
 @injectable
-class AuthExceptionMapper implements IExceptionMapper {
+final class AuthExceptionMapper implements IExceptionMapper {
   const AuthExceptionMapper();
 
   @override
