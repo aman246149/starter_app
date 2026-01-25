@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:starter_app/core/api/extensions/response_extensions.dart';
 import 'package:starter_app/core/infrastructure/base_remote_data_source.dart';
 import 'package:starter_app/features/auth/infrastructure/datasources/auth_api_service.dart';
 import 'package:starter_app/features/auth/infrastructure/models/auth_response_model.dart';
@@ -43,24 +44,25 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   final AuthApiService _apiService;
 
   @override
-  Future<bool> checkUserExists(CheckUserExistsRequestModel request) =>
-      execute(() async {
-        final response = await _apiService.checkUserExists(request.toJson());
-        return CheckUserExistsResponseModel.fromJson(response.body!).exists;
-      });
+  Future<bool> checkUserExists(CheckUserExistsRequestModel request) => execute(
+    () async {
+      final response = await _apiService.checkUserExists(request.toJson());
+      return CheckUserExistsResponseModel.fromJson(response.requireBody).exists;
+    },
+  );
 
   @override
   Future<AuthResponseModel> login(LoginRequestModel request) =>
       execute(() async {
         final response = await _apiService.login(request.toJson());
-        return AuthResponseModel.fromJson(response.body!);
+        return AuthResponseModel.fromJson(response.requireBody);
       });
 
   @override
   Future<AuthResponseModel> register(RegisterRequestModel request) =>
       execute(() async {
         final response = await _apiService.register(request.toJson());
-        return AuthResponseModel.fromJson(response.body!);
+        return AuthResponseModel.fromJson(response.requireBody);
       });
 
   @override
@@ -74,13 +76,13 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<AuthTokensModel> refreshToken(String refreshToken) => execute(
     () async {
       final response = await _apiService.refreshToken({'token': refreshToken});
-      return AuthTokensModel.fromJson(response.body!);
+      return AuthTokensModel.fromJson(response.requireBody);
     },
   );
 
   @override
   Future<UserModel> getCurrentUser() => execute(() async {
     final response = await _apiService.getCurrentUser();
-    return UserModel.fromJson(response.body!);
+    return UserModel.fromJson(response.requireBody);
   });
 }

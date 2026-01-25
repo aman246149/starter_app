@@ -24,7 +24,8 @@ import 'package:flutter/foundation.dart';
 ///   Future<bool> checkUserExists(CheckUserExistsRequestModel request) =>
 ///     execute(() async {
 ///       final response = await _apiService.checkUserExists(request.toJson());
-///       return CheckUserExistsResponseModel.fromJson(response.body!).exists;
+///       return CheckUserExistsResponseModel
+///       .fromJson(response.requireBody).exists;
 ///     });
 /// }
 /// ```
