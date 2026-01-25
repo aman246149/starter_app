@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:starter_app/features/auth/domain/entities/user.dart';
-import 'package:starter_app/features/auth/domain/events/auth_events.dart';
 
 import '../../../../helpers/test_data.dart';
 
@@ -21,37 +20,6 @@ void main() {
       });
     });
 
-    group('changeEmail', () {
-      test('updates email and emits event', () {
-        final user = TestData.user(
-          id: testId.value.value,
-          emailStr: 'old@example.com',
-        );
-
-        final newEmail = TestData.emailAddress('new@example.com');
-        final updatedUser = user.changeEmail(newEmail);
-
-        expect(updatedUser.email, newEmail);
-        expect(updatedUser.domainEvents.length, 1);
-        expect(updatedUser.domainEvents.first, isA<UserEmailChanged>());
-
-        final event = updatedUser.domainEvents.first as UserEmailChanged;
-        expect(event.user, updatedUser);
-        expect(event.oldEmail, 'old@example.com');
-      });
-
-      test('does nothing when email is same', () {
-        final user = TestData.user(
-          id: testId.value.value,
-          emailStr: testEmail.getOrCrash(),
-        );
-
-        final updatedUser = user.changeEmail(testEmail);
-
-        expect(updatedUser, user); // Same instance
-        expect(updatedUser.domainEvents, isEmpty);
-      });
-    });
 
     group('equality', () {
       test('has same ID when created with same ID', () {

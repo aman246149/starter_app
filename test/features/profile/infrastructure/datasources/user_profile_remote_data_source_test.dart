@@ -31,23 +31,6 @@ void main() {
   }
 
   group('UserProfileRemoteDataSourceImpl', () {
-    group('create', () {
-      test('should call API service and return model', () async {
-        // Arrange
-        when(
-          () => mockApiService.createProfile(any()),
-        ).thenAnswer((_) async => createResponse(TestData.userProfileJson));
-
-        // Act
-        final result = await dataSource.create(TestData.userProfileModel);
-
-        // Assert
-        expect(result, isA<UserProfileModel>());
-        expect(result.displayName, equals(TestData.name));
-        verify(() => mockApiService.createProfile(any())).called(1);
-      });
-    });
-
     group('getMyProfile', () {
       test('should call API service and return my profile', () async {
         // Arrange

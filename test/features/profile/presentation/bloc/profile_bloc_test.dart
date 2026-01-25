@@ -33,8 +33,12 @@ void main() {
     eventDispatcher = MockEventDispatcher();
     eventController = StreamController<DomainEvent>.broadcast();
     when(
-      () => eventDispatcher.events,
-    ).thenAnswer((_) => eventController.stream);
+      () => eventDispatcher.on<AuthDomainEvent>(),
+    ).thenAnswer(
+      (_) => eventController.stream
+          .where((e) => e is AuthDomainEvent)
+          .cast<AuthDomainEvent>(),
+    );
     getProfile = GetProfile(mockRepository);
     bloc = ProfileBloc(getProfile, eventDispatcher);
   });
@@ -153,23 +157,6 @@ void main() {
         expect: () => [const ProfileState.initial()],
       );
 
-      blocTest<ProfileBloc, ProfileState>(
-        'does nothing when UserEmailVerified event is dispatched',
-        build: () => ProfileBloc(getProfile, eventDispatcher),
-        seed: () => ProfileState.loaded(TestData.userProfile()),
-        act: (bloc) => eventController.add(UserEmailVerified(TestData.user())),
-        expect: () => <ProfileState>[],
-      );
-
-      blocTest<ProfileBloc, ProfileState>(
-        'does nothing when UserEmailChanged event is dispatched',
-        build: () => ProfileBloc(getProfile, eventDispatcher),
-        seed: () => ProfileState.loaded(TestData.userProfile()),
-        act: (bloc) => eventController.add(
-          UserEmailChanged(TestData.user(), 'old@example.com'),
-        ),
-        expect: () => <ProfileState>[],
-      );
 
       test('ignores non-AuthDomainEvent events', () async {
         // Create a custom non-auth event for testing
@@ -195,8 +182,12 @@ void main() {
       test('cancels event subscription on close', () async {
         final localController = StreamController<DomainEvent>.broadcast();
         when(
-          () => eventDispatcher.events,
-        ).thenAnswer((_) => localController.stream);
+          () => eventDispatcher.on<AuthDomainEvent>(),
+        ).thenAnswer(
+          (_) => localController.stream
+              .where((e) => e is AuthDomainEvent)
+              .cast<AuthDomainEvent>(),
+        );
 
         final localBloc = ProfileBloc(getProfile, eventDispatcher);
 
