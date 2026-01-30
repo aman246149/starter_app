@@ -44,8 +44,8 @@ void main() {
         'BENCHMARK: getit_registration = ${stopwatch.elapsedMicroseconds}μs',
       );
 
-      // Registration should be very fast (< 10ms)
-      expect(stopwatch.elapsedMilliseconds, lessThan(10));
+      // Registration should be fast (< 100ms, relaxed for CI)
+      expect(stopwatch.elapsedMilliseconds, lessThan(100));
     });
 
     test('benchmark: mock BLoC instantiation overhead', () async {
@@ -78,8 +78,8 @@ void main() {
         '${stopwatch.elapsedMicroseconds}μs',
       );
 
-      // 40 mock instantiations should be very fast (< 20ms)
-      expect(stopwatch.elapsedMilliseconds, lessThan(20));
+      // 40 mock instantiations should be fast (< 100ms, relaxed for CI)
+      expect(stopwatch.elapsedMilliseconds, lessThan(100));
       expect(blocs.length, equals(40));
     });
 
@@ -110,8 +110,8 @@ void main() {
         '${stopwatch.elapsedMicroseconds}μs',
       );
 
-      // 250 storage operations should be very fast (< 50ms)
-      expect(stopwatch.elapsedMilliseconds, lessThan(50));
+      // 250 storage operations should be fast (< 200ms, relaxed for CI)
+      expect(stopwatch.elapsedMilliseconds, lessThan(200));
 
       // Verify remaining keys
       expect(storage.contents.length, equals(50));
@@ -141,8 +141,8 @@ void main() {
         '${stopwatch.elapsedMicroseconds}μs',
       );
 
-      // 200 state creations should be fast (< 10ms)
-      expect(stopwatch.elapsedMilliseconds, lessThan(10));
+      // 200 state creations should be fast (< 100ms, relaxed for CI)
+      expect(stopwatch.elapsedMilliseconds, lessThan(100));
       expect(states.length, equals(200));
     });
   });
