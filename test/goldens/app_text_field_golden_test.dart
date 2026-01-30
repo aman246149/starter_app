@@ -39,6 +39,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.expectGolden(
         find.byType(MaterialApp),
@@ -61,6 +63,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.expectGolden(
         find.byType(MaterialApp),
@@ -83,6 +87,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.expectGolden(
         find.byType(MaterialApp),
@@ -105,6 +111,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.expectGolden(
         find.byType(MaterialApp),

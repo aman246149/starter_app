@@ -23,6 +23,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.tap(find.text('Show SnackBar'));
       await tester.pumpAndSettle();
@@ -61,6 +63,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.tap(find.text('Show SnackBar'));
       await tester.pumpAndSettle();
@@ -94,6 +98,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.tap(find.text('Show SnackBar'));
       await tester.pumpAndSettle();

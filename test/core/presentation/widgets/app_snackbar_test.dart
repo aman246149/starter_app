@@ -22,6 +22,8 @@ void main() {
         ),
       ),
     );
+    // Advance past Sentry timer
+    await tester.pump(const Duration(seconds: 4));
 
     await tester.tap(find.text('Show'));
     await tester.pumpAndSettle(); // Complete all animations

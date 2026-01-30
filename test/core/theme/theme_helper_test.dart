@@ -21,6 +21,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
 
     testWidgets('accesses semantic colors correctly', (tester) async {
@@ -37,6 +39,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
 
     testWidgets('accesses text styles correctly', (tester) async {
@@ -55,6 +59,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
 
     testWidgets('detects theme mode correctly', (tester) async {
@@ -73,6 +79,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
 
     testWidgets('gets brightness for dark theme', (tester) async {
@@ -89,6 +97,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
 
     testWidgets('gets surface tint color', (tester) async {
@@ -103,6 +113,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
 
     testWidgets('gets elevated surface color', (tester) async {
@@ -135,6 +147,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
   });
 
@@ -166,6 +180,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
 
     testWidgets('isDarkMode returns true for dark theme', (tester) async {
@@ -183,6 +199,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
   });
 }

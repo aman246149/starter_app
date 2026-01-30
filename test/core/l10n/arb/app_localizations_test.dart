@@ -215,6 +215,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
 
     testWidgets('of returns Spanish localizations for es locale', (
@@ -235,6 +237,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     });
   });
 

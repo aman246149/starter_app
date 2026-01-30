@@ -70,6 +70,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       final textField = tester.widget<AppTextField>(find.byType(AppTextField));
       expect(textField.obscureText, isTrue);
@@ -89,6 +91,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       final textField = tester.widget<AppTextField>(find.byType(AppTextField));
       expect(textField.obscureText, isFalse);
@@ -110,6 +114,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Tap toggle button
       await tester.tap(find.byType(IconButton));
@@ -131,6 +137,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
       expect(find.byIcon(Icons.visibility_off_outlined), findsNothing);
@@ -145,6 +153,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
       expect(find.byIcon(Icons.visibility_outlined), findsNothing);
@@ -165,6 +175,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Assert - PasswordFailure.message returns detailed message
         // 'short' is too short, so tooShort failure comes first
@@ -190,6 +202,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Assert
       expect(
@@ -214,6 +228,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Assert - PasswordFailure.message for missingUppercase
         // The first failure is shown, which is missingUppercase for this case
@@ -244,6 +260,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Assert - PasswordFailure.message for tooLong
         expect(
@@ -268,6 +286,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Assert - No error messages should be shown
         expect(
@@ -297,6 +317,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Try to tap toggle button
       await tester.tap(find.byType(IconButton));

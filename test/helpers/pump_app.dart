@@ -11,13 +11,18 @@ import 'package:starter_app/features/settings/l10n/settings_localizations.dart';
 
 extension PumpApp on WidgetTester {
   /// Pump a widget with basic MaterialApp wrapper
+  ///
+  /// Note: Includes a 4-second pump to advance
+  /// past Sentry's TimeToDisplayTracker
+  /// timer that would otherwise cause "Timer still pending"
+  /// errors in CI.
   Future<void> pumpApp(
     Widget widget, {
     ThemeMode themeMode = ThemeMode.light,
     Locale locale = const Locale('en'),
-  }) {
+  }) async {
     const appTheme = AppTheme();
-    return pumpWidget(
+    await pumpWidget(
       MaterialApp(
         theme: appTheme.lightTheme,
         darkTheme: appTheme.darkTheme,
@@ -35,17 +40,24 @@ extension PumpApp on WidgetTester {
         home: widget,
       ),
     );
+    // Advance past Sentry's 3-second TimeToDisplayTracker timer
+    await pump(const Duration(seconds: 4));
   }
 
   /// Pump a widget with BLoC providers
+  ///
+  /// Note: Includes a 4-second pump to
+  /// advance past Sentry's TimeToDisplayTracker
+  /// timer that would otherwise cause "Timer still pending"
+  /// errors in CI.
   Future<void> pumpAppWithBloc(
     Widget widget, {
     List<BlocProvider> providers = const [],
     ThemeMode themeMode = ThemeMode.light,
     Locale locale = const Locale('en'),
-  }) {
+  }) async {
     const appTheme = AppTheme();
-    return pumpWidget(
+    await pumpWidget(
       MultiBlocProvider(
         providers: providers,
         child: MaterialApp(
@@ -66,5 +78,7 @@ extension PumpApp on WidgetTester {
         ),
       ),
     );
+    // Advance past Sentry's 3-second TimeToDisplayTracker timer
+    await pump(const Duration(seconds: 4));
   }
 }

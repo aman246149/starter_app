@@ -123,6 +123,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry's 3-second TimeToDisplayTracker timer
+        await tester.pump(const Duration(seconds: 4));
 
         controller.dispose();
         secondaryAnimation.dispose();
@@ -183,6 +185,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry's 3-second TimeToDisplayTracker timer
+        await tester.pump(const Duration(seconds: 4));
 
         controller.dispose();
         secondaryAnimation.dispose();

@@ -61,6 +61,9 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
 
       final textField = tester.widget<AppTextField>(find.byType(AppTextField));
       expect(textField.keyboardType, TextInputType.emailAddress);
@@ -81,6 +84,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Assert - New message from EmailFailure.message
         expect(
@@ -104,6 +109,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Assert
       expect(
@@ -127,6 +134,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Assert - New message from EmailFailure.message
         expect(
@@ -150,6 +159,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Assert - New message from EmailFailure.message
         expect(find.text('Email is required'), findsOneWidget);
@@ -170,6 +181,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Assert - No error messages should be shown
         expect(find.text('Email is required'), findsNothing);

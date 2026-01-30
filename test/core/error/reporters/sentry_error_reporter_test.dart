@@ -318,6 +318,23 @@ void main() {
           returnsNormally,
         );
       });
+
+      test('should handle user with invalid email gracefully', () {
+        final reporter = SentryErrorReporter.test(
+          dataFilter: mockDataFilter,
+          enabled: true,
+        );
+        // Create user with invalid email to test fallback to 'unknown'
+        final userWithInvalidEmail = User(
+          id: UserId(UniqueId.fromString('test-user-id')),
+          email: EmailAddress('invalid-email'), // This will be Left (failure)
+        );
+
+        expect(
+          () => reporter.setUser(userWithInvalidEmail),
+          returnsNormally,
+        );
+      });
     });
 
     group('clearUser (disabled)', () {

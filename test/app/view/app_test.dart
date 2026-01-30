@@ -93,6 +93,8 @@ void main() {
     testWidgets('renders DashboardPage via Router', (tester) async {
       await tester.pumpWidget(buildApp());
       await tester.pumpAndSettle();
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(find.byKey(const Key('Dashboard_page')), findsOneWidget);
       verify(() => mockAuthBloc.add(const AuthGetCurrentUser())).called(1);
@@ -106,6 +108,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         final materialApp = tester.widget<MaterialApp>(
           find.byType(MaterialApp),
@@ -120,6 +124,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         final materialApp = tester.widget<MaterialApp>(
           find.byType(MaterialApp),
@@ -134,6 +140,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         final materialApp = tester.widget<MaterialApp>(
           find.byType(MaterialApp),
@@ -150,6 +158,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         final materialApp = tester.widget<MaterialApp>(
           find.byType(MaterialApp),
@@ -164,6 +174,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         final materialApp = tester.widget<MaterialApp>(
           find.byType(MaterialApp),
@@ -194,6 +206,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         expect(capturedPageBuilder, mockPageBuilder);
       });
@@ -217,6 +231,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         expect(capturedLogger, mockLogger);
       });
@@ -242,6 +258,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         expect(capturedService, mockFailureMessageService);
       });
@@ -265,6 +283,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         expect(capturedAuthBloc, mockAuthBloc);
       });
@@ -288,6 +308,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         expect(capturedProfileBloc, mockProfileBloc);
       });
@@ -311,6 +333,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         expect(capturedThemeCubit, mockThemeCubit);
       });
@@ -334,6 +358,8 @@ void main() {
 
         await tester.pumpWidget(buildApp());
         await tester.pumpAndSettle();
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         expect(capturedLocaleCubit, mockLocaleCubit);
       });

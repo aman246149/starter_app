@@ -111,6 +111,8 @@ void main() {
       // Need to pump a widget to initialize the binding
       await tester.pumpWidget(const SizedBox());
 
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
       expect(AppRouter.rootNavigator, null);
     });
 
@@ -162,6 +164,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
       await tester.pump(); // Just pump once, don't wait for settle
 
       // Navigator should be available after pumping
@@ -216,6 +220,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
         await tester.pumpAndSettle();
 
         // Try to navigate to orders (protected)
@@ -292,6 +298,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
 
       // Navigate to orders (protected) - should be allowed when authenticated
@@ -361,6 +369,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
 
       // Navigate to unknown route
@@ -421,6 +431,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(find.byType(AdaptiveNavigationScaffold), findsOneWidget);
     });

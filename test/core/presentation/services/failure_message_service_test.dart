@@ -106,6 +106,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
       },
     );
 
@@ -149,6 +151,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
       },
     );
 
@@ -195,6 +199,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         // Verify canHandle was only called once (cached after first call)
         verify(() => mapper.canHandle(failure)).called(1);
@@ -243,6 +249,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
       },
     );
   });
