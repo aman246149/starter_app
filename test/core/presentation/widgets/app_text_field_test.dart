@@ -18,6 +18,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(find.text(label), findsOneWidget);
       expect(find.text(hint), findsOneWidget);
@@ -36,6 +38,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(find.text(errorText), findsOneWidget);
     });
@@ -52,6 +56,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.enterText(find.byType(AppTextField), 'test input');
       expect(changedValue, 'test input');
@@ -71,6 +77,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(find.byKey(prefixKey), findsOneWidget);
       expect(find.byKey(suffixKey), findsOneWidget);
@@ -95,6 +103,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.pump();
       expect(focusNode.hasFocus, isTrue);

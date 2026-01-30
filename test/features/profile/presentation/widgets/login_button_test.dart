@@ -82,6 +82,8 @@ void main() {
           supportedLocales: AppLocalizations.supportedLocales,
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Find and tap the button
       final button = find.byType(TextButton);

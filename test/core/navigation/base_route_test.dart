@@ -65,6 +65,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(resultPage, testPage);
       verify(
@@ -93,6 +95,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
 
         expect(tester.takeException(), isA<ProviderNotFoundException>());
       },
@@ -113,6 +117,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(find.byType(Scaffold), findsOneWidget);
       expect(find.text('Test Page'), findsOneWidget);

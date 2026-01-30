@@ -29,6 +29,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry's 3-second TimeToDisplayTracker timer
+      await tester.pump(const Duration(seconds: 4));
     }
 
     testWidgets('handles missing AppLogger gracefully', (tester) async {
@@ -39,6 +41,8 @@ void main() {
           home: const SizedBox(),
         ),
       );
+      // Advance past Sentry's 3-second TimeToDisplayTracker timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Should not crash even though logger lookup fails
       expect(observer.navigationStack, isNotEmpty);
@@ -260,6 +264,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry's 3-second TimeToDisplayTracker timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Verify the initial push logged with [custom]
       verify(

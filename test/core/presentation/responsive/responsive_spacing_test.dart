@@ -24,6 +24,8 @@ void main() {
         home: Scaffold(body: child),
       ),
     );
+    // Advance past Sentry timer
+    await tester.pump(const Duration(seconds: 4));
   }
 
   group('ResponsivePadding', () {

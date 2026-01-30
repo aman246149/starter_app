@@ -28,6 +28,8 @@ void main() {
         ),
       ),
     );
+    // Advance past Sentry timer
+    await tester.pump(const Duration(seconds: 4));
   }
 
   group('ResponsiveContainer', () {
@@ -155,6 +157,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
     }
 
     testWidgets('should apply default mobile padding on compact screens', (

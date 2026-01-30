@@ -24,6 +24,8 @@ void main() {
         ),
       ),
     );
+    // Advance past Sentry timer
+    await tester.pump(const Duration(seconds: 4));
   }
 
   group('ResponsiveContext extension', () {

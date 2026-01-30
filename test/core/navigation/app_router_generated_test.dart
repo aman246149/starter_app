@@ -94,6 +94,8 @@ void main() {
 
       await tester.pumpWidget(MaterialApp.router(routerConfig: router));
       await tester.pumpAndSettle();
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       final context = tester.element(find.byKey(const Key('ctx')));
       action(context);
@@ -175,6 +177,8 @@ void main() {
             ),
           ),
         );
+        // Advance past Sentry timer
+        await tester.pump(const Duration(seconds: 4));
         await tester.pumpAndSettle();
 
         // Navigate to Profile

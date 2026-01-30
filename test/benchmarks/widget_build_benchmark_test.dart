@@ -37,6 +37,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
 
       // Verify warm-up completed
@@ -54,6 +56,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       stopwatch.stop();
 
@@ -80,6 +84,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       stopwatch.stop();
 
@@ -107,6 +113,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       stopwatch.stop();
 
@@ -147,6 +155,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       stopwatch.stop();
 
@@ -185,6 +195,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       final stopwatch = Stopwatch()..start();
 
@@ -228,6 +240,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Count widgets in tree
       var widgetCount = 0;

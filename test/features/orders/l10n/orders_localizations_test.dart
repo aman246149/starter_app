@@ -62,6 +62,8 @@ void main() {
           ),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       expect(localizations, isA<OrdersLocalizationsEs>());
       expect(localizations.appBarTitle, 'Pedidos');

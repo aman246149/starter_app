@@ -24,6 +24,8 @@ void main() {
           home: ErrorPage(state: mockState),
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       // Use localized text - in English locale
       expect(find.text('An unexpected error occurred'), findsOneWidget);
@@ -63,6 +65,8 @@ void main() {
           routerConfig: router,
         ),
       );
+      // Advance past Sentry timer
+      await tester.pump(const Duration(seconds: 4));
 
       await tester.tap(find.text('Go Back'));
       await tester.pumpAndSettle();
