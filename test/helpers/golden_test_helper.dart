@@ -38,9 +38,13 @@ extension GoldenTestHelper on WidgetTester {
   }
 
   /// Pump and settle with a custom duration for golden tests
+  ///
+  /// Note: Pumps for 4 seconds to advance past Sentry's TimeToDisplayTracker
+  /// timer that would otherwise cause "Timer still pending" errors in CI.
   Future<void> pumpForGolden() async {
     await pump();
-    await pump(const Duration(milliseconds: 100));
+    // Advance past Sentry's 3-second TimeToDisplayTracker timer
+    await pump(const Duration(seconds: 4));
     await pumpAndSettle();
   }
 
