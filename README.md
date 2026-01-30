@@ -1,7 +1,7 @@
 # Flutter Enterprise Starter
 
 ![coverage][coverage_badge]
-[![CI](https://github.com/deveminsahin/starter_app/actions/workflows/ci.yml/badge.svg)](https://github.com/deveminsahin/starter_app/actions/workflows/ci.yml)
+[![CI](https://github.com/deveminsahin/starter_app/actions/workflows/main.yaml/badge.svg)](https://github.com/deveminsahin/starter_app/actions/workflows/main.yaml)
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 [![Flutter](https://img.shields.io/badge/Flutter-3.38+-blue.svg)](https://flutter.dev)
