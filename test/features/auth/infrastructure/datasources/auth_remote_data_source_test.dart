@@ -148,7 +148,7 @@ void main() {
       const tRegisterRequest = RegisterRequestModel(
         email: tEmail,
         password: tPassword,
-        name:tName
+        name: tName,
       );
 
       test('returns AuthResponseModel on success', () async {

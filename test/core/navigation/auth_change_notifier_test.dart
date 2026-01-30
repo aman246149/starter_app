@@ -67,11 +67,11 @@ void main() {
 
     test('dispose cancels stream subscription', () async {
       // We can verify this implicitly by ensuring
-      // no notifications after dispose or 
+      // no notifications after dispose or
       // just verify that dispose runs without error.
-      // Since it depends on private _subscription, 
+      // Since it depends on private _subscription,
       // checking directly is hard without
-      // more complex mocking of the stream listen 
+      // more complex mocking of the stream listen
       // call which returns a mock subscription.
 
       // Let's try to mock the stream.listen to return a mock subscription

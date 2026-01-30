@@ -63,5 +63,4 @@ void main() {
       expect(event, isA<AuthDomainEvent>());
     });
   });
-
 }

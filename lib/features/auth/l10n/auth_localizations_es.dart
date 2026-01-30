@@ -61,7 +61,8 @@ class AuthLocalizationsEs extends AuthLocalizations {
   String get returnHome => 'Volver al inicio';
 
   @override
-  String get emailAlreadyInUse => 'Este correo ya está registrado. Por favor inicia sesión.';
+  String get emailAlreadyInUse =>
+      'Este correo ya está registrado. Por favor inicia sesión.';
 
   @override
   String get invalidInput => 'Por favor verifica tus datos e intenta de nuevo.';

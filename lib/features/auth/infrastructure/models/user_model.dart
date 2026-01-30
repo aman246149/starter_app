@@ -47,7 +47,7 @@ abstract class UserModel with _$UserModel {
   User toDomain() {
     return User(
       id: UserId.fromString(id),
-      email: EmailAddress.fromTrustedSource(email)
+      email: EmailAddress.fromTrustedSource(email),
     );
   }
 }

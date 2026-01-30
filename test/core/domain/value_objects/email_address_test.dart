@@ -3,7 +3,6 @@ import 'package:starter_app/core/domain/base/value_object.dart';
 import 'package:starter_app/core/domain/value_objects/email_address.dart';
 import 'package:starter_app/core/domain/value_objects/email_failure.dart';
 
-
 void main() {
   group('EmailAddress', () {
     group('constructor', () {

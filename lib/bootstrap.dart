@@ -8,7 +8,6 @@ import 'package:starter_app/core/application/bootstrap_service.dart';
 import 'package:starter_app/core/types/types.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-
 /// Shared bootstrap logic for all app flavors.
 ///
 /// Initializes:

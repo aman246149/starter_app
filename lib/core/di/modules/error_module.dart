@@ -22,7 +22,7 @@ abstract class ErrorModule {
   }
 
   /// Provides error reporter for staging and production environment.
-  /// 
+  ///
   /// Staging uses Sentry for testing error tracking workflows.
   /// Production uses Sentry for production error tracking.
   @LazySingleton(env: [AppEnvironment.stagingEnv, AppEnvironment.prodEnv])

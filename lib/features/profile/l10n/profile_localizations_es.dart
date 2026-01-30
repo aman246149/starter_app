@@ -18,7 +18,8 @@ class ProfileLocalizationsEs extends ProfileLocalizations {
   String get unexpectedError => 'Ocurrió un error inesperado.';
 
   @override
-  String get serverError => 'Ocurrió un error en el servidor. Inténtalo de nuevo más tarde.';
+  String get serverError =>
+      'Ocurrió un error en el servidor. Inténtalo de nuevo más tarde.';
 
   @override
   String get notFound => 'Perfil no encontrado.';
