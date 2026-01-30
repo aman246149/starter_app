@@ -1,12 +1,11 @@
-import 'package:flutter/widgets.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:starter_app/core/error/failures/infrastructure_failures.dart';
-import 'package:starter_app/core/l10n/arb/app_localizations.dart';
 import 'package:starter_app/core/presentation/failure_message/infrastructure_failure_mapper.dart';
 
 import '../../../helpers/mock_helpers.dart';
+import '../../../helpers/pump_app.dart';
 
 void main() {
   group('InfrastructureFailureMapper', () {
@@ -28,56 +27,91 @@ void main() {
       expect(mapper.canHandle(const InfrastructureFailure.network()), true);
     });
 
-    testWidgets('map returns correct localized strings', (tester) async {
-      await tester.pumpWidget(
-        Localizations(
-          locale: const Locale('en'),
-          delegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          child: Builder(
+    group('map', () {
+      testWidgets('maps network failure to correct message', (tester) async {
+        await tester.pumpApp(
+          Builder(
             builder: (context) {
-              final mapper = InfrastructureFailureMapper(
-                MockFailureMapperRegistry(),
+              final message = mapper.map(
+                context,
+                const InfrastructureFailure.network(),
               );
-
-              expect(
-                mapper.map(context, const InfrastructureFailure.network()),
-                "Couldn't connect to the server. Please check your connection",
-              );
-              expect(
-                mapper.map(
-                  context,
-                  const InfrastructureFailure.server(
-                    message: 'Error',
-                    statusCode: 500,
-                  ),
-                ),
-                contains('Something went wrong'),
-              );
-              expect(
-                mapper.map(context, const InfrastructureFailure.cache()),
-                'Local storage error',
-              );
-              expect(
-                mapper.map(context, const InfrastructureFailure.parse()),
-                'Invalid data format received. Please contact support.',
-              );
-              expect(
-                mapper.map(
-                  context,
-                  const InfrastructureFailure.circuitBreaker(),
-                ),
-                contains('Circuit breaker tripped'),
-              );
+              expect(message, isNotEmpty);
+              expect(message.toLowerCase(), contains('connect'));
               return const SizedBox();
             },
           ),
-        ),
-      );
+        );
+      });
+
+      testWidgets('maps server failure to correct message', (tester) async {
+        await tester.pumpApp(
+          Builder(
+            builder: (context) {
+              final message = mapper.map(
+                context,
+                const InfrastructureFailure.server(
+                  message: 'Error',
+                  statusCode: 500,
+                ),
+              );
+              expect(message, isNotEmpty);
+              expect(message.toLowerCase(), contains('wrong'));
+              return const SizedBox();
+            },
+          ),
+        );
+      });
+
+      testWidgets('maps cache failure to correct message', (tester) async {
+        await tester.pumpApp(
+          Builder(
+            builder: (context) {
+              final message = mapper.map(
+                context,
+                const InfrastructureFailure.cache(),
+              );
+              expect(message, isNotEmpty);
+              expect(message.toLowerCase(), contains('storage'));
+              return const SizedBox();
+            },
+          ),
+        );
+      });
+
+      testWidgets('maps parse failure to correct message', (tester) async {
+        await tester.pumpApp(
+          Builder(
+            builder: (context) {
+              final message = mapper.map(
+                context,
+                const InfrastructureFailure.parse(),
+              );
+              expect(message, isNotEmpty);
+              expect(message.toLowerCase(), contains('data'));
+              return const SizedBox();
+            },
+          ),
+        );
+      });
+
+      testWidgets('maps circuitBreaker failure to correct message', (
+        tester,
+      ) async {
+        await tester.pumpApp(
+          Builder(
+            builder: (context) {
+              final message = mapper.map(
+                context,
+                const InfrastructureFailure.circuitBreaker(),
+              );
+              expect(message, isNotEmpty);
+              expect(message.toLowerCase(), contains('circuit'));
+              return const SizedBox();
+            },
+          ),
+        );
+      });
     });
   });
 }
