@@ -24,8 +24,7 @@ void main() {
     );
 
     await tester.tap(find.text('Show'));
-    await tester.pump(); // Start animation
-    await tester.pump(const Duration(milliseconds: 750)); // Finish animation
+    await tester.pumpAndSettle(); // Complete all animations
 
     expect(find.text(message), findsOneWidget);
     expect(find.byType(SnackBar), findsOneWidget);
