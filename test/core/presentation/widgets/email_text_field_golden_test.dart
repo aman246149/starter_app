@@ -65,7 +65,7 @@ void main() {
       );
 
       // Skip in CI - font rendering differs between platforms
-      const isCI = bool.fromEnvironment('CI', defaultValue: false);
+      const isCI = bool.fromEnvironment('CI');
       await expectLater(
         find.byType(EmailTextField),
         matchesGoldenFile('goldens/email_text_field_empty.png'),
@@ -89,7 +89,7 @@ void main() {
       );
 
       // Skip in CI - font rendering differs between platforms
-      const isCI = bool.fromEnvironment('CI', defaultValue: false);
+      const isCI = bool.fromEnvironment('CI');
       await expectLater(
         find.byType(EmailTextField),
         matchesGoldenFile('goldens/email_text_field_error.png'),
