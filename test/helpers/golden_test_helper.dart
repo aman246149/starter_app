@@ -52,7 +52,7 @@ extension GoldenTestHelper on WidgetTester {
     bool skip = false,
   }) async {
     // Skip golden tests in CI unless explicitly enabled
-    const isCI = bool.fromEnvironment('CI', defaultValue: false);
+    const isCI = bool.fromEnvironment('CI');
     final shouldSkip = skip || isCI;
 
     await pumpForGolden();

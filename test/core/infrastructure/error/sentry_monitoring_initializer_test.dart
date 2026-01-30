@@ -65,7 +65,7 @@ void main() {
           }
         },
         // Skip in CI if Sentry native bindings unavailable
-        skip: const bool.fromEnvironment('CI', defaultValue: false),
+        skip: const bool.fromEnvironment('CI'),
       );
 
       test('returns true when Sentry is successfully initialized', () async {
