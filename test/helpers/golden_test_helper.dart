@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -51,8 +53,9 @@ extension GoldenTestHelper on WidgetTester {
     String goldenPath, {
     bool skip = false,
   }) async {
-    // Skip golden tests in CI unless explicitly enabled
-    const isCI = bool.fromEnvironment('CI');
+    // Skip golden tests in CI - use runtime check since compile-time
+    // bool.fromEnvironment doesn't work with VeryGood workflows
+    final isCI = Platform.environment['CI'] == 'true';
     final shouldSkip = skip || isCI;
 
     await pumpForGolden();

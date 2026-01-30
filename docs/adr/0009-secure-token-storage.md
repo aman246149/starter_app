@@ -1,3 +1,4 @@
+<!-- cspell:ignore plaintext -->
 # ADR-0009: flutter_secure_storage for Token Security
 
 ## Status
