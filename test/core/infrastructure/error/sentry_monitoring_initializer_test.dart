@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:starter_app/core/application/application_environment.dart';
@@ -65,7 +67,7 @@ void main() {
           }
         },
         // Skip in CI if Sentry native bindings unavailable
-        skip: const bool.fromEnvironment('CI'),
+        skip: Platform.environment['CI'] == 'true',
       );
 
       test('returns true when Sentry is successfully initialized', () async {

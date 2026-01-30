@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -65,7 +67,7 @@ void main() {
       );
 
       // Skip in CI - font rendering differs between platforms
-      const isCI = bool.fromEnvironment('CI');
+      final isCI = Platform.environment['CI'] == 'true';
       await expectLater(
         find.byType(EmailTextField),
         matchesGoldenFile('goldens/email_text_field_empty.png'),
@@ -89,7 +91,7 @@ void main() {
       );
 
       // Skip in CI - font rendering differs between platforms
-      const isCI = bool.fromEnvironment('CI');
+      final isCI = Platform.environment['CI'] == 'true';
       await expectLater(
         find.byType(EmailTextField),
         matchesGoldenFile('goldens/email_text_field_error.png'),
