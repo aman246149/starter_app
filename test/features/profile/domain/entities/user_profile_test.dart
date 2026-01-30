@@ -43,7 +43,6 @@ void main() {
       });
     });
 
-
     group('copyWith', () {
       test('creates a copy with all same values', () {
         final profile = TestData.userProfile();
@@ -105,6 +104,5 @@ void main() {
 
       expect(event.profile, equals(profile));
     });
-
   });
 }

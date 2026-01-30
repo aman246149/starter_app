@@ -65,7 +65,6 @@ abstract final class TestData {
   /// Valid profile image URL for testing.
   static const String profileImageUrl = 'https://example.com/profile.jpg';
 
-
   // ─────────────────────────────────────────────────────────────────────────
   // Invalid Data (for validation tests)
   // ─────────────────────────────────────────────────────────────────────────
@@ -265,5 +264,4 @@ abstract final class TestData {
   /// Creates a [RefreshToken] value object.
   static RefreshToken refreshTokenVO([String? value]) =>
       RefreshToken.fromTrustedSource(value ?? refreshToken);
-
 }

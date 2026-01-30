@@ -20,7 +20,6 @@ void main() {
       });
     });
 
-
     group('equality', () {
       test('has same ID when created with same ID', () {
         final user1 = TestData.user(

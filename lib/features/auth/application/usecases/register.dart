@@ -9,7 +9,7 @@ import 'package:starter_app/features/auth/domain/services/user_registration_serv
 /// Command for registering a new user account.
 ///
 /// Orchestrates the registration process using [UserRegistrationService].
-/// Credentials must include name for registration 
+/// Credentials must include name for registration
 /// (use [AuthCredentials.isValidForRegistration]).
 @injectable
 class Register extends Command<AuthCredentials, User> {

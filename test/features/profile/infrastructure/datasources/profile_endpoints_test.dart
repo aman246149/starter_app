@@ -26,6 +26,5 @@ void main() {
     test('currentProfile endpoint is correct', () {
       expect(ProfileEndpoints.me, equals('/me'));
     });
-
   });
 }

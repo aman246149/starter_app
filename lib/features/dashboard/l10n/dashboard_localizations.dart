@@ -62,15 +62,20 @@ import 'dashboard_localizations_es.dart';
 /// be consistent with the languages listed in the DashboardLocalizations.supportedLocales
 /// property.
 abstract class DashboardLocalizations {
-  DashboardLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  DashboardLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
   static DashboardLocalizations of(BuildContext context) {
-    return Localizations.of<DashboardLocalizations>(context, DashboardLocalizations)!;
+    return Localizations.of<DashboardLocalizations>(
+      context,
+      DashboardLocalizations,
+    )!;
   }
 
-  static const LocalizationsDelegate<DashboardLocalizations> delegate = _DashboardLocalizationsDelegate();
+  static const LocalizationsDelegate<DashboardLocalizations> delegate =
+      _DashboardLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,17 +87,18 @@ abstract class DashboardLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('es')
+    Locale('es'),
   ];
 
   /// app bar title for dashboard
@@ -102,34 +108,38 @@ abstract class DashboardLocalizations {
   String get appBarTitle;
 }
 
-class _DashboardLocalizationsDelegate extends LocalizationsDelegate<DashboardLocalizations> {
+class _DashboardLocalizationsDelegate
+    extends LocalizationsDelegate<DashboardLocalizations> {
   const _DashboardLocalizationsDelegate();
 
   @override
   Future<DashboardLocalizations> load(Locale locale) {
-    return SynchronousFuture<DashboardLocalizations>(lookupDashboardLocalizations(locale));
+    return SynchronousFuture<DashboardLocalizations>(
+      lookupDashboardLocalizations(locale),
+    );
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'es'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_DashboardLocalizationsDelegate old) => false;
 }
 
 DashboardLocalizations lookupDashboardLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en': return DashboardLocalizationsEn();
-    case 'es': return DashboardLocalizationsEs();
+    case 'en':
+      return DashboardLocalizationsEn();
+    case 'es':
+      return DashboardLocalizationsEs();
   }
 
   throw FlutterError(
     'DashboardLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
+    'that was used.',
   );
 }

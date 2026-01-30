@@ -84,7 +84,7 @@ class ThemeCubit extends HydratedCubit<AppThemeMode> {
 
       return AppThemeMode.fromString(modeValue);
       // ignore: avoid_catches_without_on_clauses, Catches TypeError (Error) and Exception
-    }catch (_) {
+    } catch (_) {
       return null;
     }
   }
