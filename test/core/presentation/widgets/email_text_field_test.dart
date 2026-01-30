@@ -61,6 +61,7 @@ void main() {
           ),
         ),
       );
+      await tester.pumpAndSettle();
 
       final textField = tester.widget<AppTextField>(find.byType(AppTextField));
       expect(textField.keyboardType, TextInputType.emailAddress);
