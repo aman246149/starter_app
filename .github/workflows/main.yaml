@@ -68,7 +68,7 @@ jobs:
         uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           auth: ${{ secrets.GIST_TOKEN }}
-          gistID: YOUR_GIST_ID  # Create a gist and add the ID here
+          gistID: fe81c0405c3ee75b70c1f6b07996d74a
           filename: coverage_badge.json
           label: coverage
           message: 100%
