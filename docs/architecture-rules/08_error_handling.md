@@ -48,7 +48,7 @@ FutureResult<Order> createOrder(OrderData data) async {
 ```text
 Failure (abstract) - pure marker interface, no message
 ├── TechnicalFailure (abstract) - adds isRetryable, stackTrace
-│   ├── InfrastructureFailure - server, network, cache errors
+│   ├── InfrastructureFailure - server, network, cache, parse, circuitBreaker, unexpected
 │   └── AuthFailure - authentication/authorization errors
 └── ValueFailure<T> (abstract) - domain validation errors
     ├── PasswordFailure - password requirements
@@ -117,7 +117,9 @@ class InfrastructureFailure extends TechnicalFailure with _$InfrastructureFailur
   bool get isRetryable => when(
     server: (_, _, _) => true,
     network: (_, _) => true,
-    cache: (_, _) => true,
+    cache: (_, _) => false,
+    parse: (_, _) => false,
+    circuitBreaker: (_, _) => true,
     unexpected: (_, _) => false,
   );
 }
@@ -442,6 +444,7 @@ class ErrorView extends StatelessWidget {
         cache: (_, _) => Icons.storage,
         parse: (_, _) => Icons.error_outline,
         circuitBreaker: (_, _) => Icons.block,
+        unexpected: (_, _) => Icons.warning,
       );
     }
     return Icons.warning;
@@ -509,6 +512,10 @@ class ErrorLogger {
           stackTrace: stackTrace,
         ),
         circuitBreaker: (_, __) => {},
+        unexpected: (msg, _) => _sentry?.captureException(
+          Exception(msg),
+          stackTrace: stackTrace,
+        ),
       );
     }
   }
