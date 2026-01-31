@@ -140,6 +140,7 @@ void main() {
             cache: (_, _) => null,
             parse: (_, _) => null,
             circuitBreaker: (_, _) => null,
+            unexpected: (_, _) => null,
           ),
           500,
         );
@@ -161,6 +162,7 @@ void main() {
             cache: (_, _) => null,
             parse: (_, _) => null,
             circuitBreaker: (_, _) => null,
+            unexpected: (_, _) => null,
           ),
           500,
         );
@@ -540,6 +542,68 @@ void main() {
       });
     });
 
+    group('UnexpectedFailure', () {
+      test('creates unexpected failure with default message', () {
+        const failure = InfrastructureFailure.unexpected();
+
+        expect(failure, isA<UnexpectedFailure>());
+        expect(failure.message, 'An unexpected error occurred');
+        expect(failure.isRetryable, false);
+        expect(failure.stackTrace, isNull);
+      });
+
+      test('creates unexpected failure with stackTrace', () {
+        final stackTrace = StackTrace.current;
+        final failure = InfrastructureFailure.unexpected(
+          stackTrace: stackTrace,
+        );
+
+        expect(failure.stackTrace, stackTrace);
+      });
+
+      test('creates unexpected failure with custom message', () {
+        const failure = InfrastructureFailure.unexpected(
+          message: 'Something went wrong',
+        );
+
+        expect(failure.message, 'Something went wrong');
+      });
+
+      test('is not retryable', () {
+        const failure = InfrastructureFailure.unexpected();
+
+        expect(failure.isRetryable, false);
+      });
+
+      test('equals another unexpected failure with same message', () {
+        const failure1 = InfrastructureFailure.unexpected();
+        const failure2 = InfrastructureFailure.unexpected();
+
+        expect(failure1, failure2);
+      });
+
+      test('not equals unexpected failure with different message', () {
+        const failure1 = InfrastructureFailure.unexpected(
+          message: 'Error 1',
+        );
+        const failure2 = InfrastructureFailure.unexpected(
+          message: 'Error 2',
+        );
+
+        expect(failure1, isNot(failure2));
+      });
+
+      test('copyWith creates new instance with updated message', () {
+        const original = InfrastructureFailure.unexpected(
+          message: 'Original',
+        );
+        final updated = original.copyWith(message: 'Updated');
+
+        expect(updated.message, 'Updated');
+        expect(original.message, 'Original');
+      });
+    });
+
     group('when pattern matching', () {
       test('matches server failure', () {
         const failure = InfrastructureFailure.server(
@@ -553,6 +617,7 @@ void main() {
           cache: (message, _) => 'Cache: $message',
           parse: (message, _) => 'Parse: $message',
           circuitBreaker: (message, _) => 'CircuitBreaker: $message',
+          unexpected: (message, _) => 'Unexpected: $message',
         );
 
         expect(result, 'Server: Server error');
@@ -570,6 +635,7 @@ void main() {
           cache: (message, _) => 'Cache: $message',
           parse: (message, _) => 'Parse: $message',
           circuitBreaker: (message, _) => 'CircuitBreaker: $message',
+          unexpected: (message, _) => 'Unexpected: $message',
         );
 
         expect(result, 'Server: Server error (code: null)');
@@ -586,6 +652,7 @@ void main() {
           cache: (message, _) => 'Cache',
           parse: (message, _) => 'Parse',
           circuitBreaker: (message, _) => 'CircuitBreaker',
+          unexpected: (message, _) => 'Unexpected',
         );
 
         expect(result, 'Network: No connection');
@@ -600,6 +667,7 @@ void main() {
           cache: (message, _) => 'Cache: $message',
           parse: (message, _) => 'Parse',
           circuitBreaker: (message, _) => 'CircuitBreaker',
+          unexpected: (message, _) => 'Unexpected',
         );
 
         expect(result, 'Cache: Cache failed');
@@ -614,6 +682,7 @@ void main() {
           cache: (message, _) => 'Cache',
           parse: (message, _) => 'Parse: $message',
           circuitBreaker: (message, _) => 'CircuitBreaker',
+          unexpected: (message, _) => 'Unexpected',
         );
 
         expect(result, 'Parse: Parse failed');
@@ -630,6 +699,7 @@ void main() {
           cache: (message, _) => 'Cache',
           parse: (message, _) => 'Parse',
           circuitBreaker: (message, _) => 'CircuitBreaker: $message',
+          unexpected: (message, _) => 'Unexpected: $message',
         );
 
         expect(result, 'CircuitBreaker: Circuit open');
@@ -706,6 +776,7 @@ void main() {
 
         final result = failure.maybeWhen(
           circuitBreaker: (message, _) => 'CircuitBreaker: $message',
+          unexpected: (message, _) => 'Unexpected: $message',
           orElse: () => 'Other',
         );
 

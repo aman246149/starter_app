@@ -141,6 +141,7 @@ void main() {
             cache: (_, _) => fail('Should be server failure'),
             parse: (_, _) => fail('Should be server failure'),
             circuitBreaker: (_, _) => fail('Should be server failure'),
+            unexpected: (_, _) => fail('Should be server failure'),
           );
         },
       );
@@ -163,6 +164,7 @@ void main() {
           cache: (_, _) => fail('Should be server failure'),
           parse: (_, _) => fail('Should be server failure'),
           circuitBreaker: (_, _) => fail('Should be server failure'),
+          unexpected: (_, _) => fail('Should be server failure'),
         );
       });
 
@@ -206,6 +208,7 @@ void main() {
           cache: (_, _) => fail('Should be server failure'),
           parse: (_, _) => fail('Should be server failure'),
           circuitBreaker: (_, _) => fail('Should be server failure'),
+          unexpected: (_, _) => fail('Should be server failure'),
         );
       });
     });

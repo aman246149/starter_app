@@ -74,6 +74,13 @@ abstract class InfrastructureFailure extends TechnicalFailure
     StackTrace? stackTrace,
   }) = CircuitBreakerFailure;
 
+  /// Unexpected error.
+  /// Fallback for unknown exceptions that don't match other categories.
+  const factory InfrastructureFailure.unexpected({
+    @Default('An unexpected error occurred') String message,
+    StackTrace? stackTrace,
+  }) = UnexpectedFailure;
+
   @override
   bool get isRetryable => when(
     server: (_, _, _) => true,
@@ -81,6 +88,7 @@ abstract class InfrastructureFailure extends TechnicalFailure
     cache: (_, _) => false,
     parse: (_, _) => false,
     circuitBreaker: (_, _) => true,
+    unexpected: (_, _) => false,
   );
 
   // coverage:ignore-start
@@ -91,6 +99,7 @@ abstract class InfrastructureFailure extends TechnicalFailure
     cache: (_, stackTrace) => stackTrace,
     parse: (_, stackTrace) => stackTrace,
     circuitBreaker: (_, stackTrace) => stackTrace,
+    unexpected: (_, stackTrace) => stackTrace,
   );
   // coverage:ignore-end
 }

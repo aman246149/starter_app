@@ -166,26 +166,29 @@ void main() {
         );
       });
 
-      test('maps unknown Exception to InfrastructureFailure.parse', () async {
-        // Arrange
-        final exception = Exception('Unknown error');
+      test(
+        'maps unknown Exception to InfrastructureFailure.unexpected',
+        () async {
+          // Arrange
+          final exception = Exception('Unknown error');
 
-        // Act
-        final result = await handler.handle<String>(
-          operation: () async => throw exception,
-        );
+          // Act
+          final result = await handler.handle<String>(
+            operation: () async => throw exception,
+          );
 
-        // Assert
-        expect(result.isLeft(), true);
-        result.fold(
-          (failure) {
-            expect(failure, isA<InfrastructureFailure>());
-            final infraFailure = failure as InfrastructureFailure;
-            expect(infraFailure.message, contains('unexpected error'));
-          },
-          (_) => fail('Should be Left'),
-        );
-      });
+          // Assert
+          expect(result.isLeft(), true);
+          result.fold(
+            (failure) {
+              expect(failure, isA<InfrastructureFailure>());
+              final infraFailure = failure as InfrastructureFailure;
+              expect(infraFailure.message, contains('unexpected error'));
+            },
+            (_) => fail('Should be Left'),
+          );
+        },
+      );
     });
   });
 }

@@ -26,6 +26,7 @@ class InfrastructureFailureMapper extends FailureMessageMapper {
       cache: (_) => context.appL10n.cacheError,
       parse: (_) => context.appL10n.parseError,
       circuitBreaker: (_) => context.appL10n.circuitBreakerError,
+      unexpected: (_) => context.appL10n.unexpectedError,
     );
   }
 }

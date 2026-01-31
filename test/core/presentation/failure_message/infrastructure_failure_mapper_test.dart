@@ -44,6 +44,22 @@ void main() {
         );
       });
 
+      testWidgets('maps unexpected failure to correct message', (tester) async {
+        await tester.pumpApp(
+          Builder(
+            builder: (context) {
+              final message = mapper.map(
+                context,
+                const InfrastructureFailure.unexpected(),
+              );
+              expect(message, isNotEmpty);
+              expect(message.toLowerCase(), contains('unexpected'));
+              return const SizedBox();
+            },
+          ),
+        );
+      });
+
       testWidgets('maps server failure to correct message', (tester) async {
         await tester.pumpApp(
           Builder(
