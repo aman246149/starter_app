@@ -12,25 +12,27 @@ import 'package:starter_app/features/dashboard/l10n/l10n_extensions.dart';
 final class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
+  /// Pre-generated colors ensure consistent appearance across rebuilds.
+  static final List<Color> _colors = List.generate(20, (index) {
+    final random = Random(index); // Seeded for deterministic colors
+    const limit = 255;
+    return Color.fromARGB(
+      (index + 1) * limit ~/ 4,
+      random.nextInt(limit),
+      random.nextInt(limit),
+      random.nextInt(limit),
+    );
+  });
+
   @override
   Widget build(BuildContext context) {
-    final random = Random();
     final l10n = context.dashboardL10n;
-    const boxCount = 20;
-    const randomLimit = 255;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.appBarTitle)),
       body: ResponsiveGrid.builder(
-        itemCount: boxCount,
-        itemBuilder: (context, index) => ColoredBox(
-          color: Color.fromARGB(
-            (index + 1) * randomLimit ~/ 4,
-            random.nextInt(randomLimit),
-            random.nextInt(randomLimit),
-            random.nextInt(randomLimit),
-          ),
-        ),
+        itemCount: _colors.length,
+        itemBuilder: (context, index) => ColoredBox(color: _colors[index]),
       ),
     );
   }
