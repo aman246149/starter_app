@@ -43,7 +43,7 @@ lib/core/error/
 ```
 Failure (abstract)
 ├── TechnicalFailure (abstract)
-│   ├── InfrastructureFailure (server, network, cache, parse, circuitBreaker)
+│   ├── InfrastructureFailure (server, network, cache, parse, circuitBreaker, unexpected)
 │   └── AuthFailure (unauthorized, forbidden, sessionExpired, etc.)
 └── ValueFailure<T> (abstract)
     ├── EmailFailure
@@ -93,6 +93,7 @@ class AuthRepositoryImpl implements IAuthRepository {
 | `CacheException` | Local storage fails | `InfrastructureFailure.cache` |
 | `CircuitBreakerException` | Service overloaded | `InfrastructureFailure.circuitBreaker` |
 | `FormatException` | JSON parse error | `InfrastructureFailure.parse` |
+| Other `Exception` | Unknown/unhandled | `InfrastructureFailure.unexpected` |
 
 ### Error Reporting
 
@@ -148,6 +149,7 @@ Some failures can be retried (used for UI retry buttons):
 | `circuitBreaker` | ✅ Yes | Will reset after timeout |
 | `cache` | ❌ No | Usually a bug |
 | `parse` | ❌ No | Data format issue |
+| `unexpected` | ❌ No | Unknown errors |
 
 ## Related ADRs
 

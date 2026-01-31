@@ -52,7 +52,7 @@ class ExceptionHandler {
   /// - [ServerException] → Uses custom [serverExceptionMapper] if provided,
   ///   otherwise maps to [InfrastructureFailure.server]
   /// - [FormatException] → [InfrastructureFailure.parse]
-  /// - Other exceptions → [InfrastructureFailure.parse]
+  /// - Other exceptions → [InfrastructureFailure.unexpected]
   ///
   /// Parameters:
   /// - [operation]: The async operation to execute
@@ -107,7 +107,7 @@ class ExceptionHandler {
       );
     } on Exception catch (e, stackTrace) {
       return Left(
-        InfrastructureFailure.parse(
+        InfrastructureFailure.unexpected(
           message: 'An unexpected error occurred: $e',
           stackTrace: stackTrace,
         ),

@@ -4,7 +4,8 @@
 /// ```text
 /// Failure (abstract)
 /// ├── TechnicalFailure (abstract) - isRetryable, stackTrace
-/// │   ├── InfrastructureFailure (freezed) - server, network, cache, parse
+/// │   ├── InfrastructureFailure (freezed) - server, network,
+/// │   │   cache, parse, unexpected
 /// │   └── AuthFailure (freezed) - unauthorized, forbidden, etc.
 /// └── ValueFailure<T> (abstract) - domain validation base
 ///     ├── PasswordFailure - empty, tooShort, missingUppercase, etc.

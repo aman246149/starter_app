@@ -87,7 +87,7 @@ extension InfrastructureFailurePatterns on InfrastructureFailure {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( NetworkFailure value)?  network,TResult Function( CacheFailure value)?  cache,TResult Function( ParseFailure value)?  parse,TResult Function( CircuitBreakerFailure value)?  circuitBreaker,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( ServerFailure value)?  server,TResult Function( NetworkFailure value)?  network,TResult Function( CacheFailure value)?  cache,TResult Function( ParseFailure value)?  parse,TResult Function( CircuitBreakerFailure value)?  circuitBreaker,TResult Function( UnexpectedFailure value)?  unexpected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
@@ -95,7 +95,8 @@ return server(_that);case NetworkFailure() when network != null:
 return network(_that);case CacheFailure() when cache != null:
 return cache(_that);case ParseFailure() when parse != null:
 return parse(_that);case CircuitBreakerFailure() when circuitBreaker != null:
-return circuitBreaker(_that);case _:
+return circuitBreaker(_that);case UnexpectedFailure() when unexpected != null:
+return unexpected(_that);case _:
   return orElse();
 
 }
@@ -113,7 +114,7 @@ return circuitBreaker(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( NetworkFailure value)  network,required TResult Function( CacheFailure value)  cache,required TResult Function( ParseFailure value)  parse,required TResult Function( CircuitBreakerFailure value)  circuitBreaker,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( ServerFailure value)  server,required TResult Function( NetworkFailure value)  network,required TResult Function( CacheFailure value)  cache,required TResult Function( ParseFailure value)  parse,required TResult Function( CircuitBreakerFailure value)  circuitBreaker,required TResult Function( UnexpectedFailure value)  unexpected,}){
 final _that = this;
 switch (_that) {
 case ServerFailure():
@@ -121,7 +122,8 @@ return server(_that);case NetworkFailure():
 return network(_that);case CacheFailure():
 return cache(_that);case ParseFailure():
 return parse(_that);case CircuitBreakerFailure():
-return circuitBreaker(_that);case _:
+return circuitBreaker(_that);case UnexpectedFailure():
+return unexpected(_that);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -138,7 +140,7 @@ return circuitBreaker(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( NetworkFailure value)?  network,TResult? Function( CacheFailure value)?  cache,TResult? Function( ParseFailure value)?  parse,TResult? Function( CircuitBreakerFailure value)?  circuitBreaker,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( ServerFailure value)?  server,TResult? Function( NetworkFailure value)?  network,TResult? Function( CacheFailure value)?  cache,TResult? Function( ParseFailure value)?  parse,TResult? Function( CircuitBreakerFailure value)?  circuitBreaker,TResult? Function( UnexpectedFailure value)?  unexpected,}){
 final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
@@ -146,7 +148,8 @@ return server(_that);case NetworkFailure() when network != null:
 return network(_that);case CacheFailure() when cache != null:
 return cache(_that);case ParseFailure() when parse != null:
 return parse(_that);case CircuitBreakerFailure() when circuitBreaker != null:
-return circuitBreaker(_that);case _:
+return circuitBreaker(_that);case UnexpectedFailure() when unexpected != null:
+return unexpected(_that);case _:
   return null;
 
 }
@@ -163,14 +166,15 @@ return circuitBreaker(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  int? statusCode,  StackTrace? stackTrace)?  server,TResult Function( String message,  StackTrace? stackTrace)?  network,TResult Function( String message,  StackTrace? stackTrace)?  cache,TResult Function( String message,  StackTrace? stackTrace)?  parse,TResult Function( String message,  StackTrace? stackTrace)?  circuitBreaker,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String message,  int? statusCode,  StackTrace? stackTrace)?  server,TResult Function( String message,  StackTrace? stackTrace)?  network,TResult Function( String message,  StackTrace? stackTrace)?  cache,TResult Function( String message,  StackTrace? stackTrace)?  parse,TResult Function( String message,  StackTrace? stackTrace)?  circuitBreaker,TResult Function( String message,  StackTrace? stackTrace)?  unexpected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message,_that.statusCode,_that.stackTrace);case NetworkFailure() when network != null:
 return network(_that.message,_that.stackTrace);case CacheFailure() when cache != null:
 return cache(_that.message,_that.stackTrace);case ParseFailure() when parse != null:
 return parse(_that.message,_that.stackTrace);case CircuitBreakerFailure() when circuitBreaker != null:
-return circuitBreaker(_that.message,_that.stackTrace);case _:
+return circuitBreaker(_that.message,_that.stackTrace);case UnexpectedFailure() when unexpected != null:
+return unexpected(_that.message,_that.stackTrace);case _:
   return orElse();
 
 }
@@ -188,14 +192,15 @@ return circuitBreaker(_that.message,_that.stackTrace);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  int? statusCode,  StackTrace? stackTrace)  server,required TResult Function( String message,  StackTrace? stackTrace)  network,required TResult Function( String message,  StackTrace? stackTrace)  cache,required TResult Function( String message,  StackTrace? stackTrace)  parse,required TResult Function( String message,  StackTrace? stackTrace)  circuitBreaker,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String message,  int? statusCode,  StackTrace? stackTrace)  server,required TResult Function( String message,  StackTrace? stackTrace)  network,required TResult Function( String message,  StackTrace? stackTrace)  cache,required TResult Function( String message,  StackTrace? stackTrace)  parse,required TResult Function( String message,  StackTrace? stackTrace)  circuitBreaker,required TResult Function( String message,  StackTrace? stackTrace)  unexpected,}) {final _that = this;
 switch (_that) {
 case ServerFailure():
 return server(_that.message,_that.statusCode,_that.stackTrace);case NetworkFailure():
 return network(_that.message,_that.stackTrace);case CacheFailure():
 return cache(_that.message,_that.stackTrace);case ParseFailure():
 return parse(_that.message,_that.stackTrace);case CircuitBreakerFailure():
-return circuitBreaker(_that.message,_that.stackTrace);case _:
+return circuitBreaker(_that.message,_that.stackTrace);case UnexpectedFailure():
+return unexpected(_that.message,_that.stackTrace);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,14 +217,15 @@ return circuitBreaker(_that.message,_that.stackTrace);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  int? statusCode,  StackTrace? stackTrace)?  server,TResult? Function( String message,  StackTrace? stackTrace)?  network,TResult? Function( String message,  StackTrace? stackTrace)?  cache,TResult? Function( String message,  StackTrace? stackTrace)?  parse,TResult? Function( String message,  StackTrace? stackTrace)?  circuitBreaker,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String message,  int? statusCode,  StackTrace? stackTrace)?  server,TResult? Function( String message,  StackTrace? stackTrace)?  network,TResult? Function( String message,  StackTrace? stackTrace)?  cache,TResult? Function( String message,  StackTrace? stackTrace)?  parse,TResult? Function( String message,  StackTrace? stackTrace)?  circuitBreaker,TResult? Function( String message,  StackTrace? stackTrace)?  unexpected,}) {final _that = this;
 switch (_that) {
 case ServerFailure() when server != null:
 return server(_that.message,_that.statusCode,_that.stackTrace);case NetworkFailure() when network != null:
 return network(_that.message,_that.stackTrace);case CacheFailure() when cache != null:
 return cache(_that.message,_that.stackTrace);case ParseFailure() when parse != null:
 return parse(_that.message,_that.stackTrace);case CircuitBreakerFailure() when circuitBreaker != null:
-return circuitBreaker(_that.message,_that.stackTrace);case _:
+return circuitBreaker(_that.message,_that.stackTrace);case UnexpectedFailure() when unexpected != null:
+return unexpected(_that.message,_that.stackTrace);case _:
   return null;
 
 }
@@ -560,6 +566,74 @@ class _$CircuitBreakerFailureCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? message = null,Object? stackTrace = freezed,}) {
   return _then(CircuitBreakerFailure(
+message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
+as StackTrace?,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class UnexpectedFailure extends InfrastructureFailure {
+  const UnexpectedFailure({this.message = 'An unexpected error occurred', this.stackTrace}): super._();
+  
+
+@override@JsonKey() final  String message;
+@override final  StackTrace? stackTrace;
+
+/// Create a copy of InfrastructureFailure
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UnexpectedFailureCopyWith<UnexpectedFailure> get copyWith => _$UnexpectedFailureCopyWithImpl<UnexpectedFailure>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UnexpectedFailure&&(identical(other.message, message) || other.message == message)&&(identical(other.stackTrace, stackTrace) || other.stackTrace == stackTrace));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,message,stackTrace);
+
+@override
+String toString() {
+  return 'InfrastructureFailure.unexpected(message: $message, stackTrace: $stackTrace)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UnexpectedFailureCopyWith<$Res> implements $InfrastructureFailureCopyWith<$Res> {
+  factory $UnexpectedFailureCopyWith(UnexpectedFailure value, $Res Function(UnexpectedFailure) _then) = _$UnexpectedFailureCopyWithImpl;
+@override @useResult
+$Res call({
+ String message, StackTrace? stackTrace
+});
+
+
+
+
+}
+/// @nodoc
+class _$UnexpectedFailureCopyWithImpl<$Res>
+    implements $UnexpectedFailureCopyWith<$Res> {
+  _$UnexpectedFailureCopyWithImpl(this._self, this._then);
+
+  final UnexpectedFailure _self;
+  final $Res Function(UnexpectedFailure) _then;
+
+/// Create a copy of InfrastructureFailure
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? message = null,Object? stackTrace = freezed,}) {
+  return _then(UnexpectedFailure(
 message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,stackTrace: freezed == stackTrace ? _self.stackTrace : stackTrace // ignore: cast_nullable_to_non_nullable
 as StackTrace?,
