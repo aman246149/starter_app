@@ -5,41 +5,43 @@ Copy this template when creating a new Pull Request.
 ```markdown
 # PR: [Feature/Bug/Refactor Name]
 
-## Description
+## 📝 Description
 
 [Brief description of changes. What does this PR do?]
 
-## Type of Change
+## 🏷️ Type of Change
 
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] Refactoring (non-breaking change that improves code quality)
-- [ ] Documentation update
-- [ ] Test update
-- [ ] Chore (tooling, config, etc.)
+- [ ] ✨ New feature (non-breaking change which adds functionality)
+- [ ] 🛠️ Bug fix (non-breaking change which fixes an issue)
+- [ ] ♻️ Refactoring (non-breaking change that improves code quality)
+- [ ] 📝 Documentation update
+- [ ] 🧪 Test update
+- [ ] 🗑️ Chore (tooling, config, etc.)
+- [ ] ❌ Breaking change (fix or feature that would cause existing functionality to change)
 
 ---
 
-## Changes
+## 📦 Changes
 
-### Tests (Commit 1)
+### Tests
 | Directory | Files | Description |
 |-----------|-------|-------------|
 | `test/features/...` | X | [Description of tests] |
 | **Total** | **X files** | X tests |
 
-### Implementation (Commit 2+)
+### Implementation
 | Layer | Files | Key Components |
 |-------|-------|----------------|
 | Domain | X | Entities, Failures |
-| Presentation | X | Widgets, Pages |
-| Infrastructure | X | Repositories |
-| Docs | X | README.md |
-| **Total** | **X files** |
+| Application | X | Use Cases |
+| Infrastructure | X | Repositories, Data Sources |
+| Presentation | X | Widgets, Pages, BLoCs |
+| Docs | X | README, ADRs |
+| **Total** | **X files** | |
 
 ---
 
-## Testing
+## ✅ Testing
 
 | Test Type | Count | Status |
 |-----------|-------|--------|
@@ -53,7 +55,7 @@ very_good test test/features/[feature]/
 
 ---
 
-## Architecture Compliance
+## 🏗️ Architecture Compliance
 
 | Rule | Status |
 |------|--------|
@@ -64,8 +66,14 @@ very_good test test/features/[feature]/
 
 ---
 
-## Key Features/Changes
+## 🎯 Key Features/Changes
 
 - **[Feature 1]**: [Description]
 - **[Feature 2]**: [Description]
+
+---
+
+## 📸 Screenshots (if applicable)
+
+[Add screenshots to help explain your changes]
 ```
