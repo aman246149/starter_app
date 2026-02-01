@@ -9,6 +9,12 @@
 
 An **AI-ready**, enterprise-grade Flutter starter app built with **Clean Architecture**, **Domain-Driven Design (DDD)**, **Hexagonal Architecture**, and **100% test coverage**.
 
+<p align="center">
+  <img src="docs/demo.gif" alt="Demo" width="250"/>
+  <img src="docs/screenshot_light.png" alt="Light Mode" width="250"/>
+  <img src="docs/screenshot_dark.png" alt="Dark Mode" width="250"/>
+</p>
+
 ---
 
 ## ✨ What Makes This Different
@@ -125,11 +131,20 @@ This project uses `--dart-define-from-file` for secure, type-safe environment co
 
 ```
 config/
-├── development.json   # Development settings
-├── staging.json       # Staging settings
-├── production.json    # Production settings (git-ignored)
-└── example.json       # Template for new environments
+├── development.json.example   # Copy and remove .example
+├── staging.json.example       # Copy and remove .example
+├── production.json.example    # Copy and remove .example
+└── example.json               # Template reference
 ```
+
+> [!IMPORTANT]
+> **First-time setup**: Copy the `.example` files and remove the `.example` suffix:
+> ```bash
+> cd config
+> cp development.json.example development.json
+> cp staging.json.example staging.json
+> cp production.json.example production.json
+> ```
 
 ### Running with Environment Config
 
