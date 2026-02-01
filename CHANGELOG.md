@@ -14,6 +14,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Operational documentation in `docs/operations/`
 - Enhanced `ARCHITECTURE.md` with Mermaid diagrams
 - `CONTRIBUTING.md` with development guidelines
+- AI architecture rules in `docs/architecture-rules/` (23 rule files)
+- Buy Me a Coffee support section in README
+- Social media launch templates in `social/`
+
+### Changed
+- Updated Flutter SDK to 3.38.9
+- Updated Dart SDK to 3.10.8
+- Replaced iOS launch screen with default Flutter template
+- Updated macOS entitlements for keychain access
+- Test count increased to 2,282 tests
 
 ---
 
@@ -60,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Secure Storage**: flutter_secure_storage for sensitive data
 
 #### Testing
-- **100% Test Coverage**: 2060 tests, 3136/3136 lines covered
+- **100% Test Coverage**: 2,282 tests, 3136/3136 lines covered
 - **Golden Tests**: Visual regression testing
 - **Property-Based Tests**: Fuzz testing with Glados for value objects
 - **Benchmark Tests**: Performance metrics for critical paths
@@ -87,6 +97,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/username/starter_app/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/username/starter_app/compare/v0.1.0...v1.0.0
-[0.1.0]: https://github.com/username/starter_app/releases/tag/v0.1.0
+[Unreleased]: https://github.com/deveminsahin/starter_app/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/deveminsahin/starter_app/compare/v0.1.0...v1.0.0
+[0.1.0]: https://github.com/deveminsahin/starter_app/releases/tag/v0.1.0

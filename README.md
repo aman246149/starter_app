@@ -5,12 +5,15 @@
 [![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
 [![License: MIT][license_badge]][license_link]
 [![Flutter](https://img.shields.io/badge/Flutter-3.38+-blue.svg)](https://flutter.dev)
-[![Dart](https://img.shields.io/badge/Dart-3.5+-blue.svg)](https://dart.dev)
+[![Dart](https://img.shields.io/badge/Dart-3.10+-blue.svg)](https://dart.dev)
 
 An **AI-ready**, enterprise-grade Flutter starter app built with **Clean Architecture**, **Domain-Driven Design (DDD)**, **Hexagonal Architecture**, and **100% test coverage**.
 
 <p align="center">
-  <img src="docs/demo.gif" alt="Demo" width="250"/>
+  <img src="docs/demo.gif" alt="Demo" width="800"/>
+</p>
+
+<p align="center">
   <img src="docs/screenshot_light.png" alt="Light Mode" width="250"/>
   <img src="docs/screenshot_dark.png" alt="Dark Mode" width="250"/>
 </p>
@@ -99,7 +102,7 @@ This project follows **Hexagonal Architecture** (Ports & Adapters) with **DDD ta
 ### Prerequisites
 
 - Flutter 3.38+ (stable)
-- Dart 3.5+
+- Dart 3.10+
 - [Very Good CLI](https://pub.dev/packages/very_good_cli): `dart pub global activate very_good_cli`
 
 ### Quick Start
@@ -373,6 +376,16 @@ Backend runs at `http://localhost:8080`. The Flutter app is pre-configured to co
 
 > [!NOTE]
 > The backend uses an in-memory H2 database for development. All data resets on restart.
+
+---
+
+## ☕ Support
+
+If you find this project useful, consider supporting its development:
+
+<a href="https://www.buymeacoffee.com/deveminsahin" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="50">
+</a>
 
 ---
 
